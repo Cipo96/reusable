@@ -1,0 +1,63 @@
+<form [formGroup]="form" class="dynamic-form">
+  <div class="form-row">
+    <ng-container *ngFor="let field of fields">
+      <div [ngClass]="eqpCommonService.getFieldSizeClass(field)" *ngIf="field.showInForm != false" class="form-col">
+
+        <ng-container [ngSwitch]="field.formFieldType">
+
+          <!-- TEXT -->
+          <form-text-field class="form-field" *ngSwitchCase="formFieldType.Text" [field]="field" [form]="form"
+            (valueChanged)="handleValueChanged($event)"></form-text-field>
+
+          <!-- NUMBER -->
+          <form-number-field class="form-field" *ngSwitchCase="formFieldType.Number" [field]="field" [form]="form"
+            (valueChanged)="handleValueChanged($event)"></form-number-field>
+
+          <!-- BOOLEAN -->
+          <form-boolean-field class="form-field" *ngSwitchCase="formFieldType.Boolean" [field]="field" [form]="form"
+            (valueChanged)="handleValueChanged($event)"></form-boolean-field>
+
+          <!-- DATE -->
+          <form-date-field class="form-field" *ngSwitchCase="formFieldType.Date" [field]="field" [form]="form"
+            (valueChanged)="handleValueChanged($event)"></form-date-field>
+
+          <!-- DATETIME -->
+          <form-date-field class="form-field" *ngSwitchCase="formFieldType.DateTime" [field]="field" [form]="form"
+            (valueChanged)="handleValueChanged($event)"></form-date-field>
+
+          <!-- DATERANGE -->
+          <form-date-field class="form-field" *ngSwitchCase="formFieldType.DateRange" [field]="field" [form]="form"
+            (valueChanged)="handleValueChanged($event)"></form-date-field>
+
+          <!-- EXTERNAL TEMPLATE -->
+          <form-external-template-field class="form-field" *ngSwitchCase="formFieldType.ExternalTemplate"
+            [field]="field" [form]="form" (valueChanged)="handleValueChanged($event)"></form-external-template-field>
+
+          <!-- LOOKUP -->
+          <form-lookup-field class="form-field" *ngSwitchCase="formFieldType.Lookup" [field]="field" [form]="form"
+            (valueChanged)="handleValueChanged($event)"></form-lookup-field>
+
+          <!-- ENUM -->
+          <form-select-field class="form-field" *ngSwitchCase="formFieldType.Enum" [field]="field" [form]="form"
+            (valueChanged)="handleValueChanged($event)"></form-select-field>
+
+          <!-- CVL -->
+          <form-select-field class="form-field" *ngSwitchCase="formFieldType.Cvl" [field]="field" [form]="form"
+            (valueChanged)="handleValueChanged($event)"></form-select-field>
+
+        </ng-container>
+      </div>
+    </ng-container>
+  </div>
+</form>
+
+<div class="row mt-3">
+  <div class="d-flex justify-content-end">
+    <button (click)="resetForm()" mat-raised-button class="me-1">
+      {{ resetFormLabel }}
+    </button>
+    <button mat-raised-button color="primary" (click)="onSubmit()" class="me-2">
+      {{ submitFormLabel }}
+    </button>
+  </div>
+</div>

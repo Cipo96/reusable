@@ -1,0 +1,835 @@
+<!-- <mat-card *ngIf="createMatCard == true" [ngStyle]="{'background': tableColor != null ? tableColor : 'unset'}">
+  <mat-card-header *ngIf="createMatCardHeader == true">
+    <div class="header-title-standard">{{headerTitle}}</div>
+  </mat-card-header>
+
+  <mat-card-content>
+
+    <div style="justify-content: flex-end;" class="row">
+
+      <div *ngIf="exportEqpTable != null" class="text-right exportButtonContainer">
+        <ng-container *ngIf="exportValidTypes?.length > 1">
+          <button type="button" [matTooltip]="exportEqpTable.tooltipText"
+            [ngStyle]="{'box-shadow': exportEqpTable.showButtonBorder != null && exportEqpTable.showButtonBorder == false ? 'none' : null}"
+            [matTooltipPosition]="exportEqpTable.tooltipPosition != null ? exportEqpTable.tooltipPosition : 'below'"
+            mat-raised-button [matMenuTriggerFor]="exportMenu">
+            <mat-icon>{{exportEqpTable.buttonIcon}}</mat-icon> {{exportEqpTable.buttonText}}
+          </button>
+          <mat-menu #exportMenu="matMenu">
+            <ng-container *ngFor="let exportType of exportValidTypes; let i = index">
+              <button
+                *ngIf="exportEqpTable.customExportFunction == null || (exportEqpTable.customExportFunction != null && exportEqpTable.customExportFunction[i] == null)"
+                type="button" mat-menu-item [matTooltip]="exportType"
+                [matTooltipPosition]="exportEqpTable.tooltipPosition != null ? exportEqpTable.tooltipPosition : 'below'"
+                (click)="runTableExporter(exportType)">
+                <i style="font-size: 15pt;margin-left: 5px;" class="fa" [ngClass]="{'fa-file-excel': exportType == 'xls' || exportType == 'xlsx',
+                                            'fa-file-csv': exportType == 'csv',
+                                            'fa-file-alt': exportType == 'txt',
+                                            'fa-file-code': exportType == 'json',
+                                            'fa-file': exportType == 'other' }"></i>
+                <span style="margin-left: 10px;">{{exportType}}</span>
+              </button>
+              <button
+                *ngIf="exportEqpTable.customExportFunction != null && exportEqpTable.customExportFunction[i] != null"
+                type="button" mat-menu-item [matTooltip]="exportType"
+                [matTooltipPosition]="exportEqpTable.tooltipPosition != null ? exportEqpTable.tooltipPosition : 'below'"
+                (click)="exportEqpTable.customExportFunction[i]()">
+                <i style="font-size: 15pt;margin-left: 5px;" class="fa" [ngClass]="{'fa-file-excel': exportType == 'xls' || exportType == 'xlsx',
+                                          'fa-file-csv': exportType == 'csv',
+                                          'fa-file-alt': exportType == 'txt',
+                                          'fa-file-code': exportType == 'json'}"></i>
+                <span style="margin-left: 10px;">{{exportType}}</span>
+              </button>
+            </ng-container>
+          </mat-menu>
+        </ng-container>
+        <ng-container *ngIf="exportValidTypes?.length == 1">
+          <button *ngIf="exportEqpTable.customExportFunction == null" type="button"
+            [matTooltip]="exportEqpTable.tooltipText"
+            [ngStyle]="{'box-shadow': exportEqpTable.showButtonBorder != null && exportEqpTable.showButtonBorder == false ? 'none' : null}"
+            [matTooltipPosition]="exportEqpTable.tooltipPosition != null ? exportEqpTable.tooltipPosition : 'below'"
+            mat-raised-button
+            (click)="runTableExporter(exportValidTypes[0])">
+            <mat-icon>{{exportEqpTable.buttonIcon}}</mat-icon> {{exportEqpTable.buttonText}}
+          </button>
+          <button *ngIf="exportEqpTable.customExportFunction != null && exportEqpTable.customExportFunction[0] != null"
+            type="button" [matTooltip]="exportEqpTable.tooltipText"
+            [ngStyle]="{'box-shadow': exportEqpTable.showButtonBorder != null && exportEqpTable.showButtonBorder == false ? 'none' : null}"
+            [matTooltipPosition]="exportEqpTable.tooltipPosition != null ? exportEqpTable.tooltipPosition : 'below'"
+            mat-raised-button (click)="exportEqpTable.customExportFunction[0]()">
+            <mat-icon>{{exportEqpTable.buttonIcon}}</mat-icon> {{exportEqpTable.buttonText}}
+          </button>
+        </ng-container>
+
+      </div>
+
+      <mat-form-field *ngIf="isTableSearcheable && isSingleColumnFilter == false"
+        style="width:20%; float: right; padding-right: 20px;">
+        <input matInput (keyup)="applyFilter($event.target.value)"
+          [placeholder]="searchText != null ? searchText : 'Cerca' ">
+      </mat-form-field>
+
+      <div *ngIf="isTableSearcheable && isSingleColumnFilter == true" style="float: right;">
+        <button style="cursor: pointer; margin: 0 auto; display: block;" mat-raised-button type="button"
+          matTooltip="Search"
+          (click)="$event.stopPropagation(); singleFilterColumnVisible = !singleFilterColumnVisible">
+          <mat-icon>search</mat-icon>
+          <span>{{singleFilterColumnVisible == false ? showFilterText : hideFilterText}}</span>
+        </button>
+      </div>
+
+      <div *ngIf="isTableSearcheable && switchFilterType == true" style="float: right; display: flex;
+      align-items: center;">
+        <button style="cursor: pointer;" mat-raised-button type="button"
+          matTooltip="{{isSingleColumnFilter == false ? switchFilterToSingleText : switchFilterToGenericText }}"
+          (click)="$event.stopPropagation(); isSingleColumnFilter = !isSingleColumnFilter">
+          <mat-icon>youtube_searched_for</mat-icon>
+        </button>
+      </div>
+
+    </div>
+
+
+    <div class="mat-table__wrapper">
+      <div class="mat-elevation-z8">
+        <mat-table #table [ngStyle]="{'background': tableColor != null ? tableColor : 'unset'}" matTableExporter (exportCompleted)="exportComplete()"
+          (exportStarted)="exportStart()" [hiddenColumns]="exportEqpTable?.hiddenColumns" matSort
+          [dataSource]="dataSource" #exporter="matTableExporter" (matSortChange)="sortChanged($event)">
+          <ng-container *ngFor="let col of tableColumns; let i = index" [matColumnDef]="col.key">
+            <mat-header-cell [ngStyle]="{'flex': (col.styles && col.styles.flex) ? col.styles.flex : standardFlexValue,
+                                         'text-align': (col.styles && col.styles.cellAlignment && col.styles.cellAlignment != cellAlingmentEnum.LEFT) ? (col.styles.cellAlignment == cellAlingmentEnum.RIGHT ? 'right' : 'center') : 'unset',
+                                         'justify-content': (col.styles && col.styles.cellAlignment && col.styles.cellAlignment != cellAlingmentEnum.LEFT) ? (col.styles.cellAlignment == cellAlingmentEnum.RIGHT ? 'flex-end' : 'center') : 'unset'
+                                      }" mat-sort-header *matHeaderCellDef
+              [disabled]="col.isSortable == false || !isColumnTypeValidForSearch(col)">
+              {{ col.display }}</mat-header-cell>
+            <mat-cell *matCellDef="let element; let elementIndex = index" [ngStyle]="{'flex': (col.styles && col.styles.flex) ? col.styles.flex : standardFlexValue,
+                          'text-align': (col.styles && col.styles.cellAlignment && col.styles.cellAlignment != cellAlingmentEnum.LEFT) ? (col.styles.cellAlignment == cellAlingmentEnum.RIGHT ? 'right' : 'center') : 'unset',
+                          'justify-content': (col.styles && col.styles.cellAlignment && col.styles.cellAlignment != cellAlingmentEnum.LEFT) ? (col.styles.cellAlignment == cellAlingmentEnum.RIGHT ? 'flex-end' : 'center') : 'unset'
+                         }" [attr.data-label]="col.display">
+              <ng-container *ngIf="!col.type else hasType">
+
+                <span *ngIf="col.numberPipe == null || col.numberPipe == undefined" [ngStyle]="getNgStyle(col,element)">
+                  {{ getValue(element, col) }}
+                  {{col.additionalValue != null ? col.additionalValue : ''}}
+                </span>
+
+                <span *ngIf="col.numberPipe == numberPipeEnum.DECIMAL" [ngStyle]="getNgStyle(col,element)">
+                  {{ getValue(element, col) | number: col.format ? col.format : '1.0-3' : (currentCultureSelected ? currentCultureSelected : 'it-IT')}}
+                  {{col.additionalValue != null ? col.additionalValue : ''}}
+                </span>
+
+                <span *ngIf="col.numberPipe == numberPipeEnum.PERCENT" [ngStyle]="getNgStyle(col,element)">
+                  {{ getValue(element, col) | percent }}
+                  {{col.additionalValue != null ? col.additionalValue : ''}}
+                </span>
+
+                <span *ngIf="col.numberPipe == numberPipeEnum.CURRENCY" [ngStyle]="getNgStyle(col,element)">
+                  {{ getValue(element, col) | currency: getCurrencyPipe(col, element) : 'symbol' :  (col.format ? col.format : '') : (currentLocaleSelected ? currentLocaleSelected : 'it') }}
+                  {{col.additionalValue != null ? col.additionalValue : ''}}
+                </span>
+
+                <i *ngIf="col.tooltip && getTooltipInfo(col,element) != null && getTooltipInfo(col,element) != ''"
+                  [matTooltip]="getTooltipInfo(col,element)"
+                  [matTooltipPosition]="col.tooltip?.tooltipPosition != null ? col.tooltip?.tooltipPosition : 'below'"
+                  style="margin-left: 5px;" class="fa-solid fa-circle-info"></i>
+
+              </ng-container>
+
+              <ng-template #hasType>
+
+                <ng-container *ngIf="col.type == TypeEnum.Boolean">
+                  <span [ngStyle]="getNgStyle(col,element)" [innerHTML]="getBooleanValue(element,col)"></span>
+
+                  <i *ngIf="col.tooltip && getTooltipInfo(col,element) != null && getTooltipInfo(col,element) != ''"
+                    [matTooltip]="getTooltipInfo(col,element)"
+                    [matTooltipPosition]="col.tooltip?.tooltipPosition != null ? col.tooltip?.tooltipPosition : 'below'"
+                    style="margin-left: 5px;" class="fa-solid fa-circle-info"></i>
+
+                </ng-container>
+
+                <ng-container *ngIf="col.type == TypeEnum.Color">
+                  <span [ngStyle]="{'background-color': getValue(element, col), 'height' : '25px', 'width': '100%'}">
+                  </span>
+                </ng-container>
+
+                <ng-container *ngIf="col.type == TypeEnum.Date">
+
+                  <span *ngIf="!col.format" [ngStyle]="getNgStyle(col,element)">{{ getValue(element, col) | date:
+                    'shortDate' : '' : this.currentCultureSelected }}
+                    {{col.additionalValue != null ? col.additionalValue : ''}}</span>
+
+                  <span *ngIf="col.format">
+                    {{ getValue(element, col) | date: col.format ? col.format : 'shortDate' : '' :
+                    this.currentCultureSelected}}
+                    {{col.additionalValue != null ? col.additionalValue : ''}}</span>
+
+                  <i *ngIf="col.tooltip && getTooltipInfo(col,element) != null && getTooltipInfo(col,element) != ''"
+                    [matTooltip]="getTooltipInfo(col,element)"
+                    [matTooltipPosition]="col.tooltip?.tooltipPosition != null ? col.tooltip?.tooltipPosition : 'below'"
+                    style="margin-left: 5px;" class="fa-solid fa-circle-info"></i>
+
+                </ng-container>
+
+                <ng-container *ngIf="col.type == TypeEnum.Enum">
+                  <span [ngStyle]="getNgStyle(col,element)">{{ getEnumValue(col.enumModel, element, col) }}
+                    {{col.additionalValue != null ? col.additionalValue : ''}}</span>
+
+                  <i *ngIf="col.tooltip && getTooltipInfo(col,element) != null && getTooltipInfo(col,element) != ''"
+                    [matTooltip]="getTooltipInfo(col,element)"
+                    [matTooltipPosition]="col.tooltip?.tooltipPosition != null ? col.tooltip?.tooltipPosition : 'below'"
+                    style="margin-left: 5px;" class="fa-solid fa-circle-info"></i>
+
+                </ng-container>
+
+                <ng-container *ngIf="col.type == TypeEnum.SimpleAction">
+                  <button type="button" (click)="$event.stopPropagation()"
+                    [hidden]="isRowDisabled(element)|| getHiddenInfo(action, element)"
+                    [disabled]="getDisableInfo(action,element)" [matTooltip]="getTooltipInfo(action,element)"
+                    [matTooltipPosition]="col.tooltip?.tooltipPosition != null ? col.tooltip?.tooltipPosition : 'below'"
+                    *ngFor="let action of col.actions" (click)="action.fn ? action.fn(element,elementIndex, col) : null"
+                    mat-button>
+                    <ng-container *ngIf="action.fontawesome != true">
+                      <mat-icon [ngStyle]="{'color' : action.color}">{{getIconValue(action,element)}}</mat-icon>
+                      {{action.name}}
+                    </ng-container>
+                    <ng-container *ngIf="action.fontawesome">
+                      <i [ngStyle]="{'color' : action.color}" style="font-size:24px!important"
+                        class="{{getIconValue(action,element)}}"></i> {{action.name}}
+                    </ng-container>
+                  </button>
+                </ng-container>
+
+                <ng-container *ngIf="col.type == TypeEnum.Checkbox">
+                  <mat-checkbox (click)="$event.stopPropagation()"
+                    [disabled]="col.disabled != null ? getDisableInfo(col,element) : isRowDisabled(element)"
+                    [checked]="getCheckboxValue(element, col)" (change)="changeCheckboxRow($event, element, i, col);">
+                  </mat-checkbox>
+
+                  <i *ngIf="col.tooltip && getTooltipInfo(col,element) != null && getTooltipInfo(col,element) != ''"
+                    [matTooltip]="getTooltipInfo(col,element)"
+                    [matTooltipPosition]="col.tooltip?.tooltipPosition != null ? col.tooltip?.tooltipPosition : 'below'"
+                    style="margin-left: 5px;" class="fa-solid fa-circle-info"></i>
+
+                </ng-container>
+                <ng-container *ngIf="col.type == TypeEnum.MenuAction">
+                  <button type="button" (click)="$event.stopPropagation()" [hidden]="isRowDisabled(element)"
+                    [matTooltip]="getTooltipInfo(col,element)"
+                    [matTooltipPosition]="col.tooltip?.tooltipPosition != null ? col.tooltip?.tooltipPosition : 'below'"
+                    mat-button [matMenuTriggerFor]="menu">
+                    <mat-icon>{{col.buttonMenuIcon ? col.buttonMenuIcon : 'settings'}}</mat-icon>
+                  </button>
+                  <mat-menu #menu="matMenu">
+                    <ng-container *ngFor="let action of col.actions;">
+                      <button type="button" [hidden]="getHiddenInfo(action, element)"
+                        [disabled]="getDisableInfo(action,element)" mat-menu-item
+                        [matTooltip]="getTooltipInfo(action,element)"
+                        [matTooltipPosition]="action.tooltip?.tooltipPosition != null ? action.tooltip?.tooltipPosition : 'below'"
+                        (click)="action.fn ? action.fn(element,elementIndex, col) : null">
+                        <ng-container *ngIf="action.fontawesome != true">
+                          <mat-icon [ngStyle]="{'color' : action.color}">{{getIconValue(action,element)}}</mat-icon>
+                          {{action.name}}
+                        </ng-container>
+                        <ng-container *ngIf="action.fontawesome">
+                          <i [ngStyle]="{'color' : action.color}" style="font-size:24px!important"
+                            class="{{getIconValue(action,element)}}"></i>
+                          {{action.name}}
+                        </ng-container>
+                      </button>
+                    </ng-container>
+                  </mat-menu>
+                </ng-container>
+
+                <ng-container *ngIf="col.type == TypeEnum.Icon">
+                  <div *ngFor="let icon of getValue(element,col)">
+                    <i [ngStyle]="isRowDisabled(element) ? {'color': greyDisabledColor, 'cursor': 'none'} : {'cursor': 'pointer'}"
+                      [ngClass]="icon.className" [matTooltip]="icon.tooltip"></i>
+                  </div>
+                </ng-container>
+
+                <ng-container *ngIf="col.type == TypeEnum.Hyperlink">
+
+                  <a *ngIf="col.hyperlink.isTargetBlank" target="_blank" [href]="getHyperlinkUrlValue(col,element)">{{col.hyperlink.hyperlinkText ?
+                    getHyperlinkTextValue(col,element) : getHyperlinkUrlValue(col,element)}}</a>
+
+                  <a *ngIf="!col.hyperlink.isTargetBlank" [href]="getHyperlinkUrlValue(col,element)">{{col.hyperlink.hyperlinkText ?
+                    getHyperlinkTextValue(col,element) : getHyperlinkUrlValue(col,element) }}</a>
+
+                  <i *ngIf="col.tooltip && getTooltipInfo(col,element) != null && getTooltipInfo(col,element) != ''"
+                    [matTooltip]="getTooltipInfo(col,element)"
+                    [matTooltipPosition]="col.tooltip?.tooltipPosition != null ? col.tooltip?.tooltipPosition : 'below'"
+                    style="margin-left: 5px;" class="fa-solid fa-circle-info"></i>
+
+                </ng-container>
+
+                <ng-container *ngIf="col.type == TypeEnum.Image">
+
+                  <img *ngIf="!col.image.imageFull" [src]="getImagePreviewValue(col, element)" />
+
+                  <img *ngIf="col.image.imageFull" [src]="getImagePreviewValue(col, element)"
+                    [matTooltip]="getImageFullValue(col,element)" [matTooltipPosition]="'below'"
+                    style="margin-left: 5px;" />
+
+                </ng-container>
+
+                <ng-container *ngIf="col.type == TypeEnum.ExternalTemplate">
+                  <ng-container [ngTemplateOutlet]="col.externalTemplate" [ngTemplateOutletContext]="{row:element,col:col}">
+                  </ng-container>
+                </ng-container>
+
+              </ng-template>
+
+            </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="Checkbox">
+            <mat-header-cell style="flex: 0 0 5%" *matHeaderCellDef>
+              <mat-checkbox [disabled]="!isMultipleSelection || this.disableRow == true"
+                [checked]="isAllSelected === true" (change)="isMultipleSelection ? selectUnselectAll() : null">
+              </mat-checkbox>
+            </mat-header-cell>
+            <mat-cell style="flex: 0 0 5%" *matCellDef="let element; let i = index">
+              <mat-checkbox (click)="$event.stopPropagation()" [checked]="element.isSelected"
+                [disabled]="isRowDisabled(element)" (change)="changeCheckboxRowSelection($event, element, i);">
+              </mat-checkbox>
+            </mat-cell>
+          </ng-container>
+
+          <ng-container *ngFor="let headersFilter of headersFilters; let i=index" [matColumnDef]="headersFilter.column">
+            <ng-container *ngIf="i == 0 && selection == true">
+              <mat-header-cell style="flex: 0 0 5%" *matHeaderCellDef>
+              </mat-header-cell>
+            </ng-container>
+
+            <ng-container *ngIf="selection == false || i > 0">
+              <mat-header-cell id="filter" [ngStyle]="{'flex': (headersFilter.styles && headersFilter.styles.flex) ? headersFilter.styles.flex : standardFlexValue,
+              'text-align': (headersFilter.styles && headersFilter.styles.cellAlignment && headersFilter.styles.cellAlignment != cellAlingmentEnum.LEFT) ? (headersFilter.styles.cellAlignment == cellAlingmentEnum.RIGHT ? 'right' : 'center') : 'unset',
+              'justify-content': (headersFilter.styles && headersFilter.styles.cellAlignment && headersFilter.styles.cellAlignment != cellAlingmentEnum.LEFT) ? (headersFilter.styles.cellAlignment == cellAlingmentEnum.RIGHT ? 'flex-end' : 'center') : 'unset'
+           }" *matHeaderCellDef>
+                <div class="filters-container" [class.animate]="singleFilterColumnVisible">
+                  <mat-form-field
+                    *ngIf="headersFilter.isSearchable != false && this.isColumnTypeValidForSearch(headersFilter)"
+                    style="width: 100%;" appearance="outline">
+                    <mat-icon *ngIf="filtersModel[i] == '' || filtersModel[i] == null" matPrefix>search</mat-icon>
+                    <input [(ngModel)]="filtersModel[i]" matInput
+                      (keyup)="applyFilterCustom($event.target.value, headersFilter.key)">
+                  </mat-form-field>
+                </div>
+              </mat-header-cell>
+            </ng-container>
+          </ng-container>
+
+          <mat-header-row *matHeaderRowDef="keys"></mat-header-row>
+          <mat-header-row  style="height: unset; min-height: unset;" *matHeaderRowDef="headerFilters">
+          </mat-header-row>
+          <mat-row [ngStyle]="{'background': isHighlight == true && selectedRow == row ? highlightColor : ''}"
+            (click)="highlight(row)" *matRowDef="let row; columns: keys;"></mat-row>
+        </mat-table>
+
+        <div [ngStyle]="{'background': tableColor != null ? tableColor : 'unset'}" class="no-records" *ngIf="dataSource.filteredData.length === 0">
+          {{emptyTableMessage != null ? emptyTableMessage : 'Nessun dato trovato'}}</div>
+
+      </div>
+    </div>
+    <mat-paginator [ngStyle]="{'background': paginatorColor != null ? paginatorColor : 'unset'}" (page)="pageChanged($event)" *ngIf="paginatorVisible"
+      [pageSizeOptions]="matPaginatorLength" [pageSize]="matPaginatorSize" [length]="matPaginatorCount"
+      [pageIndex]="matPaginatorIndex">
+    </mat-paginator>
+
+  </mat-card-content>
+
+  <mat-card-footer>
+    <div *ngIf="showFunctionButtons == true" class="row">
+      <div class="col-sm-12 text-right">
+        <button type="button" (click)="executeConfirmFunction()" class="btn btn-primary mat-raised-button">
+          {{functionButtonConfirmText != null ? functionButtonConfirmText : "Conferma"}}
+        </button>
+        <button type="button" (click)="executeExitFunction()" class="btn mat-raised-button">
+          {{functionButtonExitText != null ? functionButtonExitText : "Esci"}}
+        </button>
+      </div>
+    </div>
+
+  </mat-card-footer>
+
+</mat-card>
+
+<ng-container *ngIf="createMatCard == false && isExpandable == false">
+  <div class="header-title-standard">{{headerTitle}}</div>
+  <div style="justify-content: flex-end;" class="row">
+
+    <div *ngIf="exportEqpTable != null" class="text-right exportButtonContainer">
+      <ng-container *ngIf="exportValidTypes?.length > 1">
+        <button type="button" [matTooltip]="exportEqpTable.tooltipText"
+          [ngStyle]="{'box-shadow': exportEqpTable.showButtonBorder != null && exportEqpTable.showButtonBorder == false ? 'none' : null}"
+          [matTooltipPosition]="exportEqpTable.tooltipPosition != null ? exportEqpTable.tooltipPosition : 'below'"
+          mat-raised-button [matMenuTriggerFor]="exportMenu">
+          <mat-icon>{{exportEqpTable.buttonIcon}}</mat-icon> {{exportEqpTable.buttonText}}
+        </button>
+        <mat-menu #exportMenu="matMenu">
+          <ng-container *ngFor="let exportType of exportValidTypes; let i = index">
+            <button
+              *ngIf="exportEqpTable.customExportFunction == null || (exportEqpTable.customExportFunction != null && exportEqpTable.customExportFunction[i] == null)"
+              type="button" mat-menu-item [matTooltip]="exportType"
+              [matTooltipPosition]="exportEqpTable.tooltipPosition != null ? exportEqpTable.tooltipPosition : 'below'"
+              (click)="runTableExporter(exportType)">
+              <i style="font-size: 15pt;margin-left: 5px;" class="fa" [ngClass]="{'fa-file-excel': exportType == 'xls' || exportType == 'xlsx',
+                                            'fa-file-csv': exportType == 'csv',
+                                            'fa-file-alt': exportType == 'txt',
+                                            'fa-file-code': exportType == 'json',
+                                            'fa-file': exportType == 'other' }"></i>
+              <span style="margin-left: 10px;">{{exportType}}</span>
+            </button>
+            <button
+              *ngIf="exportEqpTable.customExportFunction != null && exportEqpTable.customExportFunction[i] != null"
+              type="button" mat-menu-item [matTooltip]="exportType"
+              [matTooltipPosition]="exportEqpTable.tooltipPosition != null ? exportEqpTable.tooltipPosition : 'below'"
+              (click)="exportEqpTable.customExportFunction[i]()">
+              <i style="font-size: 15pt;margin-left: 5px;" class="fa" [ngClass]="{'fa-file-excel': exportType == 'xls' || exportType == 'xlsx',
+                                          'fa-file-csv': exportType == 'csv',
+                                          'fa-file-alt': exportType == 'txt',
+                                          'fa-file-code': exportType == 'json'}"></i>
+              <span style="margin-left: 10px;">{{exportType}}</span>
+            </button>
+          </ng-container>
+        </mat-menu>
+      </ng-container>
+      <ng-container *ngIf="exportValidTypes?.length == 1">
+        <button *ngIf="exportEqpTable.customExportFunction == null" type="button"
+          [matTooltip]="exportEqpTable.tooltipText"
+          [ngStyle]="{'box-shadow': exportEqpTable.showButtonBorder != null && exportEqpTable.showButtonBorder == false ? 'none' : null}"
+          [matTooltipPosition]="exportEqpTable.tooltipPosition != null ? exportEqpTable.tooltipPosition : 'below'"
+          mat-raised-button
+          (click)="runTableExporter(exportValidTypes[0])">
+          <mat-icon>{{exportEqpTable.buttonIcon}}</mat-icon> {{exportEqpTable.buttonText}}
+        </button>
+        <button *ngIf="exportEqpTable.customExportFunction != null && exportEqpTable.customExportFunction[0] != null"
+          type="button" [matTooltip]="exportEqpTable.tooltipText"
+          [ngStyle]="{'box-shadow': exportEqpTable.showButtonBorder != null && exportEqpTable.showButtonBorder == false ? 'none' : null}"
+          [matTooltipPosition]="exportEqpTable.tooltipPosition != null ? exportEqpTable.tooltipPosition : 'below'"
+          mat-raised-button (click)="exportEqpTable.customExportFunction[0]()">
+          <mat-icon>{{exportEqpTable.buttonIcon}}</mat-icon> {{exportEqpTable.buttonText}}
+        </button>
+      </ng-container>
+
+    </div>
+
+    <mat-form-field *ngIf="isTableSearcheable && isSingleColumnFilter == false"
+      style="width:20%; float: right; padding-right: 20px;">
+      <input matInput (keyup)="applyFilter($event.target.value)"
+        [placeholder]="searchText != null ? searchText : 'Cerca' ">
+    </mat-form-field>
+
+
+    <div *ngIf="isTableSearcheable && isSingleColumnFilter == true  && showSingleFilterButton == true"
+      style="float: right;">
+      <button style="cursor: pointer; margin: 0 auto; display: block;" mat-raised-button type="button"
+        matTooltip="Search" (click)="$event.stopPropagation(); singleFilterColumnVisible = !singleFilterColumnVisible">
+        <mat-icon>search</mat-icon>
+        <span>{{singleFilterColumnVisible == false ? showFilterText : hideFilterText}}</span>
+      </button>
+    </div>
+
+    <div *ngIf="isTableSearcheable && switchFilterType == true" style="float: right; display: flex;
+    align-items: center;">
+      <button style="cursor: pointer;" mat-raised-button type="button"
+        matTooltip="{{isSingleColumnFilter == false ? switchFilterToSingleText : switchFilterToGenericText }}"
+        (click)="$event.stopPropagation(); isSingleColumnFilter = !isSingleColumnFilter">
+        <mat-icon>youtube_searched_for</mat-icon>
+        <span>{{isSingleColumnFilter == false ? switchFilterToSingleText : switchFilterToGenericText }}</span>
+      </button>
+    </div>
+
+  </div>
+
+  <div class="mat-table__wrapper">
+    <div class="mat-elevation-z8">
+      <mat-table [ngStyle]="{'background': tableColor != null ? tableColor : 'unset'}" #table matTableExporter (exportCompleted)="exportComplete()"
+        (exportStarted)="exportStart()" [hiddenColumns]="exportEqpTable?.hiddenColumns" matSort
+        [dataSource]="dataSource" #exporter="matTableExporter" (matSortChange)="sortChanged($event)">
+        <ng-container *ngFor=" let col of tableColumns; let i=index" [matColumnDef]="col.key">
+          <mat-header-cell style="padding: 5px;" [ngStyle]="{'flex': (col.styles && col.styles.flex) ? col.styles.flex : standardFlexValue,
+                        'text-align': (col.styles && col.styles.cellAlignment && col.styles.cellAlignment != cellAlingmentEnum.LEFT) ? (col.styles.cellAlignment == cellAlingmentEnum.RIGHT ? 'right' : 'center') : 'unset',
+                        'justify-content': (col.styles && col.styles.cellAlignment && col.styles.cellAlignment != cellAlingmentEnum.LEFT) ? (col.styles.cellAlignment == cellAlingmentEnum.RIGHT ? 'flex-end' : 'center') : 'unset'
+                       }" mat-sort-header *matHeaderCellDef
+            [disabled]="col.isSortable == false || !isColumnTypeValidForSearch(col)" >
+
+            <span>{{col.display}}</span>
+          </mat-header-cell>
+
+          <mat-cell *matCellDef="let element; let elementIndex = index" [ngStyle]="{'flex': (col.styles && col.styles.flex) ? col.styles.flex : standardFlexValue,
+                        'color': (col.styles && col.styles.color) ? col.styles.color : 'inherit',
+                        'text-align': (col.styles && col.styles.cellAlignment && col.styles.cellAlignment != cellAlingmentEnum.LEFT) ? (col.styles.cellAlignment == cellAlingmentEnum.RIGHT ? 'right' : 'center') : 'unset',
+                        'justify-content': (col.styles && col.styles.cellAlignment && col.styles.cellAlignment != cellAlingmentEnum.LEFT) ? (col.styles.cellAlignment == cellAlingmentEnum.RIGHT ? 'flex-end' : 'center') : 'unset'
+                       }" [attr.data-label]="col.display">
+            <ng-container *ngIf="!col.type else hasType">
+
+              <span *ngIf="col.numberPipe == null || col.numberPipe == undefined" [ngStyle]="getNgStyle(col,element)">
+                {{ getValue(element, col) }}
+                {{col.additionalValue != null ? col.additionalValue : ''}}
+              </span>
+
+              <span *ngIf="col.numberPipe == numberPipeEnum.DECIMAL" [ngStyle]="getNgStyle(col,element)">
+                {{ getValue(element, col) | number: col.format ? col.format : '1.0-3' : (currentCultureSelected ? currentCultureSelected : 'it-IT')}}
+                {{col.additionalValue != null ? col.additionalValue : ''}}
+              </span>
+
+              <span *ngIf="col.numberPipe == numberPipeEnum.PERCENT" [ngStyle]="getNgStyle(col,element)">
+                {{ getValue(element, col) | percent }}
+                {{col.additionalValue != null ? col.additionalValue : ''}}
+              </span>
+
+              <span *ngIf="col.numberPipe == numberPipeEnum.CURRENCY" [ngStyle]="getNgStyle(col,element)">
+                {{ getValue(element, col) | currency: getCurrencyPipe(col, element) : 'symbol' :  (col.format ? col.format : '') : (currentLocaleSelected ? currentLocaleSelected : 'it') }}
+                {{col.additionalValue != null ? col.additionalValue : ''}}
+              </span>
+
+              <i *ngIf="col.tooltip && getTooltipInfo(col,element) != null && getTooltipInfo(col,element) != ''"
+                [matTooltip]="getTooltipInfo(col,element)"
+                [matTooltipPosition]="col.tooltip?.tooltipPosition != null ? col.tooltip?.tooltipPosition : 'below'"
+                style="margin-left: 5px;" class="fa-solid fa-circle-info"></i>
+
+            </ng-container>
+
+            <ng-template #hasType>
+
+              <ng-container *ngIf="col.type == TypeEnum.Boolean">
+                <span [ngStyle]="getNgStyle(col,element)" [innerHTML]="getBooleanValue(element,col)"></span>
+
+                <i *ngIf="col.tooltip && getTooltipInfo(col,element) != null && getTooltipInfo(col,element) != ''"
+                  [matTooltip]="getTooltipInfo(col,element)"
+                  [matTooltipPosition]="col.tooltip?.tooltipPosition != null ? col.tooltip?.tooltipPosition : 'below'"
+                  style="margin-left: 5px;" class="fa-solid fa-circle-info"></i>
+
+              </ng-container>
+
+              <ng-container *ngIf="col.type == TypeEnum.Color">
+                <span [ngStyle]="{'background-color': getValue(element, col), 'height' : '25px', 'width': '100%'}">
+                </span>
+              </ng-container>
+
+              <ng-container *ngIf="col.type == TypeEnum.Date">
+
+                <span *ngIf="!col.format" [ngStyle]="getNgStyle(col,element)">{{ getValue(element, col) | date:
+                  'shortDate' : '' : this.currentCultureSelected }}
+                  {{col.additionalValue != null ? col.additionalValue : ''}}</span>
+
+                <span *ngIf="col.format">
+                  {{ getValue(element, col) | date: col.format ? col.format : 'shortDate' : '' :
+                  this.currentCultureSelected}}
+                  {{col.additionalValue != null ? col.additionalValue : ''}}</span>
+
+                <i *ngIf="col.tooltip && getTooltipInfo(col,element) != null && getTooltipInfo(col,element) != ''"
+                  [matTooltip]="getTooltipInfo(col,element)"
+                  [matTooltipPosition]="col.tooltip?.tooltipPosition != null ? col.tooltip?.tooltipPosition : 'below'"
+                  style="margin-left: 5px;" class="fa-solid fa-circle-info"></i>
+
+              </ng-container>
+
+              <ng-container *ngIf="col.type == TypeEnum.Enum">
+                <span [ngStyle]="getNgStyle(col,element)">{{ getEnumValue(col.enumModel, element, col) }}
+                  {{col.additionalValue != null ? col.additionalValue : ''}}</span>
+
+                <i *ngIf="col.tooltip && getTooltipInfo(col,element) != null && getTooltipInfo(col,element) != ''"
+                  [matTooltip]="getTooltipInfo(col,element)"
+                  [matTooltipPosition]="col.tooltip?.tooltipPosition != null ? col.tooltip?.tooltipPosition : 'below'"
+                  style="margin-left: 5px;" class="fa-solid fa-circle-info"></i>
+
+              </ng-container>
+
+              <ng-container *ngIf="col.type == TypeEnum.SimpleAction">
+                <button type="button" (click)="$event.stopPropagation()"
+                  [hidden]="isRowDisabled(element) || getHiddenInfo(action, element)"
+                  [disabled]="getDisableInfo(action,element)" [matTooltip]="getTooltipInfo(action,element)"
+                  [matTooltipPosition]="action.tooltip?.tooltipPosition != null ? action.tooltip?.tooltipPosition : 'below'"
+                  *ngFor="let action of col.actions" (click)="action.fn ? action.fn(element,elementIndex, col) : null"
+                  mat-button>
+                  <ng-container *ngIf="action.fontawesome != true">
+                    <mat-icon [ngStyle]="{'color' : action.color}">{{getIconValue(action,element)}}</mat-icon>
+                    {{action.name}}
+                  </ng-container>
+                  <ng-container *ngIf="action.fontawesome">
+                    <i [ngStyle]="{'color' : action.color}" style="font-size:24px!important"
+                      class="{{getIconValue(action,element)}}"></i> {{action.name}}
+                  </ng-container>
+                </button>
+              </ng-container>
+
+              <ng-container *ngIf="col.type == TypeEnum.Checkbox">
+                <mat-checkbox (click)="$event.stopPropagation()"
+                  [disabled]="col.disabled != null ? getDisableInfo(col,element) : isRowDisabled(element)"
+                  [checked]="getCheckboxValue(element, col)" (change)="changeCheckboxRow($event, element, i, col);">
+                </mat-checkbox>
+
+                <i *ngIf="col.tooltip && getTooltipInfo(col,element) != null && getTooltipInfo(col,element) != ''"
+                  [matTooltip]="getTooltipInfo(col,element)"
+                  [matTooltipPosition]="col.tooltip?.tooltipPosition != null ? col.tooltip?.tooltipPosition : 'below'"
+                  style="margin-left: 5px;" class="fa-solid fa-circle-info"></i>
+
+              </ng-container>
+
+              <ng-container *ngIf="col.type == TypeEnum.MenuAction">
+                <button type="button" (click)="$event.stopPropagation()" [hidden]="isRowDisabled(element)"
+                  [matTooltip]="getTooltipInfo(col,element)"
+                  [matTooltipPosition]="col.tooltip?.tooltipPosition != null ? col.tooltip?.tooltipPosition : 'below'"
+                  mat-button [matMenuTriggerFor]="menu">
+                  <mat-icon>{{col.buttonMenuIcon ? col.buttonMenuIcon : 'settings'}}</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <ng-container *ngFor="let action of col.actions;">
+                    <button type="button" [hidden]="getHiddenInfo(action, element)"
+                      [disabled]="getDisableInfo(action,element)" mat-menu-item
+                      [matTooltip]="getTooltipInfo(action,element)"
+                      [matTooltipPosition]="action.tooltip?.tooltipPosition != null ? action.tooltip?.tooltipPosition : 'below'"
+                      (click)="action.fn ? action.fn(element,elementIndex, col) : null">
+                      <ng-container *ngIf="action.fontawesome != true">
+                        <mat-icon [ngStyle]="{'color' : action.color}">{{getIconValue(action,element)}}</mat-icon>
+                        {{action.name}}
+                      </ng-container>
+                      <ng-container *ngIf="action.fontawesome">
+                        <i [ngStyle]="{'color' : action.color}" style="font-size:24px!important"
+                          class="{{getIconValue(action,element)}}"></i>
+                        {{action.name}}
+                      </ng-container>
+                    </button>
+                  </ng-container>
+                </mat-menu>
+              </ng-container>
+
+              <ng-container *ngIf="col.type == TypeEnum.Icon">
+                <div *ngFor="let icon of getValue(element,col)">
+                  <i [ngStyle]="isRowDisabled(element) ? {'color': greyDisabledColor, 'cursor': 'none'} : {'cursor': 'pointer'}"
+                    [ngClass]="icon.className" [matTooltip]="icon.tooltip"></i>
+                </div>
+              </ng-container>
+
+              <ng-container *ngIf="col.type == TypeEnum.Hyperlink">
+
+                <a *ngIf="col.hyperlink.isTargetBlank" target="_blank" [href]="getHyperlinkUrlValue(col,element)">{{col.hyperlink.hyperlinkText ?
+                  getHyperlinkTextValue(col,element) : getHyperlinkUrlValue(col,element)}}</a>
+
+                <a *ngIf="!col.hyperlink.isTargetBlank" [href]="getHyperlinkUrlValue(col,element)">{{col.hyperlink.hyperlinkText ?
+                  getHyperlinkTextValue(col,element) : getHyperlinkUrlValue(col,element) }}</a>
+
+                <i *ngIf="col.tooltip && getTooltipInfo(col,element) != null && getTooltipInfo(col,element) != ''"
+                  [matTooltip]="getTooltipInfo(col,element)"
+                  [matTooltipPosition]="col.tooltip?.tooltipPosition != null ? col.tooltip?.tooltipPosition : 'below'"
+                  style="margin-left: 5px;" class="fa-solid fa-circle-info"></i>
+
+              </ng-container>
+
+              <ng-container *ngIf="col.type == TypeEnum.Image">
+
+                <img *ngIf="!col.image.imageFull" [src]="getImagePreviewValue(col, element)" />
+
+                <img *ngIf="col.image.imageFull" [src]="getImagePreviewValue(col, element)"
+                  [matTooltip]="getImageFullValue(col,element)" [matTooltipPosition]="'below'"
+                  style="margin-left: 5px;" />
+
+              </ng-container>
+
+              <ng-container *ngIf="col.type == TypeEnum.ExternalTemplate">
+                <ng-container [ngTemplateOutlet]="col.externalTemplate" [ngTemplateOutletContext]="{row:element,col:col}">
+                </ng-container>
+              </ng-container>
+            </ng-template>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="Checkbox">
+          <mat-header-cell style="flex: 0 0 5%" *matHeaderCellDef>
+            <mat-checkbox [disabled]="!isMultipleSelection || this.disableRow == true"
+              [checked]="isAllSelected === true" (change)="isMultipleSelection ? selectUnselectAll() : null">
+            </mat-checkbox>
+          </mat-header-cell>
+          <mat-cell style="flex: 0 0 5%" *matCellDef="let element; let i = index">
+            <mat-checkbox (click)="$event.stopPropagation()" [checked]="element.isSelected"
+              [disabled]="isRowDisabled(element)" (change)="changeCheckboxRowSelection($event, element, i);">
+            </mat-checkbox>
+          </mat-cell>
+        </ng-container>
+
+        <ng-container *ngFor="let headersFilter of headersFilters; let i=index" [matColumnDef]="headersFilter.column">
+
+          <ng-container *ngIf="i == 0 && selection == true">
+            <mat-header-cell style="flex: 0 0 5%" *matHeaderCellDef>
+            </mat-header-cell>
+          </ng-container>
+
+          <ng-container *ngIf="selection == false || i > 0">
+            <mat-header-cell id="filter" [ngStyle]="{'flex': (headersFilter.styles && headersFilter.styles.flex) ? headersFilter.styles.flex : standardFlexValue,
+              'text-align': (headersFilter.styles && headersFilter.styles.cellAlignment && headersFilter.styles.cellAlignment != cellAlingmentEnum.LEFT) ? (headersFilter.styles.cellAlignment == cellAlingmentEnum.RIGHT ? 'right' : 'center') : 'unset',
+              'justify-content': (headersFilter.styles && headersFilter.styles.cellAlignment && headersFilter.styles.cellAlignment != cellAlingmentEnum.LEFT) ? (headersFilter.styles.cellAlignment == cellAlingmentEnum.RIGHT ? 'flex-end' : 'center') : 'unset'
+           }" *matHeaderCellDef>
+
+              <div class="filters-container" [class.animate]="singleFilterColumnVisible">
+                <mat-form-field
+                  *ngIf="headersFilter.isSearchable != false && this.isColumnTypeValidForSearch(headersFilter)"
+                  style="width: 100%;" appearance="outline">
+                  <mat-icon *ngIf="filtersModel[i] == '' || filtersModel[i] == null" matPrefix>search</mat-icon>
+                  <input [(ngModel)]="filtersModel[i]" matInput
+                    (keyup)="applyFilterCustom($event.target.value, headersFilter.key)">
+                </mat-form-field>
+              </div>
+            </mat-header-cell>
+          </ng-container>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="keys"></mat-header-row>
+        <mat-header-row style="height: unset; min-height: unset;" *matHeaderRowDef="headerFilters">
+        </mat-header-row>
+
+        <mat-row [ngStyle]="{'background': isHighlight == true && selectedRow == row ? highlightColor : ''}"
+          (click)="highlight(row)" *matRowDef="let row; columns: keys;"></mat-row>
+      </mat-table>
+
+      <div [ngStyle]="{'background': tableColor != null ? tableColor : 'unset'}" class="no-records" *ngIf="dataSource.filteredData.length === 0">
+        {{emptyTableMessage != null ? emptyTableMessage : 'Nessun dato trovato'}}</div>
+
+    </div>
+  </div>
+  <mat-paginator [ngStyle]="{'background': paginatorColor != null ? paginatorColor : 'unset'}" (page)="pageChanged($event)" *ngIf="paginatorVisible"
+    [pageSizeOptions]="matPaginatorLength" [pageSize]="matPaginatorSize" [length]="matPaginatorCount"
+    [pageIndex]="matPaginatorIndex">
+  </mat-paginator>
+
+  <div *ngIf="showFunctionButtons == true" class="row">
+    <div class="col-sm-12 text-right">
+      <button type="button" (click)="executeConfirmFunction()" class="btn btn-primary mat-raised-button">
+        {{functionButtonConfirmText != null ? functionButtonConfirmText : "Conferma"}}
+      </button>
+      <button type="button" (click)="executeExitFunction()" class="btn mat-raised-button">
+        {{functionButtonExitText != null ? functionButtonExitText : "Esci"}}
+      </button>
+    </div>
+  </div>
+
+</ng-container>
+
+<ng-container *ngIf="createMatCard == false && isExpandable == true">
+  <mat-card-header *ngIf="createMatCardHeader == true">
+    <div class="header-title-standard">{{headerTitle}}</div>
+  </mat-card-header>
+
+  <mat-card-content>
+
+    <div style="justify-content: flex-end;" class="row">
+      <mat-form-field *ngIf="isTableSearcheable" style="width:20%; float: right;">
+        <input matInput (keyup)="applyFilter($event.target.value)"
+          [placeholder]="searchText != null ? searchText : 'Cerca' ">
+      </mat-form-field>
+    </div>
+
+    <div class="mat-table__wrapper">
+      <div class="mat-elevation-z8">
+        <mat-table (exportCompleted)="exportComplete()" (exportStarted)="exportStart()"
+          [hiddenColumns]="exportEqpTable?.hiddenColumns" matTableExporter matSort [dataSource]="dataSource"
+          multiTemplateDataRows>
+          <ng-container matColumnDef="expandedDetail">
+            <ng-container *ngFor="let col of tableColumns; let i = index" [matColumnDef]="col.key">
+              <mat-header-cell
+                [ngStyle]="{'flex': (col.styles && col.styles.flex) ? col.styles.flex : standardFlexValue}"
+                mat-sort-header *matHeaderCellDef>
+                {{ col.display }}</mat-header-cell>
+
+
+              <mat-cell *matCellDef="let element; let elementIndex = index"
+                [ngStyle]="{'flex': (col.styles && col.styles.flex) ? col.styles.flex : standardFlexValue}">
+
+                <div class="example-element-detail"
+                  [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
+
+                  <ng-container *ngIf="!col.type else hasType">
+                    {{ getValue(element, col) }} {{col.additionalValue != null ? col.additionalValue : ''}}
+                  </ng-container>
+
+                  <ng-template #hasType>
+
+                    <ng-container *ngIf="col.type == TypeEnum.Boolean">
+                      <span [innerHTML]="getBooleanValue(element,col)"></span>
+                    </ng-container>
+
+                    <ng-container *ngIf="col.type == TypeEnum.Date">
+                      {{ getValue(element, col) | date: col.format ? col.format : 'shortDate' }}
+                    </ng-container>
+
+                    <ng-container *ngIf="col.type == TypeEnum.Enum">
+                      {{ getEnumValue(col.enumModel, element, col) }}
+                    </ng-container>
+
+                    <ng-container *ngIf="col.type == TypeEnum.SimpleAction">
+                      <button type="button" (click)="$event.stopPropagation()" *ngFor="let action of col.actions"
+                        (click)="action.fn ? action.fn(element,elementIndex, col) : null" mat-button>
+                        <ng-container *ngIf="action.fontawesome != true">
+                          <mat-icon>{{getIconValue(action,element)}}</mat-icon> {{action.name}}
+                        </ng-container>
+                        <ng-container *ngIf="action.fontawesome">
+                          <i style="font-size:24px!important" class="{{getIconValue(action,element)}}"></i>
+                          {{action.name}}
+                        </ng-container>
+                      </button>
+                    </ng-container>
+
+                    <ng-container *ngIf="col.type == TypeEnum.Checkbox">
+                      <mat-checkbox [disabled]="getDisableInfo(col,element)" [checked]="getCheckboxValue(element, col)"
+                        (change)="changeCheckboxRow($event, element, i, col);">
+                      </mat-checkbox>
+                    </ng-container>
+                    <ng-container *ngIf="col.type == TypeEnum.MenuAction">
+                      <button type="button" (click)="$event.stopPropagation()" mat-button [matMenuTriggerFor]="menu">
+                        <mat-icon>{{col.buttonMenuIcon ? col.buttonMenuIcon : 'settings'}}</mat-icon>
+                      </button>
+                      <mat-menu #menu="matMenu">
+                        <ng-container *ngFor="let action of col.actions;">
+                          <button type="button" [hidden]="getHiddenInfo(action, element)"
+                            [disabled]="getDisableInfo(action,element)" mat-menu-item
+                            (click)="action.fn ? action.fn(element,elementIndex, col) : null">
+                            <ng-container *ngIf="action.fontawesome != true">
+                              <mat-icon>{{getIconValue(action,element)}}</mat-icon> {{action.name}}
+                            </ng-container>
+                            <ng-container *ngIf="action.fontawesome">
+                              <i style="font-size:24px!important" class="{{getIconValue(action,element)}}"></i>
+                              {{action.name}}
+                            </ng-container>
+                          </button>
+                        </ng-container>
+                      </mat-menu>
+                    </ng-container>
+
+                    <ng-container *ngIf="col.type == TypeEnum.Icon">
+                      <div *ngFor="let icon of getValue(element,col)">
+                        <i style="cursor: pointer;" [ngClass]="icon.className" [matTooltip]="icon.tooltip"></i>
+                      </div>
+                    </ng-container>
+
+                  </ng-template>
+
+                </div>
+
+              </mat-cell>
+            </ng-container>
+          </ng-container>
+
+          <ng-container matColumnDef="Checkbox">
+            <mat-header-cell style="flex: 0 0 5%" *matHeaderCellDef>
+              <mat-checkbox [disabled]="!isMultipleSelection" [checked]="isAllSelected === true"
+                (change)="isMultipleSelection ? selectUnselectAll() : null">
+              </mat-checkbox>
+            </mat-header-cell>
+            <mat-cell style="flex: 0 0 5%" *matCellDef="let element; let i = index">
+              <mat-checkbox [checked]="element.isSelected" (change)="changeCheckboxRowSelection($event, element, i);">
+              </mat-checkbox>
+            </mat-cell>
+          </ng-container>
+
+
+          <mat-header-row *matHeaderRowDef="keys"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: keys;" [class.example-expanded-row]="expandedElement === row"
+            (click)="expandedElement = expandedElement === row ? null : row"></mat-row>
+        </mat-table>
+      </div>
+    </div>
+    <mat-paginator (page)="pageChanged($event)" *ngIf="paginatorVisible" [pageSizeOptions]="matPaginatorLength"
+      [pageSize]="matPaginatorSize" [length]="matPaginatorCount" [pageIndex]="matPaginatorIndex">
+    </mat-paginator>
+  </mat-card-content>
+</ng-container> -->

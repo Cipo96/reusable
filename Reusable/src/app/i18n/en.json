@@ -1,0 +1,16 @@
+{
+    "TEST": "English test",
+    "ENUMS": {
+        "GENDER": {
+            "MALE": "Male",
+            "FEMALE":"Female"
+        },
+        "COUNTRY": {
+            "ITALY": "Italy",
+            "SPAIN": "Spain",
+            "GERMANY": "Germany",
+            "ENGLAND": "England",
+            "FRANCE": "France"
+        }
+    }
+}

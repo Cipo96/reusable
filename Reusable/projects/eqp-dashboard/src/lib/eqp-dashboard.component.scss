@@ -1,0 +1,390 @@
+@import url('https://fonts.googleapis.com/css?family=Muli:300,400,500');
+@import "@fortawesome/fontawesome-free/css/all.min.css";
+
+.hidechartbtn{
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 36px;
+  height: 36px;
+  z-index: 9999;
+  cursor: pointer;
+  display:none;
+}
+
+
+.menuResizediv{
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 36px;
+  height: 36px;
+  z-index: 9999;
+  cursor: pointer;
+  display:none;
+}
+
+.reloadChartBtn{
+  position: absolute;
+  top: 0px;
+  right: 36px;
+  width: 36px;
+  height: 36px;
+  z-index: 9999;
+  cursor: pointer;
+  display:none;
+}
+
+.dynamicComponentTitle {
+  font-size: 18px;
+  font-family: 'Muli';
+  font-weight: 600;
+  text-align: center;
+  color: #525252;
+  letter-spacing: 0.3px;
+}
+
+.hidechartbtn mat-icon,
+.menuResizediv mat-icon,
+.reloadChartBtn mat-icon {
+  height: 36px;
+  line-height: 36px;
+  width: 36px;
+  text-align: center;
+  color: #6d6d6d;
+}
+
+
+/* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
+mat-card.matCardWidget{
+  background: #fafafa !important;
+}
+
+
+.iconMenMatCard{
+  min-width: 36px;
+  padding: 0px;
+}
+
+.mainChartCont:hover > .hidechartbtn,
+.mainChartCont:hover > .menuResizediv,
+.mainChartCont:hover > .reloadChartBtn{
+  display: block;
+
+  -webkit-animation: fadein 1s; /* Safari, Chrome and Opera > 12.1 */
+  -moz-animation: fadein 1s; /* Firefox < 16 */
+  -ms-animation: fadein 1s; /* Internet Explorer */
+  -o-animation: fadein 1s; /* Opera < 12.1 */
+  animation: fadein 1s;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Firefox < 16 */
+@-moz-keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Safari, Chrome and Opera > 12.1 */
+@-webkit-keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Internet Explorer */
+@-ms-keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Opera < 12.1 */
+@-o-keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modalhiddenlist {
+  width: 200px;
+  height: 200px;
+  position: absolute;
+}
+.rightButtonDiv {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  height: 41px;
+  width: 41px;
+  text-align: center;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.mt15 {
+  margin-top: 15px;
+}
+
+.contListHiddenItems {
+  position: absolute;
+  height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #ebebeb;
+  box-shadow: 0 0 10px grey;
+  border-radius: 7px;
+  z-index: 999;
+}
+
+.centered {
+  text-align: center;
+}
+
+// Small devices (landscape phones, 576px and up)
+@media (max-width: 575px) {
+  .contListHiddenItems {
+    width: 80%;
+  }
+}
+
+// Small devices (landscape phones, 576px and up)
+@media (min-width: 576px) {
+  .contListHiddenItems {
+    width: 70%;
+  }
+}
+
+// Medium devices (tablets, 768px and up)
+@media (min-width: 768px) {
+  .contListHiddenItems {
+    width: 60%;
+  }
+}
+
+// Large devices (desktops, 992px and up)
+@media (min-width: 992px) {
+  .contListHiddenItems {
+    width: 40%;
+  }
+}
+
+// Extra large devices (large desktops, 1200px and up)
+@media (min-width: 1200px) {
+  .contListHiddenItems {
+    width: 30%;
+  }
+}
+
+.pointericon {
+  cursor: pointer;
+}
+.rowWidgetHidden {
+  border-bottom: 1px solid #a3a3a3;
+}
+
+.headermodal {
+  border-bottom: 1px solid gray;
+  padding: 10px;
+  background: #5395db;
+  color: white;
+  text-align: center;
+}
+
+.lh30 {
+  line-height: 40px;
+}
+
+.lh40eye {
+  height: 40px;
+  width: 40px;
+  line-height: 40px;
+}
+
+
+
+
+.btnSettings{
+  color: #838383;
+}
+
+
+
+
+
+// css spinner
+#eqpDashboardWidgetLoader {
+  display: block;
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  border-top-color: white;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+#eqpDashboardWidgetLoader:before {
+  content: "";
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  right: 5px;
+  bottom: 5px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  border-top-color: white;
+  -webkit-animation: spin 3s linear infinite;
+  animation: spin 3s linear infinite;
+}
+#eqpDashboardWidgetLoader:after {
+  content: "";
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  right: 15px;
+  bottom: 15px;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  border-top-color: white;
+  -webkit-animation: spin 1.5s linear infinite;
+  animation: spin 1.5s linear infinite;
+}
+
+.dashboard-spinner-label {
+  margin-top: 20px;
+  font-size: 25px;
+  color:white
+}
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+.dashboard-splash-screen-widget {
+  background-color: #343a4073;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  z-index: 999;
+  top: 0;
+  bottom: 0;
+  img {
+    margin-left: calc(100vw - 100%);
+    width: 90px;
+    margin-bottom: 30px;
+  }
+  span {
+    margin-left: calc(100vw - 100%);
+    margin-bottom: 30px;
+  }
+  ::ng-deep {
+    .mat-mdc-progress-spinner circle,
+    .mat-mdc-progress-spinner circle {
+      // brand color
+      stroke: #5D78FF;
+    }
+  }
+}
+
+
+
+.iconerror {
+  font-size: 150px;
+  color: #ef6f6f;
+  padding-top: 30px;
+}
+
+.empty_chart_icon {
+  font-size: 150px;
+  color: gray;
+  padding-top: 30px;
+}
+
+.empty_chart_message {
+  font-size: 20px;
+  color: gray;
+}
+
+.errorfatchdata{
+  font-size: 20px;
+  color: #ef6f6f;
+}
+
+.errorEndpointCont {
+  min-height: 150px;
+  text-align: center;
+}
+
+.mainChartCont {
+  min-height: 150px;
+  margin-left: -16px; //Margine necessario per ricentrare il container del widget all'interno della card che ha un padding fisso a 16
+}
+
+
+.itemstat {
+  margin-bottom: 10px;
+}
+
+.item-stat-fa-icon {
+  margin-left: 9px;
+    vertical-align: middle;
+    font-size: 18px!important;
+    margin-right: 3px;
+}
+
+.endpointSearchButton {
+  box-shadow: none;
+  padding: 0;
+  box-shadow: none;
+  padding-top: 8px;
+  background-color: transparent;
+}

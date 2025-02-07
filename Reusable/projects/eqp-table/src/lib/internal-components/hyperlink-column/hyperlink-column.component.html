@@ -1,0 +1,21 @@
+<ng-container>
+
+    <!-- Link per aprire una nuova scheda -->
+    <a *ngIf="col.hyperlink.isTargetBlank" target="_blank" [href]="columnValueHelper.getHyperlinkUrlValue(col,element)">
+        {{col.hyperlink.hyperlinkText ? columnValueHelper.getHyperlinkTextValue(col,element) :
+        columnValueHelper.getHyperlinkUrlValue(col,element)}}
+    </a>
+
+    <!-- Link da aprire nella scheda corrente -->
+    <a *ngIf="!col.hyperlink.isTargetBlank" [href]="columnValueHelper.getHyperlinkUrlValue(col,element)">
+        {{col.hyperlink.hyperlinkText ? columnValueHelper.getHyperlinkTextValue(col,element) :
+        columnValueHelper.getHyperlinkUrlValue(col,element) }}
+    </a>
+
+    <!-- Gestione tooltip -->
+    <i *ngIf="col.tooltip && columnAccessibilityHelper.getTooltipInfo(col,element) != null && columnAccessibilityHelper.getTooltipInfo(col,element) != ''"
+        [matTooltip]="columnAccessibilityHelper.getTooltipInfo(col,element)"
+        [matTooltipPosition]="col.tooltip?.tooltipPosition != null ? col.tooltip?.tooltipPosition : 'below'"
+        style="margin-left: 5px;" class="fa-solid fa-circle-info"></i>
+
+</ng-container>

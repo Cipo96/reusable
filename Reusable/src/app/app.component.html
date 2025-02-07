@@ -1,0 +1,61 @@
+<div class="row mt-3">
+  <!-- <app-dashboard></app-dashboard> -->
+  <div *ngIf="route?.url != '/test-all'" class="col-sm-12 text-center">
+    <button [routerLink]="['/test-attachments']" type="button" class="btn btn-primary mt-2 me-3">
+      Go to test-eqp-attachments
+    </button>
+
+    <button [routerLink]="['/test-dashboard']" type="button" class="btn btn-primary mt-2 me-3">
+      Go to test-eqp-dashboard
+    </button>
+
+    <button [routerLink]="['/test-filters']" type="button" class="btn btn-primary mt-2 me-3">
+      Go to test-eqp-filters
+    </button>
+
+    <button [routerLink]="['/test-table']" type="button" class="btn btn-primary mt-2 me-3">Go to test-eqp-table</button>
+
+    <button [routerLink]="['/test-editor']" type="button" class="btn btn-primary mt-2 me-3">
+      Go to test-eqp-editor
+    </button>
+
+    <button [routerLink]="['/test-calendar']" type="button" class="btn btn-primary mt-2 me-3">
+      Go to test-eqp-calendar
+    </button>
+
+    <button [routerLink]="['/test-select']" type="button" class="btn btn-primary mt-2 me-3">
+      Go to test-eqp-select
+    </button>
+
+    <button [routerLink]="['/test-numeric']" type="button" class="btn btn-primary mt-2 me-3">
+      Go to test-eqp-numeric
+    </button>
+
+    <button [routerLink]="['/test-img-drawing']" type="button" class="btn btn-primary mt-2 me-3">
+      Go to test-eqp-img-drawing
+    </button>
+
+    <button [routerLink]="['/test-datetimerangepicker']" type="button" class="btn btn-primary mt-2 me-3">
+      Go to test-eqp-datetimerangepicker
+    </button>
+
+    <button [routerLink]="['/test-lookup']" type="button" class="btn btn-primary mt-2 me-3">
+      Go to test-eqp-lookup
+    </button>
+
+    <button [routerLink]="['/test-ui']" type="button" class="btn btn-primary mt-2 me-3">
+      Go to test-eqp-ui
+    </button>
+
+    <button [routerLink]="['/test-form']" type="button" class="btn btn-primary mt-2 me-3">
+      Go to test-eqp-form
+    </button>
+
+    <button [routerLink]="['/test-all']" type="button" class="btn btn-primary mt-2 me-3">
+      Go to test-all
+    </button>
+
+  </div>
+</div>
+
+<router-outlet></router-outlet>

@@ -1,0 +1,32 @@
+{
+  "name": "@eqproject/eqp-suite",
+  "version": "3.0.0",
+  "description": "Component suite",
+  "author": {
+    "name": "EqProject"
+  },
+  "license": "MIT",
+  "peerDependencies": {
+    "@angular/common": "^17.0.4",
+    "@angular/core": "^17.0.4",
+    "@angular/cdk": "^17.0.1",
+    "@angular/material": "^17.0.1",
+    "@angular/animations": "^17.0.4",
+    "@angular/forms": "^17.0.4",
+    "tslib": "^2.6.2",
+    "typescript": "5.2.2"
+  },
+  "dependencies": {
+    "@eqproject/eqp-datetimerangepicker": "latest",
+    "@eqproject/eqp-img-drawing": "latest",
+    "@eqproject/eqp-numeric": "latest",
+    "@eqproject/eqp-table": "latest",
+    "@eqproject/eqp-calendar": "latest",
+    "@eqproject/eqp-select": "latest",
+    "@eqproject/eqp-dashboard": "latest",
+    "@eqproject/eqp-attachments": "latest",
+    "@eqproject/eqp-filters": "latest",
+    "@eqproject/eqp-lookup": "latest",
+    "@eqproject/eqp-ui": "latest"
+  }
+}

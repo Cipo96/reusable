@@ -1,0 +1,133 @@
+::ng-deep .custom-ngx-datetime {
+  width: 100% !important;
+  .mat-mdc-form-field-infix {
+    position: inherit;
+  }
+  .mat-mdc-form-field-suffix {
+    align-self: center;
+    padding-right: 10px;
+    .mat-mdc-datepicker-toggle .mat-mdc-icon-button span svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+}
+
+::ng-deep .custom-mat-date {
+  width: 100% !important;
+  .mat-mdc-form-field-infix {
+    display: flex;
+    align-items: center;
+    align-self: flex-end;
+    padding: 0;
+    border-top: 0;
+  }
+}
+
+::ng-deep .custome-ngb-time {
+  width: 100% !important;
+  .mat-mdc-form-field-infix {
+    position: inherit;
+  }
+  .mat-mdc-form-field-suffix {
+    cursor: pointer;
+    align-self: center;
+  }
+  .mat-form-field-flex {
+    padding: 0 !important;
+  }
+}
+
+::ng-deep .custom-mat-daterange {
+  width: 100% !important;
+  .mat-mdc-form-field-infix {
+    display: flex;
+    align-items: center;
+    align-self: flex-end;
+    padding: 0;
+    border-top: 0;
+  }
+  height: fit-content;
+}
+
+//gestione visualizzazione picker datetime che nn è stato aggiornato per angular 17
+::ng-deep {
+  .mat-datepicker-content {
+    box-shadow: 0 2px 4px -1px #0003, 0 4px 5px #00000024, 0 1px 10px #0000001f;
+    background-color: #fff;
+    color: #000000de;
+  }
+
+  .mat-calendar-body-selected {
+    background-color: #3f51b5;
+    color: #fff;
+  }
+
+  .mat-calendar-body-cell-content {
+    border: none !important;
+  }
+}
+
+/* DATE */
+::ng-deep td button.mat-calendar-body-cell {
+  position: absolute !important;
+  height: 100% !important;
+}
+
+/* RANGE */
+::ng-deep td button.mat-calendar-body-cell {
+  position: absolute !important;
+  height: 100% !important;
+}
+
+/* DATETIME */
+::ng-deep td.mat-calendar-body-cell {
+  position: relative !important;
+  height: 0 !important;
+}
+
+::ng-deep .mat-datepicker-content-touch .mat-calendar {
+  width: inherit;
+  height: inherit;
+}
+
+mat-icon.disable {
+  filter: opacity(0.5);
+}
+
+::ng-deep .mat-datepicker-content-container {
+  height: auto !important;
+}
+
+@media (max-width: 800px) {
+  ::ng-deep .cdk-global-overlay-wrapper {
+    display: block;
+    margin-top: 5vh;
+    div {
+      justify-content: center;
+      max-width: unset !important;
+      .mat-datepicker-content .mat-calendar {
+        width: unset;
+      }
+    }
+  }
+}
+
+::ng-deep .ngb-error {
+  .ngb-tp-input-container {
+    border: dotted;
+    border-width: thin;
+    border-color: red;
+    border-radius: 0.5rem;
+  }
+  .chevron {
+    color: red;
+  }
+  color: red !important;
+}
+
+::ng-deep .ngb-valid {
+  .ngb-tp-input-container {
+    border: none;
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../dist/eqp-select",
+  "lib": {
+    "entryFile": "src/public-api.ts"
+  },
+  "allowedNonPeerDependencies": [
+    "ngx-mat-select-search",
+    "@ngx-translate/core",
+    "@ngx-translate/http-loader",
+    "@eqproject/eqp-lookup"
+  ]
+}

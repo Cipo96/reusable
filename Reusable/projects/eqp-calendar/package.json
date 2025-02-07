@@ -1,0 +1,23 @@
+{
+  "name": "@eqproject/eqp-calendar",
+  "description": "Custom calendar component - based on Angular and FullCalendar",
+  "author": {
+    "name": "EqProject"
+  },
+  "version": "3.0.0",
+  "peerDependencies": {
+    "@angular/cdk": "^17.0.1",
+    "@angular/common": "^17.0.4",
+    "@angular/core": "^17.0.4",
+    "tslib": "^2.6.2"
+  },
+  "dependencies": {
+    "@fullcalendar/angular": "^6.1.10",
+    "@fullcalendar/core": "^6.1.10",
+    "@fullcalendar/daygrid": "^6.1.10",
+    "@fullcalendar/interaction": "^6.1.10",
+    "@fullcalendar/timegrid": "^6.1.10",
+    "@ngx-translate/core": "^15.0.0",
+    "@ngx-translate/http-loader": "^8.0.0"
+  }
+}

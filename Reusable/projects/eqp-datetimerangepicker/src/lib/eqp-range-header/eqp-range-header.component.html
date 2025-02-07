@@ -1,0 +1,22 @@
+<app-eqp-range-panel></app-eqp-range-panel>
+
+<div class="range-header">
+  <!-- "previous" buttons -->
+  <button mat-icon-button (click)="previousClicked('year')">
+    <mat-icon>keyboard_double_arrow_left</mat-icon>
+  </button>
+  <button mat-icon-button (click)="previousClicked('month')">
+    <mat-icon>keyboard_arrow_left</mat-icon>
+  </button>
+
+  <!-- center label -->
+  <span class="range-header-label">{{ periodLabel }}</span>
+
+  <!-- "next" buttons -->
+  <button mat-icon-button (click)="nextClicked('month')">
+    <mat-icon>keyboard_arrow_right</mat-icon>
+  </button>
+  <button mat-icon-button (click)="nextClicked('year')">
+    <mat-icon>keyboard_double_arrow_right</mat-icon>
+  </button>
+</div>

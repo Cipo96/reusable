@@ -1,0 +1,35 @@
+<ng-container>
+    <!-- Caso testo semplice senza PIPE definito -->
+    <span *ngIf="col.numberPipe == null || col.numberPipe == undefined" [ngStyle]="columnStyleHelper.getNgStyle(col,element)">
+        {{ columnValueHelper.getValue(element, col) }}
+        {{col.additionalValue != null ? col.additionalValue : ''}}
+    </span>
+
+    <!-- Caso testo semplice con PIPE: DECIMAL -->
+    <span *ngIf="col.numberPipe == numberPipeEnum.DECIMAL" [ngStyle]="columnStyleHelper.getNgStyle(col,element)">
+        {{ columnValueHelper.getValue(element, col) | number: col.format ? col.format : '1.0-3' :
+        (currentCultureSelected ? currentCultureSelected : 'it-IT')}}
+        {{col.additionalValue != null ? col.additionalValue : ''}}
+    </span>
+
+    <!-- Caso testo semplice con PIPE: PERCENT -->
+    <span *ngIf="col.numberPipe == numberPipeEnum.PERCENT" [ngStyle]="columnStyleHelper.getNgStyle(col,element)">
+        {{ columnValueHelper.getValue(element, col) | percent }}
+        {{col.additionalValue != null ? col.additionalValue : ''}}
+    </span>
+
+    <!-- Caso testo semplice con PIPE: CURRENCY -->
+    <span *ngIf="col.numberPipe == numberPipeEnum.CURRENCY" [ngStyle]="columnStyleHelper.getNgStyle(col,element)">
+        {{ columnValueHelper.getValue(element, col) | currency: columnPipeHelper.getCurrencyPipe(col, element) : 'symbol' :
+        (col.format ? col.format : '') : (currentLocaleSelected ? currentLocaleSelected : 'it')
+        }}
+        {{col.additionalValue != null ? col.additionalValue : ''}}
+    </span>
+
+    <!-- Gestione tooltip -->
+    <i *ngIf="col.tooltip && columnAccessibilityHelper.getTooltipInfo(col,element) != null && columnAccessibilityHelper.getTooltipInfo(col,element) != ''"
+        [matTooltip]="columnAccessibilityHelper.getTooltipInfo(col,element)"
+        [matTooltipPosition]="col.tooltip?.tooltipPosition != null ? col.tooltip?.tooltipPosition : 'below'"
+        style="margin-left: 5px;" class="fa-solid fa-circle-info"></i>
+
+</ng-container>

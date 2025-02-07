@@ -1,0 +1,20 @@
+{
+  "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../dist/eqp-suite",
+  "lib": {
+    "entryFile": "src/public-api.ts"
+  },
+  "allowedNonPeerDependencies": [
+    "@eqproject/eqp-attachments",
+    "@eqproject/eqp-calendar",
+    "@eqproject/eqp-dashboard",
+    "@eqproject/eqp-datetimerangepicker",
+    "@eqproject/eqp-filters",
+    "@eqproject/eqp-img-drawing",
+    "@eqproject/eqp-numeric",
+    "@eqproject/eqp-select",
+    "@eqproject/eqp-table",
+    "@eqproject/eqp-lookup",
+    "@eqproject/eqp-ui"
+  ]
+}

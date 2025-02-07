@@ -1,0 +1,73 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# compiled output
+/dist
+/tmp
+/out-tsc
+# Only exists if Bazel was run
+/bazel-out
+
+# dependencies
+/node_modules
+
+# profiling files
+chrome-profiler-events*.json
+speed-measure-plugin*.json
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+.vs
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+/typings
+
+# System Files
+.DS_Store
+Thumbs.db
+
+/Reusable/projects/eqp-table/node_modules
+/Reusable/projects/eqp-attachments/node_modules
+/Reusable/projects/eqp-dashboard/node_modules
+/Reusable/projects/eqp-editor/node_modules
+/Reusable/projects/eqp-filters/node_modules
+/Reusable/projects/eqp-select/node_modules
+/.vscode
+/Reusable/projects/eqp-attachments/node_modules
+/Reusable/projects/eqp-calendar/node_modules
+/Reusable/projects/eqp-dynamic-module/node_modules
+Reusable/projects/eqp-filters/node_modules/*
+.angulardoc.json
+/Reusable/projects/eqp-img-drawing/node_modules
+/Reusable/projects/eqp-img-drawing/node_modules
+/Reusable/projects/eqp-img-drawing/node_modules
+/Reusable/projects/eqp-suite/node_modules
+/Reusable/projects/eqp-datetimerangepicker/node_modules
+
+Reusable/projects/eqp-suite/package-lock.json
+Reusable/projects/eqp-img-drawing/package-lock.json
+Reusable/projects/eqp-calendar/package-lock.json
+Reusable/package-lock.json
+/Reusable/projects/eqp-calendar/package-lock.json
+/Reusable/projects/eqp-lookup/node_modules

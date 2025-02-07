@@ -1,0 +1,122 @@
+<div class="container-fluid">
+  <h2>GESTIONE SINGOLO ALLEGATO</h2>
+  <div class="row">
+    <div class="col-md-12">
+      <eqp-attachments
+        [multipleAttachment]="false"
+        [attachmentsList]="singleAttachment"
+        [allowOnlyImages]="false"
+        [compressionOptions]="compressionOptions"
+        [isDisabled]="false"
+        [allowedTypes]="[1, 2, 3]"
+        (downloadAttachment)="viewAttachment($event)"
+        (localEditedAttachments)="catchAttachmentList($event)"
+        (onDeleteAttachment)="onDeleteAttachment($event)"
+        [showPreview]="false"
+        [cropOptions]="[1, 2]"
+        [singleAttachmentDragAndDrop]="true">
+      </eqp-attachments>
+    </div>
+    <div class="col-md-12">
+      <eqp-attachments
+        [multipleAttachment]="false"
+        [attachmentsList]="singleAttachmentWithSeparatedButtons"
+        [allowOnlyImages]="false"
+        [compressionOptions]="compressionOptions"
+        [isDisabled]="false"
+        [allowedTypes]="[3]"
+        (downloadAttachment)="viewAttachment($event)"
+        (localEditedAttachments)="catchAttachmentList($event)"
+        (onDeleteAttachment)="onDeleteAttachment($event)"
+        [separatedUploadButtons]="true"
+        [singleAttachmentDragAndDrop]="false"
+        [cropOptions]="[1, 2]">
+      </eqp-attachments>
+    </div>
+  </div>
+
+  <!-- <h2 class="mt-5">GESTIONE MOLTEPLICI ALLEGATI CON CARICAMENTO SINGOLO</h2>
+    <eqp-attachments
+        [attachmentsColumns]="attachmentsColumns"
+        [productionBaseUrl]="'https://easydocs.eqproject.it'"
+        [getAttachmentEndpoint]="'http://localhost:5000/api/test'"
+        [compressionOptions]="compressionOptions"
+        [allowedTypes]="[1,2]"
+        [showInlinePreview]="true"
+        [previewLabel]="'Anteprima'"
+        [multipleAttachment]="true"
+        [disableAction]="false"
+        [showHeader]="true"
+        [headerTitle]="'Test nuovo titolo'"
+        [emptyTableMessage]="'No record found'"
+        [attachmentsList]="attachmentsListMultiple"
+        [showMatCard]="true"
+        [allowOnlyImages]="false"
+        [acceptedFileTypes]="null"
+        [isDisabled]="false"
+        [downloadTooltipPosition]="'below'"
+        [openLinkLabel]="'Apri link'"
+        [addButtonLabel]="'Aggiungi'"
+        [downloadLabel]="'Download'"
+        [deleteLabel]="'Elimina'"
+        [fileNameLabel]="'Nome file'"
+        [uploadFileLabel]="'Carica file'"
+        [confirmLabel]="'Conferma'"
+        [abortLabel]="'Annulla'"
+        [saveLabel]="'Salva'"
+        [exitLabel]="'Esci'"
+        [eqpTableSearchText]="'Cerca...'"
+        [deleteDialogTitle]="'Attenzione:'"
+        [deleteDialogMessage]="'Sicuro di voler eliminare questo allegato?'"
+        [noImageSelectedErrorMessage]="'Nessuna immagine selezionata!'"
+        (downloadAttachment)="viewAttachment($event)"
+        (localEditedAttachments)="catchAttachmentList($event)"
+        #eqpAttachments>
+    </eqp-attachments> -->
+
+  <h2 class="mt-5">GESTIONE MOLTEPLICI ALLEGATI</h2>
+  <div class="row">
+    <div class="col-md-12">
+      <eqp-attachments
+        [productionBaseUrl]="'https://easydocs.eqproject.it'"
+        [getAttachmentEndpoint]="'http://localhost:5000/api/test'"
+        [attachmentsColumns]="attachmentsColumns"
+        [allowedTypes]="[1, 2, 3]"
+        [loadMultipleFiles]="true"
+        [showInlinePreview]="true"
+        [previewLabel]="'Anteprima'"
+        [multipleAttachment]="true"
+        [disableAction]="false"
+        [showHeader]="true"
+        [headerTitle]="'Test nuovo titolo'"
+        [emptyTableMessage]="'No record found'"
+        [attachmentsList]="attachmentsList"
+        [showMatCard]="true"
+        [allowOnlyImages]="false"
+        [acceptedFileTypes]="null"
+        [isDisabled]="false"
+        [downloadTooltipPosition]="'below'"
+        [openLinkLabel]="'Apri link'"
+        [addButtonLabel]="'Aggiungi'"
+        [downloadLabel]="'Download'"
+        [deleteLabel]="'Elimina'"
+        [fileNameLabel]="'Nome file'"
+        [uploadFileLabel]="'Carica file'"
+        [confirmLabel]="'Conferma'"
+        [abortLabel]="'Annulla'"
+        [saveLabel]="'Salva'"
+        [exitLabel]="'Indietro'"
+        [eqpTableSearchText]="'Cerca...'"
+        [deleteDialogTitle]="'Attenzione:'"
+        [deleteDialogMessage]="'Sicuro di voler eliminare questo allegato?'"
+        [noImageSelectedErrorMessage]="'Nessuna immagine selezionata!'"
+        (downloadAttachment)="viewAttachment($event)"
+        (localEditedAttachments)="catchAttachmentList($event)"
+        [isTableSearcheable]="false"
+        [tablePaginatorVisible]="false"
+        [cropOptions]="[1, 2]"
+        #eqpAttachments>
+      </eqp-attachments>
+    </div>
+  </div>
+</div>

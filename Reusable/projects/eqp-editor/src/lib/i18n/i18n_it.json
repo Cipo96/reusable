@@ -1,0 +1,72 @@
+{
+    "EQP_EDITOR": {
+        "INFO_TOOLTIP": "Clicca per visualizzare la guida all'uso dei tag",
+        "INFO_TITLE": "Guida all'uso dei tag",
+        "INFO_EXIT": "Chiudi",
+        "GENERAL": {
+            "MAIN_PARAGRAPH": "La colonna {{columnName}} riporta l'elenco di tutti i segnaposto che possono essere utilizzati nel documento. In fase di stampa, questi segnaposto presenti nel documento potranno essere rimpiazzati con valori specifici.",
+            "HOW_TO_USE_PLACEHOLDERS": "Per utilizzare correttamente i segnaposto è sufficiente assicurarsi che, una volta trascinati all'interno documento, risultino separati dal resto del contenuto del documento almeno da una spazio bianco sia all'inizio che alla fine del tag."
+        },
+        "CONDITION": {
+            "MAIN": {
+                "TITLE": "Utilizzo dei tag condizionali",
+                "FIRST_PARAGRAPH":"Se nell'elenco dei tag è presente il segnaposto <b>{{conditionTagName}}</b> allora sarà possibile trascinare all'interno del documento i due tag aggiuntivi <b>{{visibilityConditionTagName}}</b> e <b>{{styleConditionTagName}}</b>.",
+                "SECOND_PARAGRAPH":"Trascinando questi tag nel documento l'utente avrà la possibilità di definire delle condizioni che permetteranno di gestire, rispettivamente:",
+                "LIST_ITEM_VISIBILITY_CONDITION":"La visibilità di un'intera sezione del documento solo al verificarsi di una specifica condizione",
+                "LIST_ITEM_STYLE_CONDITION":"Lo stile da applicare al testo (colore di sfondo, colore del testo e stile grassetto) solo al verificarsi di opportune condizioni"
+            },
+            "VISIBILITY": {
+                "TITLE":"Condizione di visibilità",
+                "FIRST_PARAGRAPH":"Trascinando il tag <b>{{visibilityConditionTagName}}</b> nel documento verrà predisposto il segnaposto <b><i>{{VISIBILITY_CONDITION_TAG}}</i></b> che dovrà essere completato dall'utente con l'inserimento della condizione.",
+                "SECOND_PARAGRAPH": "L'inserimento della condizione dovrà essere fatto nel blocco di apertura della condizione identificato dal tag 'IF' con le modalità descritte nel capitolo successivo.",
+                "THIRD_PARAGRAPH":"Una volta trascinato il tag nel documento, l'utente potrà completarlo intervendo nel blocco di apertura 'IF' e inserendo la condizione che dovrà essere verificata al fine di mostrare l'intero contenuto inserito nel tag <b><i>{{VISIBILITY_CONDITION_TAG}}</i></b>."
+            },
+            "STYLE": {
+                "TITLE":"Condizione di stile",
+                "FIRST_PARAGRAPH":"Trascinando il tag <b>{{styleConditionTagName}}</b> nel documento verrà predisposto il segnaposto <b><i>{{STYLE_CONDITION_TAG}}</i></b> che, anche in questo caso, dovrà essere completato dall'utente con l'inserimento della condizione.",
+                "SECOND_PARAGRAPH": "L'inserimento della condizione dovrà essere fatto nel blocco di apertura della condizione identificato dal tag 'IF_STYLE' con le modalità descritte nel capitolo successivo."
+            },
+            "CONDITION_DEFINITION": {
+                "TITLE":"Definizione della condizione di visibilità",
+                "FIRST_PARAGRAPH":"Per definire la condizione l'utente potrà utilizzare tutti i tag mostrati nella colonna {{columnName}} e, una volta trascinati nel blocco che identifica la condizione, avrà la possibilità di completarla indicando l'operatore logico di confronto e il valore con cui effettuare il confronto.",
+                "SECOND_PARAGRAPH":"Sarà possibile utilizzare tutti questi operatori di confronto:",
+                "EQUAL_OPERATOR":"<b>=</b>: uguaglianza",
+                "NOT_EQUAL_OPERATOR":"<b><></b>: disuguaglianza",
+                "GREATHER_THAN_OPERATOR":"<b>></b>: maggiore di",
+                "GREATHER_THAN_OR_EQUAL_OPERATOR":"<b>>=</b>: maggiore o uguale di",
+                "LESS_THAN_OPERATOR":"<b><</b>: minore di",
+                "LESS_THAN_OR_EQUAL_OPERATOR":"<b><=</b>: minore o uguale di",
+                "EXISTS_OPERATOR":"<b>Exists</b>: per verificare se un elenco risulta popolato",
+                "NOT_EXISTS_OPERATOR":"<b>NotExists</b>: per verificare se un elenco risulta vuoto",
+                "EXAMPLE": {
+                    "SIMPLE_TITLE":"Esempio di condizione semplice",
+                    "EXAMPLE_CONTENT":"INSERIRE QUI IL CONTENUTO DA MOSTRARE SE LA CONDIZIONE E' VERIFICATA",
+                    "SIMPLE_DESCRIPTION":"Con questa condizione, il contenuto del documento verrà visualizzato solo se il tag @@DENOMINATION assumerà il valore indicato nella condizione",
+                    "COMPLEX_TITLE":"Esempio di condizione composta",
+                    "COMPLEX_DESCRIPTION":"E' possibile combinare più condizioni semplici facendo però attenzione che tali condizioni siano tutte combinate attraverso lo stesso operatore logico (quindi o tutte condizioni in AND o tutte in OR)",
+                    "EXISTS_TITLE":"Esempio di condizione su elenco popolato",
+                    "EXISTS_DESCRIPTION":"Con l'operatore Exists è possibile verificare se l'elenco attribuito al tag @@CHILDREN risulta popolato, in caso contrario la condizione non risulta verificata",
+                    "NOT_EXISTS_TITLE":"Esempio di condizione su elenco vuoto",
+                    "NOT_EXISTS_DESCRIPTION":"Con l'operatore NotExists è possibile verificare se l'elenco attribuito al tag @@CHILDREN risulta vuoto, in caso contrario la condizione non risulta verificata"
+                }
+            },
+            "STYLE_DEFINITION": {
+                "TITLE":"Definizione della condizione di stile",
+                "FIRST_PARAGRAPH":"Questa sezione descrive come specializzare la condizione di stile per fare in modo, dopo aver definito la condizione, di definire lo stile da applicare se quest'ultima risulta verificata.",
+                "SECOND_PARAGRAPH": "Per la definizione della condizione da verificare sarà possibile utilizzare gli stessi concetti di definizione visti nella sezione 'Condizioni di visibilità', mentre per quanto riguarda la definizione si potrà specializzare la condizione aggiungendo la parola chiave <b>THEN</b> e, successivamente, gli stili da applicare come mostrato nell'esempio",
+                "THIRD_PARAGRAPH":"E' possibile definire lo stile da utilizzare con queste due modalità:",
+                "LIST_ITEM_STYLE_MODE_1": "Definendo direttamente il nome dello stile definito all'interno del documento (Es. Titolo 1, Titolo 2...o il nome di uno stile custom creato)",
+                "LIST_ITEM_STYLE_MODE_2": "Definendo manualmente le proprietà degli stili riferiti a sfondo, colore del testo e grassetto (Es. Background:#FFFFFF;TextColor:#EEEEEE;Bold:1)",
+                "FOURTH_PARAGRAPH":"Nel caso di definizione manuale è possibile definire i seguenti stili:",
+                "LIST_ITEM_BACKGROUND":"<b>Background:</b> permette di definire lo sfondo del testo (o di una cella in caso la condizione venga applicata dentro una cella). Il colore da utilizzare può essere espresso in esadecimale o in RGB",
+                "LIST_ITEM_BOLD":"<b>Bold</b>: permette di definire se applicare il grassetto al testo oppure no. Per applicare tale stile basta valorizzarlo con il valore 1",
+                "LIST_ITEM_FOREGROUND":"<b>TextColor:</b> permette di definire il colore del testo. Il colore da utilizzare può essere espresso in esadecimale o in RGB",
+                "EXAMPLE_TITLE_1":"Esempio di applicazione con stile definito all'interno del documento",
+                "EXAMPLE_CONTENT": "INSERIRE QUI IL CONTENUTO SU CUI APPLICARE LO STILE",
+                "EXAMPLE_DESCRIPTION_1": "In quest'esempio la condizione risulterà verificata solo se il tag @@IS_VALID assumerà il valore 1 e in quel caso il contenuto del tag condizionale assumerà lo stile chiamato CustomStyle1 che dovrà essere obbligatoriamente censito all'interno del documento",
+                "EXAMPLE_TITLE_2":"Esempio di applicazione con stile definito manualmente nel tag",
+                "EXAMPLE_DESCRIPTION_2": "In quest'esempio la condizione risulterà verificata solo se il tag @@IS_VALID assumerà il valore 1 e in quel caso il testo avrà uno sfondo rosso (Esadecimale: #FF0000), sarà messo in grassetto e sarà di colore bianco (RGB:255,255,255)"
+            }
+        }
+    }
+}

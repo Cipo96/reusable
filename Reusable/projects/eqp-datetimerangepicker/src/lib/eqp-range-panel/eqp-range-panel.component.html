@@ -1,0 +1,5 @@
+<mat-card class="mat-elevation-z3">
+  <button *ngFor="let item of customPreset" mat-button (click)="selectRange(item.label)">
+    {{ buttonName(item.label) }}
+  </button>
+</mat-card>

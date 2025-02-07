@@ -1,0 +1,22 @@
+ngx-file-drop ::ng-deep .ngx-file-drop__drop-zone {
+  min-height: 30vh;
+  border-radius: 5px !important;
+  background-color: #e4e6ea !important;
+  cursor: pointer;
+  font-size: 17px !important;
+  border: dotted !important;
+  padding-top: 7vh;
+
+  .ngx-file-drop__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #73777a !important;
+    margin: auto;
+  }
+}
+
+.custom-height .mat-form-field-wrapper {
+  height: 20px;
+}

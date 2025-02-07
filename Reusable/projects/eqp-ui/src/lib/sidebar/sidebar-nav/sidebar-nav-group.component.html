@@ -1,0 +1,19 @@
+<a (click)="toggleGroup($event)" class="nav-link nav-group-toggle" href>
+  <ng-container *ngTemplateOutlet="iconTemplate ; context: {$implicit: item}" />
+  <ng-container>{{ item.name }}</ng-container>
+  <span *ngIf="helper.hasBadge(item)" [ngClass]="item | eqpSidebarNavBadge">{{ item.badge.text }}</span>
+</a>
+<eqp-sidebar-nav (@openClose.done)="onAnimationDone($event)" (@openClose.start)="onAnimationStart($event)"
+  [@openClose]="open ? 'open' : 'closed'" [dropdownMode]="dropdownMode" [groupItems]="true" [navItems]="navItems"
+  [ngStyle]="display" />
+
+<ng-template #iconTemplate let-item>
+  <i *ngIf="item?.icon" [ngClass]="item | eqpSidebarNavIcon"></i>
+  <ng-template [ngIf]="item?.iconComponent">
+    <!-- <svg>
+      [customClasses]="item | eqpSidebarNavIcon"
+      [name]="item.iconComponent?.name"
+    </svg> -->
+  </ng-template>
+  <span *ngIf="!item?.icon && !item?.iconComponent" [ngClass]="item | eqpSidebarNavIcon"></span>
+</ng-template>

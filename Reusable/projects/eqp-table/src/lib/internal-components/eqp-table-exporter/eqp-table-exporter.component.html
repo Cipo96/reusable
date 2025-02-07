@@ -1,0 +1,56 @@
+<div class="text-right exportButtonContainer">
+    <!-- Se sono stati richiesti più type per l'esportazione allora mostra un menu-item altrimenti mostra un button singolo -->
+    <ng-container *ngIf="exportValidTypes?.length > 1">
+        <button type="button" [matTooltip]="exportEqpTable.tooltipText"
+            [ngStyle]="{'box-shadow': exportEqpTable.showButtonBorder != null && exportEqpTable.showButtonBorder == false ? 'none' : null}"
+            [matTooltipPosition]="exportEqpTable.tooltipPosition != null ? exportEqpTable.tooltipPosition : 'below'"
+            mat-icon-button [matMenuTriggerFor]="exportMenu">
+            <mat-icon style="vertical-align: super;">{{exportEqpTable.buttonIcon}}</mat-icon> {{exportEqpTable.buttonText}}
+        </button>
+        <mat-menu #exportMenu="matMenu">
+            <ng-container *ngFor="let exportType of exportValidTypes; let i = index">
+                <button
+                    *ngIf="exportEqpTable.customExportFunction == null || (exportEqpTable.customExportFunction != null && exportEqpTable.customExportFunction[i] == null)"
+                    type="button" mat-menu-item [matTooltip]="exportType"
+                    [matTooltipPosition]="exportEqpTable.tooltipPosition != null ? exportEqpTable.tooltipPosition : 'below'"
+                    (click)="runTableExporter(exportType)">
+                    <i style="font-size: 15pt;margin-left: 5px;" class="fa" [ngClass]="{'fa-file-excel': exportType == 'xls' || exportType == 'xlsx',
+                                    'fa-file-csv': exportType == 'csv',
+                                    'fa-file-alt': exportType == 'txt',
+                                    'fa-file-code': exportType == 'json',
+                                    'fa-file': exportType == 'other' }"></i>
+                    <span style="margin-left: 10px;">{{exportType}}</span>
+                </button>
+                <button
+                    *ngIf="exportEqpTable.customExportFunction != null && exportEqpTable.customExportFunction[i] != null"
+                    type="button" mat-menu-item [matTooltip]="exportType"
+                    [matTooltipPosition]="exportEqpTable.tooltipPosition != null ? exportEqpTable.tooltipPosition : 'below'"
+                    (click)="exportEqpTable.customExportFunction[i]()">
+                    <i style="font-size: 15pt;margin-left: 5px;" class="fa" [ngClass]="{'fa-file-excel': exportType == 'xls' || exportType == 'xlsx',
+                                  'fa-file-csv': exportType == 'csv',
+                                  'fa-file-alt': exportType == 'txt',
+                                  'fa-file-code': exportType == 'json'}"></i>
+                    <span style="margin-left: 10px;">{{exportType}}</span>
+                </button>
+            </ng-container>
+        </mat-menu>
+    </ng-container>
+    <ng-container *ngIf="exportValidTypes?.length == 1">
+        <button *ngIf="exportEqpTable.customExportFunction == null" type="button"
+            [matTooltip]="exportEqpTable.tooltipText"
+            [ngStyle]="{'box-shadow': exportEqpTable.showButtonBorder != null && exportEqpTable.showButtonBorder == false ? 'none' : null}"
+            [matTooltipPosition]="exportEqpTable.tooltipPosition != null ? exportEqpTable.tooltipPosition : 'below'"
+            mat-raised-button (click)="runTableExporter(exportValidTypes[0])">
+            <mat-icon>{{exportEqpTable.buttonIcon}}</mat-icon> {{exportEqpTable.buttonText}}
+        </button>
+        <button
+            *ngIf="exportEqpTable.customExportFunction != null && exportEqpTable.customExportFunction[0] != null"
+            type="button" [matTooltip]="exportEqpTable.tooltipText"
+            [ngStyle]="{'box-shadow': exportEqpTable.showButtonBorder != null && exportEqpTable.showButtonBorder == false ? 'none' : null}"
+            [matTooltipPosition]="exportEqpTable.tooltipPosition != null ? exportEqpTable.tooltipPosition : 'below'"
+            mat-raised-button (click)="exportEqpTable.customExportFunction[0]()">
+            <mat-icon>{{exportEqpTable.buttonIcon}}</mat-icon> {{exportEqpTable.buttonText}}
+        </button>
+    </ng-container>
+
+</div>

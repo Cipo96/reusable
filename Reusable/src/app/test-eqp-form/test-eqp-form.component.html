@@ -1,0 +1,12 @@
+<div class="container-fluid mt-5">
+    <eqp-form (valueChanged)="valueChange($event)" [fields]="formFields" [disabledForm]="false"></eqp-form>
+</div>
+
+<ng-template #externalField let-field="field" let-form="form" let-control="control">
+    <form [formGroup]="form">
+        <mat-form-field>
+            <mat-label>{{ field.display }}</mat-label>
+            <input (input)="valueChange($event)" matInput [formControlName]="field.key" [disabled]="control?.disabled" />
+        </mat-form-field>
+    </form>
+</ng-template>

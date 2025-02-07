@@ -1,0 +1,428 @@
+<div class="container-fluid">
+  <h2>Select con ngModel</h2>
+
+  <!-- <div class="row">
+    <div class="col-6">
+      <eqp-select
+        [arrayData]="dataSource"
+        [isSearchable]="true"
+        [(ngModelInput)]="selectWithArrayData"
+        placeholder="Select con array data"
+        (ngModelInputChange)="selectChange($event, selectWithArrayData)"
+        [arrayKeyProperty]="'Key'"
+        [arrayValueProperty]="'extra'">
+      </eqp-select>
+    </div>
+
+    <div class="col-6">
+      <eqp-select
+        [enumData]="testEnum"
+        [isSearchable]="true"
+        [(ngModelInput)]="selectWithEnumData"
+        placeholder="Select con enum data"
+        (ngModelInputChange)="selectChange($event, selectWithEnumData)"
+        [suffixIcon]="'edit'"
+        [prefixIcon]="'add'">
+      </eqp-select>
+    </div>
+
+    <div class="col-6">
+      <eqp-select
+        [enumData]="testEnum"
+        [isMultiSelect]="true"
+        [(ngModelInput)]="selectWithEnumAndSelectAll"
+        placeholder="Select con enum e select all"
+        (ngModelInputChange)="selectChange($event, selectWithEnumAndSelectAll)"
+        [selectAll]="true"
+        [selectAllText]="'Piglia tutto'"
+        [selectableGroupAsModel]="true"
+        [suffixIcon]="'edit'"
+        [prefixIcon]="'add'">
+      </eqp-select>
+    </div>
+
+    <div class="col-6">
+      <eqp-select
+        [arrayData]="dataSource"
+        [arrayKeyProperty]="'Key'"
+        [arrayValueProperty]="'Company.Denomination'"
+        [isMultiSelect]="true"
+        [(ngModelInput)]="selectWithArrayAndSelectAll"
+        placeholder="Select con array e select all"
+        (ngModelInputChange)="selectChange($event, selectWithArrayAndSelectAll)"
+        [selectAll]="true"
+        [selectAllText]="'Piglia tutto'"
+        [selectableGroupAsModel]="true"
+        [suffixIcon]="'edit'"
+        [prefixIcon]="'add'">
+      </eqp-select>
+    </div>
+  </div> -->
+
+  <h2>Select con Form</h2>
+
+  <!-- <div class="row">
+    <div class="col-6">
+      <eqp-select
+        [arrayData]="dataSource"
+        [isSearchable]="true"
+        placeholder="Select con array data e form"
+        (formControlChange)="selectChange($event, null, getControls('selectWithArrayData').value)"
+        [formGroupInput]="formSelect"
+        [formControlNameInput]="'selectWithArrayData'"
+        [arrayKeyProperty]="'Key'"
+        [arrayValueProperty]="'Company.Denomination'"
+        [suffixIcon]="'edit'"
+        [prefixIcon]="'add'">
+      </eqp-select>
+    </div>
+
+    <div class="col-6">
+      <eqp-select
+        [enumData]="testEnum"
+        placeholder="Select con enum e form"
+        (formControlChange)="selectChange($event, null, getControls('selectWithEnumData').value)"
+        [formGroupInput]="formSelect"
+        [formControlNameInput]="'selectWithEnumData'"
+        [suffixIcon]="'edit'"
+        [prefixIcon]="'add'">
+      </eqp-select>
+    </div>
+    <div class="col-6">
+      <eqp-select
+        [enumData]="testEnum"
+        [isMultiSelect]="true"
+        placeholder="Select con enum e select all"
+        (formControlChange)="selectChange($event, null, getControls('selectWithEnumAndSelectAll').value)"
+        [formGroupInput]="formSelect"
+        [formControlNameInput]="'selectWithEnumAndSelectAll'"
+        [selectAll]="true"
+        [selectAllText]="'Piglia tutto'"
+        [selectableGroupAsModel]="true"
+        [suffixIcon]="'edit'"
+        [prefixIcon]="'add'">
+      </eqp-select>
+    </div>
+    <div class="col-6">
+      <eqp-select
+        [arrayData]="dataSource"
+        [arrayKeyProperty]="'Key'"
+        [arrayValueProperty]="'Company.Denomination'"
+        [isMultiSelect]="true"
+        placeholder="Select con array e select all"
+        (formControlChange)="selectChange($event, null, getControls('selectWithArrayAndSelectAll').value)"
+        [formGroupInput]="formSelect"
+        [formControlNameInput]="'selectWithArrayAndSelectAll'"
+        [selectAll]="true"
+        [selectAllText]="'Piglia tutto'"
+        [selectableGroupAsModel]="true"
+        [suffixIcon]="'edit'"
+        [prefixIcon]="'add'">
+      </eqp-select>
+    </div>
+  </div> -->
+
+  <h2>Select con ngModel e dati già popolati</h2>
+  <!-- <div class="row">
+    <div class="col-6">
+      <eqp-select
+        #eqpselect
+        [enumData]="testEnum"
+        [isSearchable]="true"
+        placeholder="Select con enum data"
+        [(ngModelInput)]="selectPopulatedWithEnum"
+        [suffixIcon]="'edit'"
+        [prefixIcon]="'add'"
+        (ngModelInputChange)="selectChange($event, selectPopulatedWithEnum)">
+      </eqp-select>
+    </div>
+
+    <div class="col-6">
+      <eqp-select
+        [arrayData]="dataSource"
+        [isSearchable]="true"
+        placeholder="Select con array data"
+        [(ngModelInput)]="selectPopulatedWithArray"
+        (ngModelInputChange)="selectChange($event, selectPopulatedWithArray)"
+        [arrayKeyProperty]="'Key'"
+        [arrayValueProperty]="'Company.Denomination'">
+      </eqp-select>
+    </div>
+
+    <div class="col-6">
+      <eqp-select
+        [enumData]="testEnum"
+        [isSearchable]="true"
+        placeholder="Select con enum data e select all con ngModel"
+        [(ngModelInput)]="selectPopulatedWithEnumAndSelectAll"
+        (ngModelInputChange)="selectChange($event, selectPopulatedWithEnumAndSelectAll)"
+        [selectAll]="true"
+        [isMultiSelect]="true"
+        [selectableGroupAsModel]="true">
+      </eqp-select>
+    </div>
+    <div class="col-6">
+      <eqp-select
+        [arrayData]="dataSource"
+        [isSearchable]="true"
+        placeholder="Select con array data e select all con form"
+        [(ngModelInput)]="selectPopulatedWithArrayAndSelectAll"
+        (ngModelInputChange)="selectChange($event, selectPopulatedWithArrayAndSelectAll)"
+        [selectAll]="true"
+        [isMultiSelect]="true"
+        [selectableGroupAsModel]="true"
+        [arrayKeyProperty]="'Key'"
+        [arrayValueProperty]="'Company.Denomination'">
+      </eqp-select>
+    </div>
+  </div> -->
+
+  <h2>Select con form e dati già popolati</h2>
+  <!-- <div class="row">
+    <div class="col-6">
+      <eqp-select
+        #eqpselect
+        [enumData]="testEnum"
+        [isSearchable]="true"
+        placeholder="Select con enum data"
+        [formGroupInput]="formSelect"
+        [formControlNameInput]="'selectPopulatedWithEnum'"
+        [suffixIcon]="'edit'"
+        [prefixIcon]="'add'"
+        (formControlChange)="selectChange($event, null, getControls('selectPopulatedWithEnum').value)">
+      </eqp-select>
+    </div>
+
+    <div class="col-6">
+      <eqp-select
+        [arrayData]="dataSource"
+        [isSearchable]="true"
+        placeholder="Select con array data"
+        [formGroupInput]="formSelect"
+        [formControlNameInput]="'selectPopulatedWithArray'"
+        (formControlChange)="selectChange($event, null, getControls('selectPopulatedWithArray').value)"
+        [arrayKeyProperty]="'Key'"
+        [arrayValueProperty]="'Company.Denomination'">
+      </eqp-select>
+    </div>
+
+    <div class="col-6">
+      <eqp-select
+        [enumData]="testEnum"
+        [isSearchable]="true"
+        placeholder="Select con enum data e select all con ngModel"
+        [formGroupInput]="formSelect"
+        [formControlNameInput]="'selectPopulatedWithEnumAndSelectAll'"
+        (formControlChange)="selectChange($event, null, getControls('selectPopulatedWithEnumAndSelectAll').value)"
+        [selectAll]="true"
+        [isMultiSelect]="true"
+        [selectableGroupAsModel]="true">
+      </eqp-select>
+    </div>
+    <div class="col-6">
+      <eqp-select
+        [arrayData]="dataSource"
+        [isSearchable]="true"
+        placeholder="Select con array data e select all con form"
+        [formGroupInput]="formSelect"
+        [formControlNameInput]="'selectPopulatedWithArrayAndSelectAll'"
+        (formControlChange)="selectChange($event, null, getControls('selectPopulatedWithArrayAndSelectAll').value)"
+        [selectAll]="true"
+        [isMultiSelect]="true"
+        [selectableGroupAsModel]="true"
+        [arrayKeyProperty]="'Key'"
+        [arrayValueProperty]="'Company.Denomination'">
+      </eqp-select>
+    </div>
+  </div> -->
+
+  <h2>Select con array di elementi primitivi</h2>
+
+  <!-- <div class="row">
+    <div class="col-6">
+      <eqp-select
+        [arrayData]="primitiveArrayData"
+        [isSearchable]="true"
+        placeholder="Select con array di dati primitivi e ngModel"
+        [(ngModelInput)]="selectWithPrimitiveArray"
+        (ngModelInputChange)="selectChange($event, selectWithPrimitiveArray)"
+        [arrayKeyProperty]="'ID'"
+        [arrayValueProperty]="'Label'">
+      </eqp-select>
+    </div>
+    <div class="col-6">
+      <eqp-select
+        [arrayData]="primitiveArrayData"
+        [isSearchable]="true"
+        placeholder="Select con array di dati primitivi e form"
+        (formControlChange)="selectChange($event, null, getControls('selectWithPrimitiveArray').value)"
+        [formGroupInput]="formSelect"
+        [formControlNameInput]="'selectWithPrimitiveArray'"
+        [arrayKeyProperty]="'ID'"
+        [arrayValueProperty]="'Label'">
+      </eqp-select>
+    </div>
+
+    <div class="col-6">
+      <eqp-select
+        [arrayData]="primitiveArrayData"
+        [isSearchable]="true"
+        placeholder="Select con array di dati primitivi, ngModel e inizialmente popolato"
+        [(ngModelInput)]="selectPopulatedWithPrimitiveArray"
+        (ngModelInputChange)="selectChange($event, selectPopulatedWithPrimitiveArray)"
+        [arrayKeyProperty]="'ID'"
+        [arrayValueProperty]="'Label'">
+      </eqp-select>
+    </div>
+    <div class="col-6">
+      <eqp-select
+        [arrayData]="primitiveArrayData"
+        [isSearchable]="true"
+        placeholder="Select con array di dati primitivi, form e inizialmente popolato"
+        (formControlChange)="selectChange($event, null, getControls('selectPopulatedWithPrimitiveArray').value)"
+        [formGroupInput]="formSelect"
+        [formControlNameInput]="'selectPopulatedWithPrimitiveArray'"
+        [arrayKeyProperty]="'ID'"
+        [arrayValueProperty]="'Label'">
+      </eqp-select>
+    </div>
+    <div class="col-6">
+      <eqp-select
+        [arrayData]="primitiveArrayData"
+        [isSearchable]="true"
+        placeholder="Select con array di dati primitivi, ngModel, inizialmente popolato e selectAll"
+        [(ngModelInput)]="selectPopulatedWithPrimitiveArrayAndSelectAll"
+        (ngModelInputChange)="selectChange($event, selectPopulatedWithPrimitiveArrayAndSelectAll)"
+        [selectAll]="true"
+        [selectableGroupAsModel]="true"
+        [isMultiSelect]="true"
+        [arrayKeyProperty]="'ID'"
+        [arrayValueProperty]="'Label'">
+      </eqp-select>
+    </div>
+    <div class="col-6">
+      <eqp-select
+        [arrayData]="primitiveArrayData"
+        [isSearchable]="true"
+        placeholder="Select con array di dati primitivi, form, inizialmente popolato e selectAll"
+        (formControlChange)="
+          selectChange($event, null, getControls('selectPopulatedWithPrimitiveArrayAndSelectAll').value)
+        "
+        [formGroupInput]="formSelect"
+        [formControlNameInput]="'selectPopulatedWithPrimitiveArrayAndSelectAll'"
+        [selectAll]="true"
+        [selectableGroupAsModel]="true"
+        [isMultiSelect]="true"
+        [arrayKeyProperty]="'ID'"
+        [arrayValueProperty]="'Label'">
+      </eqp-select>
+    </div>
+  </div> -->
+
+  <h2>Traduzioni</h2>
+  <!-- <div class="row">
+    <div class="col-6">
+      <eqp-select
+        [enumData]="testEnum"
+        [isMultiSelect]="true"
+        [(ngModelInput)]="multiSelectWithTranslation"
+        placeholder="Select multipla con traduzioni"
+        (ngModelInputChange)="selectChange($event, multiSelectWithTranslation)"
+        [isMultiLanguage]="true"
+        [multilanguagePrefixKey]="'ENUMS.COUNTRY.'">
+      </eqp-select>
+    </div>
+    <div class="col-6">
+      <eqp-select
+        [enumData]="genderEnum"
+        [(ngModelInput)]="singleSelectWithTranslation"
+        placeholder="Select singola con traduzioni"
+        (ngModelInputChange)="selectChange($event, singleSelectWithTranslation)"
+        [isMultiLanguage]="true"
+        [multilanguagePrefixKey]="'ENUMS.GENDER.'">
+      </eqp-select>
+    </div>
+  </div> -->
+
+  <h2>Uso enum data to exclude</h2>
+  <div class="row">
+    <div class="col-6">
+      <eqp-select
+        #selectWithExclude
+        [enumData]="testEnum"
+        [isSearchable]="true"
+        [(ngModelInput)]="selectWithEnumAndEnumDataToExclude"
+        placeholder="Select con enum data"
+        (ngModelInputChange)="selectChange($event, selectWithEnumAndEnumDataToExclude)"
+        [suffixIcon]="'edit'"
+        [enumDataToExclude]="enumDataToExclude"
+        [prefixIcon]="'add'">
+      </eqp-select>
+    </div>
+    <div class="col-6">
+      <button class="btn btn-primary" type="button" (click)="exclude()">Aggiungi esclusione</button>
+    </div>
+  </div>
+
+  <h2>Gestione validazioni form</h2>
+  <!-- <div class="row">
+    <div class="col-6">
+      <eqp-select
+        [arrayData]="dataSource"
+        [isSearchable]="true"
+        placeholder="Select con form e validazioni"
+        (formControlChange)="selectChange($event, null, getControls('selectWithArrayAndValidation').value)"
+        [formGroupInput]="formSelect"
+        [formControlNameInput]="'selectWithArrayAndValidation'"
+        [arrayKeyProperty]="'Key'"
+        [arrayValueProperty]="'Company.Denomination'"
+        [suffixIcon]="'edit'"
+        [prefixIcon]="'add'">
+      </eqp-select>
+    </div>
+    <div class="col-6">
+      <button class="btn btn-primary" type="button" (click)="changeValue(dataSource[1])">Aggiungi valore</button>
+      <button class="btn btn-primary" type="button" (click)="changeValue(null)">Togli valore</button>
+      <button class="btn btn-primary" type="button" (click)="changeValidator(true)">Aggiungi validazione</button>
+      <button class="btn btn-primary" type="button" (click)="changeValidator(false)">Togli validazione</button>
+      <button class="btn btn-primary" type="button" (click)="changeEnable('selectWithArrayAndValidation')">
+        Cambia stato
+      </button>
+
+      <button class="btn btn-primary" type="button" [disabled]="formSelect?.invalid">Submit button</button>
+    </div>
+
+    <div class="col-6">
+      <eqp-select
+        [enumData]="testEnum"
+        [isSearchable]="true"
+        placeholder="Select con form e validazioni"
+        (formControlChange)="selectChange($event, null, getControls('selectWithEnumAndValidation').value)"
+        [formGroupInput]="formSelect"
+        [formControlNameInput]="'selectWithEnumAndValidation'"
+        [suffixIcon]="'edit'"
+        [prefixIcon]="'add'">
+      </eqp-select>
+    </div>
+    <div class="col-6">
+      <button class="btn btn-primary" type="button" (click)="changeValue(3, true)">Aggiungi valore</button>
+      <button class="btn btn-primary" type="button" (click)="changeValue(null, true)">Togli valore</button>
+      <button class="btn btn-primary" type="button" (click)="changeValidator(true, true)">Aggiungi validazione</button>
+      <button class="btn btn-primary" type="button" (click)="changeValidator(false, true)">Togli validazione</button>
+      <button class="btn btn-primary" type="button" (click)="changeEnable('selectWithEnumAndValidation')">
+        Cambia stato
+      </button>
+
+      <button class="btn btn-primary" type="button" [disabled]="formSelect?.invalid">Submit button</button>
+    </div>
+
+    <div class="col-12">
+      <button class="btn btn-primary" type="button" (click)="changeFormGroupEnable()">Cambia stato form group</button>
+      ì
+    </div>
+  </div> -->
+
+  <div class="row">
+    <button class="btn btn-primary" (click)="checkValues()">Check</button>
+  </div>
+</div>

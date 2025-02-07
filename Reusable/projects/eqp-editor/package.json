@@ -1,0 +1,30 @@
+{
+  "name": "@eqproject/eqp-editor",
+  "version": "3.0.0",
+  "peerDependencies": {
+    "@angular/common": "^17.0.4",
+    "@angular/core": "^17.0.4",
+    "tslib": "^2.6.2"
+  },
+  "dependencies": {
+    "@ngx-translate/core": "^15.0.0",
+    "@ngx-translate/http-loader": "^8.0.0",
+    "@syncfusion/ej2-base": "23.2.6",
+    "@syncfusion/ej2-lists": "23.2.4",
+    "@syncfusion/ej2-inputs": "23.2.4",
+    "@syncfusion/ej2-popups": "23.2.4",
+    "@syncfusion/ej2-buttons": "23.2.7",
+    "@angular/platform-browser": "15.2.10",
+    "@syncfusion/ej2-dropdowns": "23.2.7",
+    "@syncfusion/ej2-navigations": "23.2.7",
+    "@syncfusion/ej2-angular-base": "23.2.5",
+    "@syncfusion/ej2-splitbuttons": "23.2.4",
+    "@syncfusion/ej2-angular-inputs": "23.2.4",
+    "@syncfusion/ej2-documenteditor": "25.1.37",
+    "@syncfusion/ej2-angular-buttons": "23.2.7",
+    "@angular/platform-browser-dynamic": "15.2.10",
+    "@syncfusion/ej2-angular-dropdowns": "23.2.7",
+    "@syncfusion/ej2-angular-navigations": "23.2.7",
+    "@syncfusion/ej2-angular-documenteditor": "25.1.37"
+  }
+}

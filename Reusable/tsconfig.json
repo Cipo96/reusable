@@ -1,0 +1,102 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "preserveSymlinks": true,
+    "strict": false,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "module": "ES2022",
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "ES2022",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "ES2022",
+      "dom"
+    ],
+    "paths": {
+      "eqp-ui": [
+        "dist/eqp-ui",
+        "projects/eqp-ui"
+      ],
+      "eqp-datetimerangepicker": [
+        "dist/eqp-datetimerangepicker",
+        "projects/eqp-datetimerangepicker"
+      ],
+      "eqp-suite": [
+        "dist/eqp-suite",
+        "projects/eqp-suite"
+      ],
+      "eqp-table": [
+        "dist/eqp-table",
+        "projects/eqp-table"
+      ],
+      "eqp-select": [
+        "./dist/eqp-select",
+        "projects/eqp-select"
+      ],
+      "eqp-editor": [
+        "dist/eqp-editor",
+        "projects/eqp-editor",
+        "projects/eqp-editor/node_modules/@syncfusion/*"
+      ],
+      "eqp-dashboard": [
+        "dist/eqp-dashboard",
+        "projects/eqp-dashboard"
+      ],
+      "eqp-filters": [
+        "dist/eqp-filters",
+        "projects/eqp-filters"
+      ],
+      "eqp-attachments": [
+        "dist/eqp-attachments",
+        "projects/eqp-attachments"
+      ],
+      "eqp-form": [
+        "dist/eqp-form",
+        "projects/eqp-form"
+      ],
+      "eqp-calendar": [
+        "dist/eqp-calendar",
+        "projects/eqp-calendar"
+      ],
+      "eqp-numeric": [
+        "dist/eqp-numeric",
+        "projects/eqp-numeric"
+      ],
+      "eqp-img-drawing": [
+        "dist/eqp-img-drawing",
+        "projects/eqp-drawing"
+      ],
+      "eqp-lookup": [
+        "dist/eqp-lookup",
+        "projects/eqp-lookup"
+      ],
+      "eqp-common": [
+        "dist/eqp-common",
+        "projects/eqp-common"
+      ],
+      //In caso di errore di Syncfusion Cannot resolve type entity i1.DocumentContainerComponent to symbol
+      //specificare anche "./node_modules/@syncfusion/ej2-angular-documenteditor" e ej2-documenteditor
+      "@syncfusion/*": [
+        "./node_modules/@syncfusion/*"
+      ],
+      "@eqproject/*": [
+        "./node_modules/@eqproject/*"
+      ]
+    }
+  },
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true
+  }
+}

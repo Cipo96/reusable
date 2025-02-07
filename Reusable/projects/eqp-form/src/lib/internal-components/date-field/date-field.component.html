@@ -1,0 +1,27 @@
+<!-- DATE -->
+<ng-container *ngIf="field.formFieldType == formFieldType.Date">
+    <eqp-datetimerangepicker placeholder="{{ field.display }}" [formGroupInput]="form"
+        [formControlNameInput]="field.key" [type]="pickerModeEnum.DATE" [disabled]="control?.disabled"
+        (formControlChange)="onInputChange(field.key, $event)">
+    </eqp-datetimerangepicker>
+</ng-container>
+
+<!-- DATETIME -->
+<ng-container *ngIf="field.formFieldType == formFieldType.DateTime">
+    <eqp-datetimerangepicker placeholder="{{ field.display }}" [formGroupInput]="form"
+        [formControlNameInput]="field.key" [type]="pickerModeEnum.DATETIME" [disabled]="control?.disabled"
+        (formControlChange)="onInputChange(field.key, $event)">
+    </eqp-datetimerangepicker>
+</ng-container>
+
+<!-- DATERANGE -->
+<ng-container *ngIf="field.formFieldType == formFieldType.DateRange">
+    <eqp-datetimerangepicker placeholder="{{ field.display }}" [formGroupInput]="form" [disabled]="control?.disabled"
+        [type]="pickerModeEnum.DATE_RANGE" [class.mat-form-field-invalid]="true"
+        [formControlNameInputStart]="field.key + '_START'" [formControlNameInputEnd]="field.key + '_END'"
+        (formControlChange)="onInputChange(field.key, $event)">
+    </eqp-datetimerangepicker>
+</ng-container>
+@if (control?.invalid && control?.touched) {
+<mat-error> {{ field.validationProperties?.HintLabel }}</mat-error>
+}

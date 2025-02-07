@@ -1,0 +1,75 @@
+<!-- FORMCONTROLNAME -->
+<form *ngIf="tmpFormGroup" [formGroup]="tmpFormGroup">
+  <eqp-lookup
+    #eqpLookup
+    (formControlChange)="onChangeSelect($event)"
+    [isMultiple]="isMultiSelect"
+    [formControlNameInput]="'tmpFormControl'"
+    [isRequired]="isRequired"
+    [isDisabled]="isDisabled"
+    [formGroupInput]="tmpFormGroup"
+    [isReadonly]="isReadonly"
+    [initialItems]="listOfElements"
+    [isSearchable]="isSearchable"
+    [isSearchWhileComposing]="isSearchWhileComposing"
+    [appendToInput]="appendToInput"
+    [dropdownPosition]="dropdownPosition"
+    [notFoundText]="noResultSearchText"
+    [selectOnTab]="selectOnTab"
+    [selectAll]="selectAll"
+    [selectAllText]="selectAllText"
+    [selectableGroupAsModel]="selectableGroupAsModel"
+    [clearAllText]="clearAllText"
+    [customOption]="customOption"
+    [customLabel]="customLabel ? customLabel : customTemplateForSuffixAndPrefix"
+    [class]="class"
+    [placeholder]="placeholder"
+    [isClearable]="showCancelButton"
+    [bindKey]="arrayKeyProperty"
+    [bindLabel]="arrayValueProperty"
+    [bindCompleteObject]="arrayData != null ? true : false">
+  </eqp-lookup>
+</form>
+
+<eqp-lookup
+  #eqpLookup
+  *ngIf="!tmpFormGroup"
+  [isMultiple]="isMultiSelect"
+  (ngModelInputChange)="onChangeSelect($event)"
+  [ngModelInput]="ngModelInput"
+  [ngModelOptions]="ngModelOptions"
+  [isRequired]="isRequired"
+  [isDisabled]="isDisabled"
+  [isReadonly]="isReadonly"
+  [initialItems]="listOfElements"
+  [isSearchable]="isSearchable"
+  [isSearchWhileComposing]="isSearchWhileComposing"
+  [appendToInput]="appendToInput"
+  [dropdownPosition]="dropdownPosition"
+  [notFoundText]="noResultSearchText"
+  [selectOnTab]="selectOnTab"
+  [selectAll]="selectAll"
+  [selectAllText]="selectAllText"
+  [selectableGroupAsModel]="selectableGroupAsModel"
+  [clearAllText]="clearAllText"
+  [customOption]="customOption"
+  [customLabel]="customLabel ? customLabel : customTemplateForSuffixAndPrefix"
+  [class]="class"
+  [placeholder]="placeholder"
+  [isClearable]="showCancelButton"
+  [bindLabel]="arrayValueProperty"
+  [bindKey]="arrayKeyProperty"
+  [bindCompleteObject]="arrayData != null ? true : false">
+</eqp-lookup>
+
+<ng-template #customTemplateForSuffixAndPrefix ng-label-tmp let-item="item" let-clear="clear">
+  <div class="ng-value__wrapper">
+    <mat-icon class="prefix-icon-template" matIconPrefix *ngIf="prefixIcon">{{ prefixIcon }}</mat-icon>
+    <span title="{{ getValue(item, arrayValueProperty) }}">{{
+      getValue(item, arrayValueProperty) != null ? getValue(item, arrayValueProperty) : item["Key"]
+    }}</span>
+    <span *ngIf="item.Total" class="ml-1 badge badge-secondary" style="color: white !important">{{ item.Total }}</span>
+    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true"> x </span>
+    <mat-icon class="suffix-icon-template" matIconSuffix *ngIf="suffixIcon">{{ suffixIcon }}</mat-icon>
+  </div>
+</ng-template>

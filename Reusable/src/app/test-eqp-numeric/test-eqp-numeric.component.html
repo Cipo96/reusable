@@ -1,0 +1,24 @@
+<form class="container" [formGroup]="form">
+  <div class="row">
+    <div class="col-md-3 col-sm-5 form-group">
+      <label>Esempio</label>
+      <input #valueInput class="form-control" eqpNumericMask formControlName="value" [placeholder]="'€'"
+        [options]="eqpNumericOptions" />
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3 col-sm-5 form-group">
+      <label>Tipo</label>
+      <div>
+        <label class="radio-inline">
+          <input type="radio" name="inputMode" formControlName="inputMode" [value]="0" />Financial</label>
+        <label class="radio-inline">
+          <input type="radio" name="inputMode" formControlName="inputMode" [value]="1" />Natural</label>
+      </div>
+    </div>
+  </div>
+  <div class="row col-md-4 col-sm-6 form-group">
+    <label>Value</label>
+    <pre style="width: 100%">{{ form.get('value').value | json }}</pre>
+  </div>
+</form>

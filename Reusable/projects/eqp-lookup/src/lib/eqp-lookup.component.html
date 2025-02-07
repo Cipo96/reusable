@@ -1,0 +1,150 @@
+<!-- CASO IN CUI VIENE PASSATO IL FormControlName e il FormGroup -->
+<form *ngIf="formGroupInput && formControlNameInput" [formGroup]="formGroupInput">
+  <ng-select
+    [class]="class"
+    appendTo="{{ appendToInput }}"
+    [formControlName]="formControlNameInput"
+    #ngselect
+    (blur)="ngselect.close(); onBlur($event)"
+    (change)="onChangeSelect($event)"
+    (clear)="lookupCleared($event)"
+    (search)="searchChangeMethod($event)"
+    [items]="items"
+    placeholder="{{ placeholder }}"
+    [multiple]="isMultiple"
+    [notFoundText]="notFoundText"
+    [searchable]="isSearchable"
+    [virtualScroll]="isVirtualScroll"
+    [readonly]="isReadonly"
+    [bindLabel]="bindLabel"
+    [bindValue]="bindCompleteObject == true ? null : bindKey"
+    [required]="isRequired"
+    [dropdownPosition]="dropdownPosition"
+    [searchWhileComposing]="isSearchWhileComposing"
+    [disabled]="isDisabled"
+    [clearAllText]="clearAllText"
+    [compareWith]="compareFunction"
+    (keydown)="keydownEvent($event)"
+    [selectOnTab]="selectOnTab"
+    (focus)="onFocus($event)"
+    [clearable]="isClearable"
+    [groupBy]="groupBy"
+    [groupValue]="groupValue"
+    [selectableGroup]="selectableGroup"
+    [selectableGroupAsModel]="selectableGroupAsModel">
+    <!--TEMPLATE STANDARD PER L'OPZIONE ALL'INTERNO DEL MENU' A TENDINA-->
+    <ng-template *ngIf="!customOption && showOptionTooltip" ng-option-tmp let-item="item">
+      <div title="{{ item[bindLabel] }}">{{ item[bindLabel] }}</div>
+    </ng-template>
+
+    <!--TEMPLATE CUSTOM PER L'OPZIONE ALL'INTERNO DEL MENU' A TENDINA-->
+    <ng-template *ngIf="customOption" ng-option-tmp let-item="item">
+      <ng-template [ngTemplateOutlet]="customOption" [ngTemplateOutletContext]="{ item: item }"></ng-template>
+    </ng-template>
+
+    <!--TEMPLATE STANDARD PER L'OPZIONE DI RAGGRUPPAMENTO ALL'INTERNO DEL MENU' A TENDINA-->
+    <ng-template ng-optgroup-tmp let-item="item">
+      <span class="optgroup-tmp-label">{{
+        item[bindLabel] != null && item[bindLabel] != "" ? item[bindLabel] : item["Key"]
+      }}</span>
+      <span class="ml-1 badge badge-secondary optgroup-tmp-total" *ngIf="item.Total">({{ item.Total }})</span>
+    </ng-template>
+
+    <!--TEMPLATE CUSTOM PER L'OPZIONE DI RAGGRUPPAMENTO ALL'INTERNO DEL MENU' A TENDINA-->
+    <!-- <ng-template ng-optgroup-tmp let-item="item">
+      <span class="optgroup-tmp-label">{{item[bindLabel]}}</span>
+      <span class="ml-1 badge badge-secondary optgroup-tmp-total" *ngIf="item.Total">{{item.Total}}</span>
+    </ng-template> -->
+
+    <!--TEMPLATE STANDARD PER LA LABEL DEL COMPONENTE CON L'OGGETTO SELEZIONATO-->
+    <ng-template ng-label-tmp let-item="item" let-clear="clear" *ngIf="!customLabel">
+      <span class="lookup-label-value" title="{{ item[bindLabel] }}">{{ item[bindLabel] }}</span>
+      <span *ngIf="item.Total" class="ml-1 badge badge-secondary lookup-label-total">({{ item.Total }})</span>
+      <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true"> ×</span>
+    </ng-template>
+
+    <!--TEMPLATE CUSTOM PER LA LABEL DEL COMPONENTE CON L'OGGETTO SELEZIONATO-->
+    <ng-template ng-label-tmp let-item="item" let-clear="clear" *ngIf="customLabel">
+      <ng-template
+        [ngTemplateOutlet]="customLabel"
+        [ngTemplateOutletContext]="{ item: item, clear: clear }"></ng-template>
+    </ng-template>
+  </ng-select>
+</form>
+
+<ng-select
+  *ngIf="!formGroupInput && !formControlNameInput"
+  [class]="class"
+  appendTo="{{ appendToInput }}"
+  [ngModel]="ngModelInput"
+  [ngModelOptions]="{ standalone: true }"
+  #ngselect
+  (blur)="ngselect.close(); onBlur($event)"
+  (change)="onChangeSelect($event)"
+  (clear)="lookupCleared($event)"
+  (search)="searchChangeMethod($event)"
+  [items]="items"
+  placeholder="{{ placeholder }}"
+  [multiple]="isMultiple"
+  [notFoundText]="notFoundText"
+  [searchable]="isSearchable"
+  [virtualScroll]="isVirtualScroll"
+  [readonly]="isReadonly"
+  [bindLabel]="bindLabel"
+  [bindValue]="bindCompleteObject == true ? null : bindKey"
+  [required]="isRequired"
+  [dropdownPosition]="dropdownPosition"
+  [searchWhileComposing]="isSearchWhileComposing"
+  [disabled]="isDisabled"
+  [clearAllText]="clearAllText"
+  [compareWith]="compareFunction"
+  (keydown)="keydownEvent($event)"
+  [selectOnTab]="selectOnTab"
+  (focus)="onFocus($event)"
+  [clearable]="isClearable"
+  [groupBy]="groupBy"
+  [groupValue]="groupValue"
+  [selectableGroup]="selectableGroup"
+  [selectableGroupAsModel]="selectableGroupAsModel">
+  <!--TEMPLATE STANDARD PER L'OPZIONE ALL'INTERNO DEL MENU' A TENDINA-->
+  <ng-template *ngIf="!customOption && showOptionTooltip" ng-option-tmp let-item="item">
+    <div title="{{ item[bindLabel] }}">{{ item[bindLabel] }}</div>
+  </ng-template>
+
+  <!--TEMPLATE CUSTOM PER L'OPZIONE ALL'INTERNO DEL MENU' A TENDINA-->
+  <ng-template *ngIf="customOption" ng-option-tmp let-item="item">
+    <ng-template [ngTemplateOutlet]="customOption" [ngTemplateOutletContext]="{ item: item }"></ng-template>
+  </ng-template>
+
+  <!--TEMPLATE STANDARD PER L'OPZIONE DI RAGGRUPPAMENTO ALL'INTERNO DEL MENU' A TENDINA-->
+  <ng-template ng-optgroup-tmp let-item="item">
+    <span class="optgroup-tmp-label">{{
+      item[bindLabel] != null && item[bindLabel] != "" ? item[bindLabel] : item["Key"]
+    }}</span>
+    <span class="ml-1 badge badge-secondary optgroup-tmp-total" *ngIf="item.Total">({{ item.Total }})</span>
+  </ng-template>
+
+  <!--TEMPLATE CUSTOM PER L'OPZIONE DI RAGGRUPPAMENTO ALL'INTERNO DEL MENU' A TENDINA-->
+  <!-- <ng-template ng-optgroup-tmp let-item="item">
+      <span class="optgroup-tmp-label">{{item[bindLabel]}}</span>
+      <span class="ml-1 badge badge-secondary optgroup-tmp-total" *ngIf="item.Total">{{item.Total}}</span>
+    </ng-template> -->
+
+  <!--TEMPLATE STANDARD PER LA LABEL DEL COMPONENTE CON L'OGGETTO SELEZIONATO-->
+  <ng-template ng-label-tmp let-item="item" let-clear="clear" *ngIf="!customLabel">
+    <span class="lookup-label-value" title="{{ item[bindLabel] }}">{{ item[bindLabel] }}</span>
+    <span *ngIf="item.Total" class="ml-1 badge badge-secondary lookup-label-total">({{ item.Total }})</span>
+    <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true"> ×</span>
+  </ng-template>
+
+  <!--TEMPLATE CUSTOM PER LA LABEL DEL COMPONENTE CON L'OGGETTO SELEZIONATO-->
+  <ng-template ng-label-tmp let-item="item" let-clear="clear" *ngIf="customLabel">
+    <ng-template
+      [ngTemplateOutlet]="customLabel"
+      [ngTemplateOutletContext]="{ item: item, clear: clear }"></ng-template>
+  </ng-template>
+</ng-select>
+
+<ng-template #dialogDynamic>
+  <ng-template appDynamicLoader [data]="genericAddComponent"> </ng-template>
+</ng-template>

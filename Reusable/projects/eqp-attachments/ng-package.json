@@ -1,0 +1,16 @@
+{
+  "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../dist/eqp-attachments",
+  "lib": {
+    "entryFile": "src/public-api.ts"
+  },
+  "allowedNonPeerDependencies": [
+    "@eqproject/eqp-table",
+    "browser-image-compression",
+    "ngx-image-cropper",
+    "jspdf",
+    "jspdf-autotable",
+    "sweetalert2",
+    "ngx-file-drop"
+  ]
+}

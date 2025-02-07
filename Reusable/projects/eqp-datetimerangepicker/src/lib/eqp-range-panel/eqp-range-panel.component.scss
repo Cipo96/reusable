@@ -1,0 +1,51 @@
+$width: 128px;
+$height: 337.8px;
+$heightTouchUi: 130px;
+$widthTouchUi: 300px;
+
+:host {
+  position: absolute;
+  width: $width;
+  .mat-mdc-card {
+    padding: 0;
+    padding-top: 1rem;
+    width: fit-content;
+    text-align: center;
+    height: $height;
+    overflow-y: auto;
+    button {
+      background-color: transparent;
+      border: solid 1px #bbbbbb;
+      border-radius: 5px;
+    }
+  }
+  right: -$width; // to render it on the right side, use "right: -$width" instead
+}
+
+:host(.touch-ui) {
+  position: relative;
+  left: 0;
+  display: flex;
+  flex-wrap: wrap;
+  width: fit-content;
+  flex-direction: row;
+  justify-content: center;
+  .mdc-card {
+    position: relative;
+    left: 0;
+    display: flex;
+    flex-wrap: wrap;
+    width: fit-content !important;
+    flex-direction: row;
+
+    justify-content: center;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    height: $heightTouchUi;
+    overflow-y: scroll;
+  }
+}
+
+button {
+  margin: 0.5rem;
+}

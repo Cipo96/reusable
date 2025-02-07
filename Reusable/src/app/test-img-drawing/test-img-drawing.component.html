@@ -1,0 +1,7 @@
+<eqp-img-drawing [showCancelButton]="false" [enableLoadAnotherImage]="true" [enableRemoveImage]="true" [src]="src"
+    (save)="saveBtn($event)" [i18n]="i18n" [drawingSizes]="{ small: 5, medium: 10, large: 25, extra: 50 }" *ngIf="src">
+</eqp-img-drawing>
+
+<eqp-img-drawing [showCancelButton]="true" [enableLoadAnotherImage]="true" [enableRemoveImage]="true" [src]="src"
+    (save)="saveBtn($event)" [i18n]="i18n" [drawingSizes]="{ small: 5, medium: 10, large: 25, extra: 50 }">
+</eqp-img-drawing>

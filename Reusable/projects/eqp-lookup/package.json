@@ -1,0 +1,19 @@
+{
+  "name": "@eqproject/eqp-lookup",
+  "version": "3.0.0",
+  "description": "Dynamic lookup - Angular Material based",
+  "author": {
+    "name": "EqProject"
+  },
+  "license": "MIT",
+  "peerDependencies": {
+    "@angular/common": "^17.0.4",
+    "@angular/core": "^17.0.4",
+    "@angular/animations": "^17.0.4",
+    "@angular/forms": "^17.0.4",
+    "@ng-select/ng-select": "^12.0.4"
+  },
+  "dependencies": {
+    "tslib": "^2.6.2"
+  }
+}

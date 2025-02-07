@@ -1,0 +1,479 @@
+<div class="container-fluid">
+  <div class="row mt-3">
+    <div class="col-6 blue">
+      <h3>Custom label properties (id, code, name) e include full object</h3>
+      <eqp-lookup
+        [entityType]="'Province'"
+        placeholder="Provincia"
+        [fullUrlHttpCall]="fullUrlHttpCall"
+        (ngModelInputChange)="lookupChange($event)"
+        [customConfig]="{ LabelProperties: ['Name', 'Code', 'ID'], IncludeFullObject: true }"
+        [isDisabled]="!enabled"></eqp-lookup>
+    </div>
+    <div class="col-6">
+      <h3>Filtro in base alla provincia</h3>
+      <eqp-lookup
+        [entityType]="'City'"
+        placeholder="Città"
+        [fullUrlHttpCall]="fullUrlHttpCall"
+        [isVirtualScroll]="true"
+        (ngModelInputChange)="lookupChange($event)"
+        [dataFilter]="[{ PropertyFilters: [{ PropertyName: 'FK_Province', PropertyValue: 10, RelationType: 1 }] }]"
+        [isDisabled]="!enabled"></eqp-lookup>
+    </div>
+  </div>
+  <div class="row mt-3" style="align-items: center">
+    <div class="col-4">
+      <h3>Lookup con initial Items</h3>
+      <eqp-lookup
+        *ngIf="questionInitialItems != null"
+        placeholder="Domande"
+        [entityType]="'Question'"
+        [initialItems]="questionInitialItems"
+        [isVirtualScroll]="true"
+        (ngModelInputChange)="lookupChange($event)"
+        [isDisabled]="!enabled"></eqp-lookup>
+    </div>
+    <div class="col-4">
+      <h3>Lookup con initial Items e aggiunta</h3>
+      <eqp-lookup
+        *ngIf="questionInitialItems != null"
+        placeholder="Domande"
+        [entityType]="'Question'"
+        [initialItems]="questionInitialItems"
+        [(ngModelInput)]="lookupWithInitialItems"
+        (ngModelInputChange)="lookupChange($event)"
+        [genericAddComponent]="{
+          componentSelector: addQuestionComponent,
+          idLookupEntity: getNumber(lookupWithInitialItems?.ID),
+          isEditable: true,
+          disableRedirectAfterSave: true
+        }"
+        [isVirtualScroll]="true"
+        [isDisabled]="!enabled"></eqp-lookup>
+    </div>
+    <div class="col-4">
+      <h3>Lookup con initial Items e aggiunta e modifica</h3>
+      <eqp-lookup
+        *ngIf="questionInitialItems != null"
+        placeholder="Domande"
+        [entityType]="'Question'"
+        [initialItems]="questionInitialItems"
+        [genericAddComponent]="{
+          componentSelector: addQuestionComponent,
+          idLookupEntity: getNumber(lookupWithInitialItems?.ID),
+          isEditable: true,
+          disableRedirectAfterSave: true
+        }"
+        [isVirtualScroll]="true"
+        [isEditable]="true"
+        [(ngModelInput)]="lookupWithInitialItems"
+        (ngModelInputChange)="lookupChange($event)"
+        [isDisabled]="!enabled"></eqp-lookup>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-6">
+      <h3>Lookup senza form - Editabile</h3>
+      <eqp-lookup
+        placeholder="Lookup no form"
+        [entityType]="'Question'"
+        [fullUrlHttpCall]="fullUrlHttpCall"
+        [genericAddComponent]="{
+          componentSelector: addQuestionComponent,
+          idLookupEntity: getNumber(questionLookupWithoutForm?.ID),
+          isEditable: true,
+          disableRedirectAfterSave: true
+        }"
+        [isVirtualScroll]="true"
+        [(ngModelInput)]="questionLookupWithoutForm"
+        (ngModelInputChange)="lookupChange($event)"
+        [isMultiline]="true"
+        [isEditable]="true"
+        [addButtonText]="'Aggiungi un nuovo valore nella lookup'"
+        [editButtonText]="'Modifica un valore nella lookup'"
+        [isDisabled]="!enabled"></eqp-lookup>
+      {{ getLookupValue(questionLookupWithoutForm) }}
+    </div>
+    <div class="col-6">
+      <h3>Lookup senza form - Non editabile</h3>
+      <eqp-lookup
+        placeholder="Lookup no form"
+        [entityType]="'Question'"
+        [fullUrlHttpCall]="fullUrlHttpCall"
+        [genericAddComponent]="{
+          componentSelector: addQuestionComponent,
+          idLookupEntity: getNumber(questionLookupWithoutFormPT2?.ID),
+          isEditable: true,
+          disableRedirectAfterSave: true
+        }"
+        [isVirtualScroll]="true"
+        [(ngModelInput)]="questionLookupWithoutFormPT2"
+        (ngModelInputChange)="lookupChange($event)"
+        [isMultiline]="true"
+        [bindKey]="'ID'"
+        [bindLabel]="'Label'"
+        [bindCompleteObject]="true"
+        [isDisabled]="!enabled"></eqp-lookup>
+
+      {{ getLookupValue(questionLookupWithoutFormPT2) | json }}
+      {{ questionLookupWithoutFormPT2 | json }}
+    </div>
+  </div>
+
+  <div class="row mt-3" *ngIf="lookupFormGroup">
+    <div class="col-6">
+      <h3>Lookup con form - Editabile</h3>
+      <eqp-lookup
+        placeholder="Lookup con form"
+        [entityType]="'Question'"
+        [fullUrlHttpCall]="fullUrlHttpCall"
+        [genericAddComponent]="{
+          componentSelector: addQuestionComponent,
+          idLookupEntity: getNumber(getFormControls('questionLookupWithForm').value),
+          isEditable: true,
+          disableRedirectAfterSave: true
+        }"
+        [isVirtualScroll]="true"
+        [formGroupInput]="lookupFormGroup"
+        [formControlNameInput]="'questionLookupWithForm'"
+        (formControlChange)="lookupChange($event)"
+        [isMultiline]="true"
+        [isEditable]="true"></eqp-lookup>
+      {{
+        "Valore: " +
+          getFormControls("questionLookupWithForm").value?.ID +
+          " " +
+          getFormControls("questionLookupWithForm").value?.Label
+      }}
+    </div>
+    <div class="col-6">
+      <h3>Lookup con form - Non editabile</h3>
+      <eqp-lookup
+        placeholder="Lookup con form"
+        [entityType]="'Question'"
+        [fullUrlHttpCall]="fullUrlHttpCall"
+        [genericAddComponent]="{
+          componentSelector: addQuestionComponent,
+          idLookupEntity: getNumber(getFormControls('questionLookupWithFormPT2').value),
+          isEditable: true,
+          disableRedirectAfterSave: true
+        }"
+        [isVirtualScroll]="true"
+        [formGroupInput]="lookupFormGroup"
+        [formControlNameInput]="'questionLookupWithFormPT2'"
+        (formControlChange)="lookupChange($event)"
+        [isMultiline]="true"
+        [bindKey]="'ID'"
+        [bindLabel]="'Label'"
+        [bindCompleteObject]="true"></eqp-lookup>
+      {{ "Valore: " + (getFormControls("questionLookupWithFormPT2").value | json) }}
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-6">
+      <h3>Lookup con select all</h3>
+      <eqp-lookup
+        placeholder="Lookup con select all"
+        [entityType]="'Question'"
+        [fullUrlHttpCall]="fullUrlHttpCall"
+        [genericAddComponent]="{
+          componentSelector: addQuestionComponent,
+          idLookupEntity: getNumber(lookupWithSelectAll?.ID),
+          isEditable: true,
+          disableRedirectAfterSave: true
+        }"
+        [isVirtualScroll]="true"
+        [(ngModelInput)]="lookupWithSelectAll"
+        (ngModelInputChange)="lookupChange($event)"
+        [isMultiline]="true"
+        [isEditable]="true"
+        [addButtonText]="'Aggiungi un nuovo valore nella lookup'"
+        [editButtonText]="'Modifica un valore nella lookup'"
+        [selectAll]="true"
+        [isMultiple]="true"
+        [selectableGroupAsModel]="true"
+        [isDisabled]="!enabled"></eqp-lookup>
+    </div>
+    <div class="col-6">
+      <h3>Lookup con select all e form</h3>
+      <eqp-lookup
+        placeholder="Lookup con select all e form"
+        [entityType]="'Question'"
+        [fullUrlHttpCall]="fullUrlHttpCall"
+        [genericAddComponent]="{
+          componentSelector: addQuestionComponent,
+          idLookupEntity: getNumber(getFormControls('questionLookupWithForm').value),
+          isEditable: true,
+          disableRedirectAfterSave: true
+        }"
+        [isVirtualScroll]="true"
+        (formControlChange)="lookupChange($event)"
+        [formGroupInput]="lookupFormGroup"
+        [formControlNameInput]="'lookupWithSelectAllAndForm'"
+        [isMultiline]="true"
+        [isEditable]="true"
+        [addButtonText]="'Aggiungi un nuovo valore nella lookup'"
+        [editButtonText]="'Modifica un valore nella lookup'"
+        [selectAll]="true"
+        [isMultiple]="true"
+        [selectableGroupAsModel]="true"
+        [isDisabled]="!enabled"></eqp-lookup>
+    </div>
+    <div class="col-6">
+      <h3>Lookup con gruppi e custom property</h3>
+      <eqp-lookup
+        *ngIf="groupValueFn2"
+        placeholder="Lookup con gruppi"
+        [entityType]="'Question'"
+        [fullUrlHttpCall]="fullUrlHttpCall"
+        [genericAddComponent]="{
+          componentSelector: addQuestionComponent,
+          idLookupEntity: getNumber(lookupWithGroups?.ID),
+          isEditable: true,
+          disableRedirectAfterSave: true
+        }"
+        [isVirtualScroll]="true"
+        [(ngModelInput)]="lookupWithGroups"
+        (ngModelInputChange)="lookupChange($event)"
+        [customConfig]="{ LabelProperties: null, IncludeFullObject: true }"
+        [isMultiline]="true"
+        [isEditable]="true"
+        [addButtonText]="'Aggiungi un nuovo valore nella lookup'"
+        [editButtonText]="'Modifica un valore nella lookup'"
+        [groupBy]="groupByFn"
+        [groupValue]="groupValueFn2"
+        [groupByProperty]="'FullObject.FK_QuestionCategory'"
+        [isMultiple]="true"
+        [selectableGroup]="true"
+        [selectableGroupAsModel]="true"
+        [isDisabled]="!enabled"></eqp-lookup>
+    </div>
+    <div class="col-6">
+      <h3>Lookup con gruppi e form</h3>
+      <eqp-lookup
+        placeholder="Lookup con gruppi"
+        [entityType]="'Question'"
+        [fullUrlHttpCall]="fullUrlHttpCall"
+        [genericAddComponent]="{
+          componentSelector: addQuestionComponent,
+          idLookupEntity: getNumber(getFormControls('lookupWithGroupsAndForm').value),
+          isEditable: true,
+          disableRedirectAfterSave: true
+        }"
+        [isVirtualScroll]="true"
+        [formGroupInput]="lookupFormGroup"
+        [formControlNameInput]="'lookupWithGroupsAndForm'"
+        (formControlChange)="lookupChange($event)"
+        [customConfig]="{ LabelProperties: null, IncludeFullObject: true }"
+        [isMultiline]="true"
+        [isEditable]="true"
+        [addButtonText]="'Aggiungi un nuovo valore nella lookup'"
+        [editButtonText]="'Modifica un valore nella lookup'"
+        [groupBy]="groupByFn"
+        [groupValue]="groupValueFn"
+        [groupByProperty]="'FullObject.FK_QuestionCategory'"
+        [isMultiple]="true"
+        [selectableGroup]="true"
+        [selectableGroupAsModel]="true"
+        [isDisabled]="!enabled"></eqp-lookup>
+    </div>
+  </div>
+  <div class="row mt-3">
+    <div class="col-6">
+      <h3>Lookup con custom ng-option</h3>
+      <eqp-lookup
+        #lookupCustomOption
+        placeholder="Lookup con custom ng-option"
+        [entityType]="'Question'"
+        [fullUrlHttpCall]="fullUrlHttpCall"
+        [genericAddComponent]="{
+          componentSelector: addQuestionComponent,
+          idLookupEntity: getNumber(lookupWithCustomNgOption?.ID),
+          isEditable: true,
+          disableRedirectAfterSave: true
+        }"
+        [(ngModelInput)]="lookupWithCustomNgOption"
+        (ngModelInputChange)="lookupChange($event)"
+        [isMultiline]="true"
+        [isEditable]="true"
+        [addButtonText]="'Aggiungi un nuovo valore nella lookup'"
+        [editButtonText]="'Modifica un valore nella lookup'"
+        [selectAll]="true"
+        [isDisabled]="!enabled"
+        [customOption]="customOptionTemplate"></eqp-lookup>
+    </div>
+    <div class="col-6">
+      <h3>Lookup con custom ng-label</h3>
+      <eqp-lookup
+        #lookupCustomOption
+        placeholder="Lookup con custom ng-label"
+        [entityType]="'Question'"
+        [fullUrlHttpCall]="fullUrlHttpCall"
+        [genericAddComponent]="{
+          componentSelector: addQuestionComponent,
+          idLookupEntity: getNumber(lookupWithCustomNgLabel?.ID),
+          isEditable: true,
+          disableRedirectAfterSave: true
+        }"
+        [(ngModelInput)]="lookupWithCustomNgLabel"
+        (ngModelInputChange)="lookupChange($event)"
+        [isMultiline]="true"
+        [isEditable]="true"
+        [addButtonText]="'Aggiungi un nuovo valore nella lookup'"
+        [editButtonText]="'Modifica un valore nella lookup'"
+        [selectAll]="true"
+        [isDisabled]="!enabled"
+        [customOption]="customOptionTemplate"
+        [customLabel]="customLabelTemplate"></eqp-lookup>
+    </div>
+    <div class="col-6">
+      <h3>Lookup con manipulate data fn and custom templates</h3>
+      <eqp-lookup
+        #lookupCustomOption
+        placeholder="Lookup con function and custom templates"
+        [entityType]="'Question'"
+        [fullUrlHttpCall]="fullUrlHttpCall"
+        [genericAddComponent]="{
+          componentSelector: addQuestionComponent,
+          idLookupEntity: getNumber(lookupWithManipulateData?.ID),
+          isEditable: true,
+          disableRedirectAfterSave: true
+        }"
+        [(ngModelInput)]="lookupWithManipulateData"
+        (ngModelInputChange)="lookupChange($event)"
+        [isMultiline]="true"
+        [isEditable]="true"
+        [addButtonText]="'Aggiungi un nuovo valore nella lookup'"
+        [editButtonText]="'Modifica un valore nella lookup'"
+        [selectAll]="true"
+        [isDisabled]="!enabled"
+        [customOption]="customOptionTemplate"
+        [customLabel]="customLabelTemplate"
+        [manipulateDataFn]="manipulateData"></eqp-lookup>
+    </div>
+
+    <div class="col-6">
+      <h3>Lookup semplice con ngmodel già popolato</h3>
+      <eqp-lookup
+        #lookupCustomOption
+        placeholder="Lookup semplice con ngmodel già popolato"
+        [entityType]="'Question'"
+        [fullUrlHttpCall]="fullUrlHttpCall"
+        [genericAddComponent]="{
+          componentSelector: addQuestionComponent,
+          idLookupEntity: getNumber(lookupWithStartingData?.ID),
+          isEditable: true,
+          disableRedirectAfterSave: true
+        }"
+        [(ngModelInput)]="lookupWithStartingData"
+        (ngModelInputChange)="lookupChange($event)"
+        [isMultiline]="true"
+        [isEditable]="true"
+        [addButtonText]="'Aggiungi un nuovo valore nella lookup'"
+        [editButtonText]="'Modifica un valore nella lookup'"
+        [selectAll]="true"
+        [isDisabled]="!enabled"
+        [customOption]="customOptionTemplate"
+        [customLabel]="customLabelTemplate"
+        [manipulateDataFn]="manipulateData"></eqp-lookup>
+    </div>
+
+    <div class="col-6">
+      <h3>Lookup con gruppi e ngmodel già popolato</h3>
+      <eqp-lookup
+        #lookupCustomOption
+        placeholder="Lookup con function and custom templates"
+        [entityType]="'Question'"
+        [fullUrlHttpCall]="fullUrlHttpCall"
+        [genericAddComponent]="{
+          componentSelector: addQuestionComponent,
+          idLookupEntity: getNumber(lookupWithStartingDataGroup?.ID),
+          isEditable: true,
+          disableRedirectAfterSave: true
+        }"
+        [(ngModelInput)]="lookupWithStartingDataGroup"
+        (ngModelInputChange)="lookupChange($event)"
+        [isMultiline]="true"
+        [isEditable]="true"
+        [addButtonText]="'Aggiungi un nuovo valore nella lookup'"
+        [editButtonText]="'Modifica un valore nella lookup'"
+        [selectAll]="true"
+        [isMultiple]="true"
+        [isDisabled]="!enabled"
+        [selectableGroupAsModel]="true"></eqp-lookup>
+    </div>
+    <!-- 
+        <div class="col-6">
+          <h3>Lookup semplice con form già popolato</h3>
+          <eqp-lookup
+            #lookupCustomOption
+            placeholder="Lookup semplice con form già popolato"
+            [entityType]="'Question'"
+            [fullUrlHttpCall]="fullUrlHttpCall"
+            [genericAddComponent]="{componentSelector: addQuestionComponent, idLookupEntity: getNumber(getFormControls('lookupWithStartingData').value), isEditable: true, disableRedirectAfterSave: true}"
+            [formGroupInput]="lookupFormGroup"
+            [formControlNameInput]="'lookupWithStartingData'"
+            (formControlChange)="lookupChange($event)"
+            [isMultiline]="true"
+            [isEditable]="true"
+            [addButtonText]="'Aggiungi un nuovo valore nella lookup'"
+            [editButtonText]="'Modifica un valore nella lookup'"
+            [selectAll]="true"
+            [isDisabled]="!enabled"
+            [customOption]="customOptionTemplate"
+            [customLabel]="customLabelTemplate"
+            [manipulateDataFn]="manipulateData"
+          ></eqp-lookup>
+        </div> -->
+
+    <div class="col-6">
+      <h3>Lookup con gruppi e form già popolato</h3>
+      <eqp-lookup
+        #lookupCustomOption
+        placeholder="Lookup con gruppi e form già popolato"
+        [entityType]="'Question'"
+        [fullUrlHttpCall]="fullUrlHttpCall"
+        [genericAddComponent]="{
+          componentSelector: addQuestionComponent,
+          idLookupEntity: getNumber(getFormControls('lookupWithStartingDataGroup').value),
+          isEditable: true,
+          disableRedirectAfterSave: true
+        }"
+        [formGroupInput]="lookupFormGroup"
+        [formControlNameInput]="'lookupWithStartingDataGroup'"
+        (formControlChange)="lookupChange($event)"
+        [isMultiline]="true"
+        [isEditable]="true"
+        [addButtonText]="'Aggiungi un nuovo valore nella lookup'"
+        [editButtonText]="'Modifica un valore nella lookup'"
+        [selectAll]="true"
+        [isMultiple]="true"
+        [isDisabled]="!enabled"
+        [selectableGroupAsModel]="true"></eqp-lookup>
+    </div>
+  </div>
+</div>
+
+<button class="btn btn-secondary" (click)="changeEnableDisable()">Enable/Disable</button>
+
+<ng-template #customOptionTemplate ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+  <span *ngIf="item.ID != 174">Ciao ciao ciao {{ item?.Label }}</span>
+  <div style="margin: 10px 0" class="card" *ngIf="item.ID == 174">
+    <div class="card-body">
+      <h5 class="card-title">{{ item.Label }}</h5>
+      <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+      <p class="card-text">Some quick example text to build</p>
+      <div>
+        <a href="#" class="card-link">Card link</a>
+        <a href="#" class="card-link">Another link</a>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #customLabelTemplate ng-label-tmp let-item="item" let-clear="clear">
+  <span title="{{ item.Label }}">Addio addio addio {{ item.Label }}</span>
+  <span *ngIf="item.Total" class="ml-1 badge badge-secondary" style="color: black !important">{{ item.Total }}</span>
+  <span class="ng-value-icon right" (click)="clear(item)" aria-hidden="true"> x </span>
+</ng-template>

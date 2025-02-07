@@ -1,0 +1,38 @@
+<div class="custom-button-container">
+  <ng-container *ngFor="let customButton of customButtons; let i = index">
+
+    <ng-container *ngIf="customButton.buttonText; else iconButton">
+      <button [ngStyle]="columnStyleHelper.getNgStyle(customButton, null)" mat-button class="custom-button" [matTooltip]="customButton.tooltipText"
+        [matTooltipPosition]="customButton.tooltipPosition != null ? customButton.tooltipPosition : 'below'"
+        (click)="customButton.customButtonFunction()">
+        {{customButton.buttonText }}
+        <ng-container *ngIf="!customButton.fontawesome; else fontawesomeIcon">
+          <ng-container [ngTemplateOutlet]="matIcon"></ng-container>
+        </ng-container>
+      </button>
+    </ng-container>
+
+    <ng-template #iconButton>
+      <button [ngStyle]="columnStyleHelper.getNgStyle(customButton, null)" mat-icon-button class="custom-button" [matTooltip]="customButton.tooltipText"
+        [matTooltipPosition]="customButton.tooltipPosition != null ? customButton.tooltipPosition : 'below'"
+        (click)="customButton.customButtonFunction()">
+        <ng-container *ngIf="!customButton.fontawesome; else fontawesomeIcon">
+          <ng-container [ngTemplateOutlet]="matIcon"></ng-container>
+        </ng-container>
+      </button>
+    </ng-template>
+
+    <ng-template #fontawesomeIcon>
+      <i class="custom-icon-size" [ngStyle]="{'color' : customButton.color}" style="font-size:24px!important; margin-left: 10px;"
+        class="{{columnValueHelper.getIconValue(customButton, null)}}"></i>
+    </ng-template>
+
+    <ng-template #matIcon>
+      <mat-icon class="custom-icon-size"
+        [ngStyle]="{'color' : customButton.color}">{{columnValueHelper.getIconValue(customButton, null)}}
+      </mat-icon>
+    </ng-template>
+
+
+  </ng-container>
+</div>

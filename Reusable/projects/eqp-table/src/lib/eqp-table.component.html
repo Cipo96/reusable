@@ -1,0 +1,572 @@
+<mat-card appearance="outlined" *ngIf="createMatCard == true"
+  [ngStyle]="{'background': tableColor != null ? tableColor : 'white'}">
+  <mat-card-header *ngIf="createMatCardHeader == true">
+    <ng-container [ngTemplateOutlet]="headerTemplate"></ng-container>
+  </mat-card-header>
+  <mat-card-content>
+    <ng-container [ngTemplateOutlet]="bodyTemplate"></ng-container>
+  </mat-card-content>
+  <mat-card-footer>
+    <ng-container [ngTemplateOutlet]="footerTemplate"></ng-container>
+  </mat-card-footer>
+</mat-card>
+
+
+<ng-container *ngIf="createMatCard == false">
+  <ng-container [ngTemplateOutlet]="headerTemplate"></ng-container>
+  <ng-container [ngTemplateOutlet]="bodyTemplate"></ng-container>
+  <ng-container [ngTemplateOutlet]="footerTemplate"></ng-container>
+</ng-container>
+
+
+<!-- Definizione del template che conterrà il titolo della tabella -->
+<ng-template #headerTemplate>
+  <div class="header-title-standard">{{headerTitle}}</div>
+
+  <!-- Abilito i filtri se richiesti, faccio gestire tutto al componente interno -->
+  <eqp-table-filter *ngIf="enableFilters == true && tableColumns != null" [filterObject]="filterObject"
+    [tableColumnFields]="tableColumns" (filtersSelected)="tableFiltersSelected($event)"
+    (customFiltersSavedValueLoaded)="tableCustomFiltersSavedValueLoaded($event)"></eqp-table-filter>
+</ng-template>
+
+
+<!-- Definizione template che conterrà tutta la tabella con tutte le funzioni -->
+<ng-template #bodyTemplate>
+  <div style="justify-content: flex-end;" class="row">
+
+    <!-- Campo per ricerca testuale -->
+    <div class="table-header">
+      <!-- <mat-form-field *ngIf="isTableSearcheable && !isSingleColumnFilter" class="search-field">
+        <input matInput (keyup)="applyFilter($event.target['value'])"
+          [placeholder]="searchText != null ? searchText : 'Cerca'">
+      </mat-form-field> -->
+
+      <div *ngIf="isTableSearcheable && !isSingleColumnFilter" class="search-container">
+        <mat-form-field class="search-input" [class.active]="searchActive">
+          <input matInput #searchInput (input)="applyFilter(searchInput.value)" placeholder="Cerca">
+          <button matSuffix mat-icon-button *ngIf="searchActive" (click)="toggleSearch()">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+        <button mat-icon-button class="search-icon" (click)="toggleSearch()">
+          <mat-icon>search</mat-icon>
+        </button>
+      </div>
+
+      <!-- GESTIONE ESPORTAZIONE TABELLA -->
+      <eqp-table-exporter *ngIf="exportEqpTable != null" [exportEqpTable]="exportEqpTable"
+        [isMultiLanguage]="isMultiLanguage" [selectionEnabled]="selection" [tableColumns]="tableColumns"
+        [exporterInstance]="exporter"></eqp-table-exporter>
+
+      <button *ngIf="chooseColumnsToShow == true" mat-icon-button [matMenuTriggerFor]="menu" class="table-config-menu">
+        <mat-icon aria-hidden="false" aria-label="Example home icon">settings</mat-icon>
+        <mat-menu #menu="matMenu">
+          <span class="table-config-menu-label">{{chooseColumnsToShowText}}</span>
+          <div class="table-config-menu-options">
+            <mat-checkbox *ngFor="let cd of tableColumns; let i = index" (change)="isColumnToShowChecked(cd)"
+              (click)="displayedColumns = getColumnKeys();$event.stopPropagation()" [checked]="!cd.isHidden">
+              {{cd.display}}
+            </mat-checkbox>
+          </div>
+        </mat-menu>
+      </button>
+
+
+      <!-- Pulsante per aprire/chiudere l'accordion dei filtri su ogni colonna (visibile solo se sono stati richiesti i filtri sulla singola colonna) -->
+      <div *ngIf="isTableSearcheable && isSingleColumnFilter == true  && showSingleFilterButton == true"
+        style="float: right;">
+        <button style="cursor: pointer; margin: 0 auto; display: block;" mat-raised-button type="button"
+          matTooltip="Search"
+          (click)="$event.stopPropagation(); singleFilterColumnVisible = !singleFilterColumnVisible">
+          <mat-icon>search</mat-icon>
+          <span>{{singleFilterColumnVisible == false ? showFilterText : hideFilterText}}</span>
+        </button>
+      </div>
+
+
+      <!-- Pulsante che permette di switchare tra il filtro testuale globale e quelli su ogni colonna -->
+      <div *ngIf="isTableSearcheable && switchFilterType == true"
+        style="float: right; display: flex;align-items: center;">
+        <button style="cursor: pointer;" mat-raised-button type="button"
+          matTooltip="{{isSingleColumnFilter == false ? switchFilterToSingleText : switchFilterToGenericText }}"
+          (click)="$event.stopPropagation(); isSingleColumnFilter = !isSingleColumnFilter">
+          <mat-icon>youtube_searched_for</mat-icon>
+          <span>{{isSingleColumnFilter == false ? switchFilterToSingleText : switchFilterToGenericText }}</span>
+        </button>
+      </div>
+
+      <eqp-table-custom-buttons *ngIf="customButtons != null" [customButtons]="customButtons"
+        [isMultiLanguage]="isMultiLanguage"></eqp-table-custom-buttons>
+
+    </div>
+
+
+  </div>
+
+  <div [ngClass]="{'expandableTable': autoResizeColumns == true && mediaQuery?.matches}"
+    class="mat-table__wrapper mat-elevation-z8">
+    <div #tableContainer>
+
+      <table mat-table [ngStyle]="{'background': tableColor != null ? tableColor : 'white'}" #table matTableExporter
+        multiTemplateDataRows (exportCompleted)="exportComplete()" (exportStarted)="exportStart()"
+        [hiddenColumns]="exportEqpTable?.hiddenColumns" matSort [dataSource]="dataSource" #exporter="matTableExporter"
+        id="eqp-table" (matSortChange)="sortChanged($event)">
+
+
+        <!-- Colonna per il dettaglio righe -->
+        <ng-container matColumnDef="Detail">
+          <th mat-header-cell [ngStyle]="{'flex': detailColumns?.length ? '0 0 5%' : '0 0 0'}" *matHeaderCellDef></th>
+          <td mat-cell [ngStyle]="{'flex': detailColumns?.length ? '0 0 5%' : '0 0 0'}"
+            *matCellDef="let element; let i = index">
+            <button *ngIf="detailColumns?.length" mat-button
+              (click)="$event.stopPropagation(); resizeHelper.toggleRow(element)">
+              <mat-icon [@iconTransition]="element.expanded" *ngIf="element.expanded != true">add_circle</mat-icon>
+              <mat-icon [@iconTransition]="element.expanded" *ngIf="element.expanded == true">remove_circle</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+
+        <!-- Colonna per la selezione righe (visibile solo se input 'selection'=true) -->
+        <ng-container matColumnDef="Checkbox">
+          <th mat-header-cell style="flex: 0 0 5%" *matHeaderCellDef>
+            <mat-checkbox [disabled]="!isMultipleSelection || this.disableRow == true"
+              [checked]="isAllSelected === true" (change)="isMultipleSelection ? selectUnselectAll() : null">
+            </mat-checkbox>
+          </th>
+          <td mat-cell style="flex: 0 0 5%" *matCellDef="let element; let i = dataIndex">
+            <mat-checkbox (click)="$event.stopPropagation()" [checked]="element[isSelectedPropertyName]"
+              [disabled]="columnAccessibilityHelper.isRowDisabled(element)"
+              (change)="changeCheckboxRowSelection($event, element, i);">
+            </mat-checkbox>
+          </td>
+        </ng-container>
+
+
+        <!-- Definizione delle colonne che arrivano dalla configurazione -->
+        <ng-container *ngFor=" let col of tableColumns; let i=index;" [matColumnDef]="col.key" [sticky]="col.isSticky"
+          [stickyEnd]="col.isStickyEnd">
+
+
+          <th mat-header-cell style="padding: 5px;" [ngClass]="getHeaderCellCss(col)"
+            [ngStyle]="{'flex': (col.styles && col.styles.flex) ? col.styles.flex : (col.styles && (col.styles.minWidth || col.styles.maxWidth)) ? '' : standardFlexValue,
+            'min-width': (col.styles && col.styles.minWidth) ? col.styles.minWidth : '',
+            'max-width': (col.styles && col.styles.maxWidth) ? col.styles.maxWidth : '',
+                                                                        'text-align': (col.styles && col.styles.cellAlignment && col.styles.cellAlignment != cellAlingmentEnum.LEFT) ? (col.styles.cellAlignment == cellAlingmentEnum.RIGHT ? 'right' : 'center') : 'unset',
+                                                                        'justify-content': (col.styles && col.styles.cellAlignment && col.styles.cellAlignment != cellAlingmentEnum.LEFT) ? (col.styles.cellAlignment == cellAlingmentEnum.RIGHT ? 'flex-end' : 'center') : 'unset' }"
+            mat-sort-header *matHeaderCellDef
+            [disabled]="col.isSortable == false || !searchFilterHelper.isColumnTypeValidForSearch(col.type, col.isSearchable)">
+            <span>{{col.display}}</span>
+          </th>
+
+
+          <td mat-cell *matCellDef="let element; let elementIndex = index" [ngClass]="getCellCss(element, col)"
+            [ngStyle]="{'flex': (col.styles && col.styles.flex) ? col.styles.flex : (col.styles && (col.styles.minWidth || col.styles.maxWidth)) ? '' : standardFlexValue,
+            'min-width': (col.styles && col.styles.minWidth) ? col.styles.minWidth : '',
+            'max-width': (col.styles && col.styles.maxWidth) ? col.styles.maxWidth : '',
+                                            'color': (col.styles && col.styles.color) ? col.styles.color : 'inherit',
+                                            'text-align': (col.styles && col.styles.cellAlignment && col.styles.cellAlignment != cellAlingmentEnum.LEFT) ? (col.styles.cellAlignment == cellAlingmentEnum.RIGHT ? 'right' : 'center') : 'unset',
+                                            'justify-content': (col.styles && col.styles.cellAlignment && col.styles.cellAlignment != cellAlingmentEnum.LEFT) ? (col.styles.cellAlignment == cellAlingmentEnum.RIGHT ? 'flex-end' : 'center') : 'unset' }"
+            [attr.data-label]="col.display">
+
+
+            <!-- Controllo se è una colonna normale (primitiva) oppure se ha una configurazione specifica -->
+            <ng-container *ngIf="!col.type else hasType">
+              <eqp-table-standard-column [col]="col" [element]="element"
+                [currentCultureSelected]="currentCultureSelected"
+                [currentLocaleSelected]="currentLocaleSelected"></eqp-table-standard-column>
+            </ng-container>
+
+
+            <!-- Configurazione custom delle colonne, qualora debba essere aggiunto una nuova tipologia, va inserita qui -->
+            <ng-template #hasType>
+
+
+              <!-- se boolean, richiamo getBooleanValue che tornerà il valore dato l'elemento della colonna-->
+              <ng-container *ngIf="col.type == TypeEnum.Boolean">
+                <eqp-table-boolean-column [col]="col" [element]="element"></eqp-table-boolean-column>
+              </ng-container>
+
+
+              <!-- se di tipo color, restituisco una cella riempita con il colore (esadecimale o rgb) passato come stringa  -->
+              <ng-container *ngIf="col.type == TypeEnum.Color">
+                <eqp-table-color-column style="width:100%" [col]="col" [element]="element"></eqp-table-color-column>
+              </ng-container>
+
+
+              <!-- Se la colonna è una data viene renderizzato questo container, è possibile passare un formato data custom altrimenti viene definito di default -->
+              <ng-container *ngIf="col.type == TypeEnum.Date">
+                <eqp-table-date-column [col]="col" [element]="element"
+                  [currentCultureSelected]="currentCultureSelected"></eqp-table-date-column>
+              </ng-container>
+
+
+              <!-- Se la colonna è un'enum viene renderizzato questo container, è necessario passare il modello di un enumeratore oltre all'elemento e la colonna-->
+              <ng-container *ngIf="col.type == TypeEnum.Enum">
+                <eqp-table-enum-column [col]="col" [element]="element"></eqp-table-enum-column>
+              </ng-container>
+
+
+              <!-- Se la colonna è un'azione, controllo se è un menù a tendina o azioni secche, e le ciclo -->
+              <ng-container *ngIf="col.type == TypeEnum.SimpleAction">
+                <button type="button" (click)="$event.stopPropagation()"
+                  [hidden]="columnAccessibilityHelper.isRowDisabled(element) || columnAccessibilityHelper.getHiddenInfo(action, element)"
+                  [disabled]="columnAccessibilityHelper.getDisableInfo(action,element)"
+                  [matTooltip]="columnAccessibilityHelper.getTooltipInfo(action,element)"
+                  [matTooltipPosition]="action.tooltip?.tooltipPosition != null ? action.tooltip?.tooltipPosition : 'below'"
+                  *ngFor="let action of col.actions" (click)="action.fn ? action.fn(element,elementIndex, col) : null"
+                  mat-button>
+                  <ng-container *ngIf="action.fontawesome != true">
+                    <mat-icon [ngStyle]="{'color' : action.color}">{{columnValueHelper.getIconValue(action, element)}}
+                    </mat-icon>
+                    {{action.name}}
+                  </ng-container>
+                  <ng-container *ngIf="action.fontawesome">
+                    <i [ngStyle]="{'color' : action.color}" style="font-size:24px!important"
+                      class="{{columnValueHelper.getIconValue(action,element)}}"></i>
+                    {{action.name}}
+                  </ng-container>
+                </button>
+              </ng-container>
+
+
+              <!-- Se non viene passata alcuna icona per il buttonMenu, ne viene selezionata una di default -->
+              <ng-container *ngIf="col.type == TypeEnum.MenuAction">
+                <button type="button" (click)="$event.stopPropagation()"
+                  [hidden]="columnAccessibilityHelper.isRowDisabled(element)"
+                  [matTooltip]="columnAccessibilityHelper.getTooltipInfo(col,element)"
+                  [matTooltipPosition]="col.tooltip?.tooltipPosition != null ? col.tooltip?.tooltipPosition : 'below'"
+                  mat-button [matMenuTriggerFor]="menu">
+                  <mat-icon>{{col.buttonMenuIcon ? col.buttonMenuIcon : 'settings'}}</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <ng-container *ngFor="let action of col.actions;">
+                    <button type="button" [hidden]="columnAccessibilityHelper.getHiddenInfo(action, element)"
+                      [disabled]="columnAccessibilityHelper.getDisableInfo(action,element)" mat-menu-item
+                      [matTooltip]="columnAccessibilityHelper.getTooltipInfo(action,element)"
+                      [matTooltipPosition]="action.tooltip?.tooltipPosition != null ? action.tooltip?.tooltipPosition : 'below'"
+                      (click)="action.fn ? action.fn(element,elementIndex, col) : null">
+                      <ng-container *ngIf="action.fontawesome != true">
+                        <mat-icon [ngStyle]="{'color' : action.color}">
+                          {{columnValueHelper.getIconValue(action, element)}}</mat-icon>
+                        {{action.name}}
+                      </ng-container>
+                      <ng-container *ngIf="action.fontawesome">
+                        <i [ngStyle]="{'color' : action.color}" style="font-size:24px!important"
+                          class="{{columnValueHelper.getIconValue(action,element)}}"></i>
+                        {{action.name}}
+                      </ng-container>
+                    </button>
+                  </ng-container>
+                </mat-menu>
+              </ng-container>
+
+
+              <!-- Se la colonna è di tipo checkbox -->
+              <ng-container *ngIf="col.type == TypeEnum.Checkbox">
+                <eqp-table-checkbox-column [col]="col" [element]="element"></eqp-table-checkbox-column>
+              </ng-container>
+
+
+              <!-- Se la colonna è di tipo icona, accetterà N icone con eventuali tooltip -->
+              <ng-container *ngIf="col.type == TypeEnum.Icon">
+                <eqp-table-icon-column [col]="col" [element]="element"></eqp-table-icon-column>
+              </ng-container>
+
+
+              <!-- Se la colonna è di tipo hyperlink -->
+              <ng-container *ngIf="col.type == TypeEnum.Hyperlink">
+                <eqp-table-hyperlink-column [col]="col" [element]="element"></eqp-table-hyperlink-column>
+              </ng-container>
+
+
+              <!-- Se la colonna è di tipo immagine -->
+              <ng-container *ngIf="col.type == TypeEnum.Image">
+                <eqp-table-image-column [col]="col" [element]="element"></eqp-table-image-column>
+              </ng-container>
+
+
+              <!-- Se la colonna è di tipo ExternalTemplate -->
+              <ng-container *ngIf="col.type == TypeEnum.ExternalTemplate">
+                <ng-container [ngTemplateOutlet]="col.externalTemplate"
+                  [ngTemplateOutletContext]="{row:element,col:col}">
+                </ng-container>
+              </ng-container>
+            </ng-template>
+          </td>
+
+        </ng-container>
+
+
+        <!-- Contiene tutti i filtri per le singole colonne -->
+        <ng-container *ngFor="let headersFilter of headersFilters; let i=index" [matColumnDef]="headersFilter.column">
+
+
+          <ng-container *ngIf="i == 0 && selection == true">
+            <th mat-header-cell style="flex: 0 0 5%" *matHeaderCellDef>
+            </th>
+          </ng-container>
+
+
+          <ng-container *ngIf="selection == false || i > 0">
+            <th mat-header-cell id="filter" [ngStyle]="{'flex': (headersFilter.styles && headersFilter.styles.flex) ? headersFilter.styles.flex : (headersFilter.styles && (headersFilter.styles.minWidth || headersFilter.styles.maxWidth)) ? '' : standardFlexValue,
+            'min-width': (headersFilter.styles && headersFilter.styles.minWidth) ? headersFilter.styles.minWidth : '',
+            'max-width': (headersFilter.styles && headersFilter.styles.maxWidth) ? headersFilter.styles.maxWidth : '',
+              'text-align': (headersFilter.styles && headersFilter.styles.cellAlignment && headersFilter.styles.cellAlignment != cellAlingmentEnum.LEFT) ? (headersFilter.styles.cellAlignment == cellAlingmentEnum.RIGHT ? 'right' : 'center') : 'unset',
+              'justify-content': (headersFilter.styles && headersFilter.styles.cellAlignment && headersFilter.styles.cellAlignment != cellAlingmentEnum.LEFT) ? (headersFilter.styles.cellAlignment == cellAlingmentEnum.RIGHT ? 'flex-end' : 'center') : 'unset'
+           }" *matHeaderCellDef>
+
+
+              <div class="filters-container" [class.animate]="singleFilterColumnVisible">
+                <mat-form-field
+                  *ngIf="headersFilter.isSearchable != false && searchFilterHelper.isColumnTypeValidForSearch(headersFilter.type, headersFilter.isSearchable)"
+                  style="width: 100%;" appearance="outline">
+                  <mat-icon *ngIf="filtersModel[i] == '' || filtersModel[i] == null" matPrefix>search
+                  </mat-icon>
+                  <input [(ngModel)]="filtersModel[i]" matInput
+                    (keyup)="applyFilterSingleColumn($event.target['value'], headersFilter.key)">
+                </mat-form-field>
+              </div>
+            </th>
+          </ng-container>
+        </ng-container>
+
+
+        <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+        <ng-container matColumnDef="expandedDetail">
+          <td style="display: flex;" mat-cell *matCellDef="let element; let templateIndex = dataIndex">
+            <div class="example-element-detail" [@detailExpand]="element.expanded ? 'expanded' : 'collapsed'">
+              <!-- <div class="detail-table"> -->
+              <ng-template [ngTemplateOutlet]="detailTableTemplate"
+                [ngTemplateOutletContext]="{row:element, templateIndex: templateIndex}"></ng-template>
+            </div>
+            <!-- </div> -->
+          </td>
+        </ng-container>
+
+
+        <tr mat-header-row style="width: 100%;" *matHeaderRowDef="displayedColumns; sticky:isStickyHeader"></tr>
+        <ng-container *ngIf="autoResizeColumns != true && !mediaQuery?.matches">
+          <tr mat-header-row style="height: unset; min-height: unset;"
+            *matHeaderRowDef="getHeaderFiltersColumnDefinitions">
+          </tr>
+        </ng-container>
+
+        <tr mat-row style="width: 100%;" class="example-element-row" [class.example-expanded-row]="row.expanded"
+          [ngClass]="getMatRowCss(row)"
+          [ngStyle]="{'background': isHighlight == true && selectedRow == row ? highlightColor : ''}"
+          (click)="highlight(row);" *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        <!-- resizeHelper.toggleRow(row, this) -->
+        <ng-container *ngIf="autoResizeColumns == true && mediaQuery?.matches">
+          <tr mat-row [ngStyle]="{'height': row.expanded ? 'fit-content' : 'inherit'}"
+            *matRowDef="let row; columns: ['expandedDetail']; let i = index" class="example-detail-row"></tr>
+        </ng-container>
+      </table>
+
+
+      <!-- Indicazione tabella vuota -->
+      <div *ngIf="dataSource.filteredData.length === 0"
+        [ngStyle]="{'background': tableColor != null ? tableColor : 'unset'}" class="no-records">
+        {{emptyTableMessage != null ? emptyTableMessage : 'Nessun dato trovato'}}
+      </div>
+
+
+    </div>
+  </div>
+  <mat-paginator [ngStyle]="{'background': paginatorColor != null ? paginatorColor : 'unset'}"
+    (page)="pageChanged($event)" *ngIf="paginatorVisible" [pageSizeOptions]="matPaginatorLength"
+    [pageSize]="matPaginatorSize" [length]="matPaginatorCount" [pageIndex]="matPaginatorIndex"
+    [showFirstLastButtons]="showFirstLastButtons">
+  </mat-paginator>
+  <!-- <div [gotoPage]="table"></div> -->
+</ng-template>
+
+
+<!-- Definizione del template per i pulsanti di azioni CONFERMA/ANNULLA della tabella, visibile come footer -->
+<ng-template #footerTemplate>
+  <div *ngIf="showFunctionButtons == true" class="row">
+    <div class="col-sm-12 text-right">
+      <button type="button" (click)="executeConfirmFunction()" class="btn btn-primary mat-raised-button">
+        {{functionButtonConfirmText != null ? functionButtonConfirmText : "Conferma"}}
+      </button>
+      <button type="button" (click)="executeExitFunction()" class="btn mat-raised-button">
+        {{functionButtonExitText != null ? functionButtonExitText : "Esci"}}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+
+<ng-template #detailTableTemplate let-row="row" let-templateIndex="templateIndex">
+
+
+  <div style="width: 100%" class="expandTable">
+
+
+    <mat-table [ngStyle]="{'background': tableColor != null ? tableColor : 'white'}" #table matTableExporter
+      (exportCompleted)="exportComplete()" (exportStarted)="exportStart()"
+      [hiddenColumns]="exportEqpTable?.hiddenColumns" matSort [dataSource]="dataSource" #exporter="matTableExporter"
+      (matSortChange)="sortChanged($event)" id="expand-table">
+
+
+      <!-- Definizione delle colonne che arrivano dalla configurazione -->
+      <ng-container *ngFor=" let col of detailConfigColumns; let i=index" [matColumnDef]="col.key">
+
+
+        <mat-header-cell style="padding: 5px;"
+          [ngStyle]="{'flex': (col.styles && col.styles.flex) ? col.styles.flex : (col.styles && (col.styles.minWidth || col.styles.maxWidth)) ? '' : standardFlexValue,
+          'min-width': (col.styles && col.styles.minWidth) ? col.styles.minWidth : '',
+          'max-width': (col.styles && col.styles.maxWidth) ? col.styles.maxWidth : '',
+                                                                  'text-align': (col.styles && col.styles.cellAlignment && col.styles.cellAlignment != cellAlingmentEnum.LEFT) ? (col.styles.cellAlignment == cellAlingmentEnum.RIGHT ? 'right' : 'center') : 'unset',
+                                                                  'justify-content': (col.styles && col.styles.cellAlignment && col.styles.cellAlignment != cellAlingmentEnum.LEFT) ? (col.styles.cellAlignment == cellAlingmentEnum.RIGHT ? 'flex-end' : 'center') : 'unset' }"
+          mat-sort-header *matHeaderCellDef
+          [disabled]="col.isSortable == false || !searchFilterHelper.isColumnTypeValidForSearch(col.type, col.isSearchable)">
+          <span>{{col.display}}</span>
+        </mat-header-cell>
+
+
+        <mat-cell *matCellDef="let element; let elementIndex = index"
+          [ngStyle]="{'flex': (col.styles && col.styles.flex) ? col.styles.flex : (col.styles && (col.styles.minWidth || col.styles.maxWidth)) ? '' : standardFlexValue,
+          'min-width': (col.styles && col.styles.minWidth) ? col.styles.minWidth : '',
+          'max-width': (col.styles && col.styles.maxWidth) ? col.styles.maxWidth : '',
+                                      'color': (col.styles && col.styles.color) ? col.styles.color : 'inherit',
+                                      'text-align': (col.styles && col.styles.cellAlignment && col.styles.cellAlignment != cellAlingmentEnum.LEFT) ? (col.styles.cellAlignment == cellAlingmentEnum.RIGHT ? 'right' : 'center') : 'unset',
+                                      'justify-content': (col.styles && col.styles.cellAlignment && col.styles.cellAlignment != cellAlingmentEnum.LEFT) ? (col.styles.cellAlignment == cellAlingmentEnum.RIGHT ? 'flex-end' : 'center') : 'unset' }"
+          [attr.data-label]="col.display">
+
+
+          <div *ngIf="elementIndex == templateIndex">
+            <!-- Controllo se è una colonna normale (primitiva) oppure se ha una configurazione specifica -->
+            <ng-container *ngIf="!col.type else hasType">
+              <eqp-table-standard-column [col]="col" [element]="element"
+                [currentCultureSelected]="currentCultureSelected"
+                [currentLocaleSelected]="currentLocaleSelected"></eqp-table-standard-column>
+            </ng-container>
+          </div>
+          <!-- Configurazione custom delle colonne, qualora debba essere aggiunto una nuova tipologia, va inserita qui -->
+          <ng-template #hasType>
+
+
+            <!-- se boolean, richiamo getBooleanValue che tornerà il valore dato l'elemento della colonna-->
+            <ng-container *ngIf="col.type == TypeEnum.Boolean">
+              <eqp-table-boolean-column [col]="col" [element]="element"></eqp-table-boolean-column>
+            </ng-container>
+
+
+            <!-- se di tipo color, restituisco una cella riempita con il colore (esadecimale o rgb) passato come stringa  -->
+            <ng-container *ngIf="col.type == TypeEnum.Color">
+              <eqp-table-color-column style="width:100%" [col]="col" [element]="element"></eqp-table-color-column>
+            </ng-container>
+
+
+            <!-- Se la colonna è una data viene renderizzato questo container, è possibile passare un formato data custom altrimenti viene definito di default -->
+            <ng-container *ngIf="col.type == TypeEnum.Date">
+              <eqp-table-date-column [col]="col" [element]="element"
+                [currentCultureSelected]="currentCultureSelected"></eqp-table-date-column>
+            </ng-container>
+
+
+            <!-- Se la colonna è un'enum viene renderizzato questo container, è necessario passare il modello di un enumeratore oltre all'elemento e la colonna-->
+            <ng-container *ngIf="col.type == TypeEnum.Enum">
+              <eqp-table-enum-column [col]="col" [element]="element"></eqp-table-enum-column>
+            </ng-container>
+
+
+            <!-- Se la colonna è un'azione, controllo se è un menù a tendina o azioni secche, e le ciclo -->
+            <ng-container *ngIf="col.type == TypeEnum.SimpleAction">
+              <button type="button" (click)="$event.stopPropagation()"
+                [hidden]="columnAccessibilityHelper.isRowDisabled(element) || columnAccessibilityHelper.getHiddenInfo(action, element)"
+                [disabled]="columnAccessibilityHelper.getDisableInfo(action,element)"
+                [matTooltip]="columnAccessibilityHelper.getTooltipInfo(action,element)"
+                [matTooltipPosition]="action.tooltip?.tooltipPosition != null ? action.tooltip?.tooltipPosition : 'below'"
+                *ngFor="let action of col.actions" (click)="action.fn ? action.fn(element,elementIndex, col) : null"
+                mat-button>
+                <ng-container *ngIf="action.fontawesome != true">
+                  <mat-icon [ngStyle]="{'color' : action.color}">{{columnValueHelper.getIconValue(action, element)}}
+                  </mat-icon>
+                  {{action.name}}
+                </ng-container>
+                <ng-container *ngIf="action.fontawesome">
+                  <i [ngStyle]="{'color' : action.color}" style="font-size:24px!important"
+                    class="{{columnValueHelper.getIconValue(action,element)}}"></i>
+                  {{action.name}}
+                </ng-container>
+              </button>
+            </ng-container>
+
+
+            <!-- Se non viene passata alcuna icona per il buttonMenu, ne viene selezionata una di default -->
+            <ng-container *ngIf="col.type == TypeEnum.MenuAction">
+              <button type="button" (click)="$event.stopPropagation()"
+                [hidden]="columnAccessibilityHelper.isRowDisabled(element)"
+                [matTooltip]="columnAccessibilityHelper.getTooltipInfo(col,element)"
+                [matTooltipPosition]="col.tooltip?.tooltipPosition != null ? col.tooltip?.tooltipPosition : 'below'"
+                mat-button [matMenuTriggerFor]="menu">
+                <mat-icon>{{col.buttonMenuIcon ? col.buttonMenuIcon : 'settings'}}</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <ng-container *ngFor="let action of col.actions;">
+                  <button type="button" [hidden]="columnAccessibilityHelper.getHiddenInfo(action, element)"
+                    [disabled]="columnAccessibilityHelper.getDisableInfo(action,element)" mat-menu-item
+                    [matTooltip]="columnAccessibilityHelper.getTooltipInfo(action,element)"
+                    [matTooltipPosition]="action.tooltip?.tooltipPosition != null ? action.tooltip?.tooltipPosition : 'below'"
+                    (click)="action.fn ? action.fn(element,elementIndex, col) : null">
+                    <ng-container *ngIf="action.fontawesome != true">
+                      <mat-icon [ngStyle]="{'color' : action.color}">
+                        {{columnValueHelper.getIconValue(action, element)}}</mat-icon>
+                      {{action.name}}
+                    </ng-container>
+                    <ng-container *ngIf="action.fontawesome">
+                      <i [ngStyle]="{'color' : action.color}" style="font-size:24px!important"
+                        class="{{columnValueHelper.getIconValue(action,element)}}"></i>
+                      {{action.name}}
+                    </ng-container>
+                  </button>
+                </ng-container>
+              </mat-menu>
+            </ng-container>
+
+
+            <!-- Se la colonna è di tipo checkbox -->
+            <ng-container *ngIf="col.type == TypeEnum.Checkbox">
+              <eqp-table-checkbox-column [col]="col" [element]="element"></eqp-table-checkbox-column>
+            </ng-container>
+
+
+            <!-- Se la colonna è di tipo icona, accetterà N icone con eventuali tooltip -->
+            <ng-container *ngIf="col.type == TypeEnum.Icon">
+              <eqp-table-icon-column [col]="col" [element]="element"></eqp-table-icon-column>
+            </ng-container>
+
+
+            <!-- Se la colonna è di tipo hyperlink -->
+            <ng-container *ngIf="col.type == TypeEnum.Hyperlink">
+              <eqp-table-hyperlink-column [col]="col" [element]="element"></eqp-table-hyperlink-column>
+            </ng-container>
+
+
+            <!-- Se la colonna è di tipo immagine -->
+            <ng-container *ngIf="col.type == TypeEnum.Image">
+              <eqp-table-image-column [col]="col" [element]="element"></eqp-table-image-column>
+            </ng-container>
+
+
+            <!-- Se la colonna è di tipo ExternalTemplate -->
+            <ng-container *ngIf="col.type == TypeEnum.ExternalTemplate">
+              <ng-container [ngTemplateOutlet]="col.externalTemplate" [ngTemplateOutletContext]="{row:element,col:col}">
+              </ng-container>
+            </ng-container>
+          </ng-template>
+        </mat-cell>
+      </ng-container>
+
+
+      <mat-header-row *matHeaderRowDef="detailColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: detailColumns" class="example-detail-row"></mat-row>
+
+    </mat-table>
+  </div>
+
+
+</ng-template>

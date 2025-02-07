@@ -1,0 +1,6 @@
+<ng-container>
+    <div *ngFor="let icon of columnValueHelper.getValue(element,col)">
+        <i [ngStyle]="columnAccessibilityHelper.isRowDisabled(element) ? {'color': columnAccessibilityHelper.disableRowColor,'cursor': 'none'} : {'cursor': 'pointer'}"
+            [ngClass]="icon.className" [matTooltip]="icon.tooltip"></i>
+    </div>
+</ng-container>

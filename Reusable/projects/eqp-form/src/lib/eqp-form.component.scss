@@ -1,0 +1,27 @@
+.dynamic-form {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start; /* Allinea le colonne a sinistra */
+  align-items: flex-start; /* Allinea le colonne in alto */
+}
+
+.form-col {
+  padding: 0 10px;
+  box-sizing: border-box; /* Considera il padding nel calcolo della larghezza */
+  min-width: 10rem;
+}
+
+.form-field {
+  width: auto; /* Larghezza automatica in base al contenuto */
+  margin-bottom: 10px; /* Spazio tra le colonne */
+}
+
+.submit-button-container {
+  margin-top: 20px; /* Spazio sopra il pulsante */
+  text-align: center; /* Centra il pulsante orizzontalmente */
+}

@@ -1,0 +1,40 @@
+<ng-container *ngFor="let item of navItemsArray">
+  <ng-container [ngSwitch]="helper.itemType(item)">
+    <eqp-sidebar-nav-group
+      #rla="routerLinkActive"
+      *ngSwitchCase="'group'"
+      [dropdownMode]="dropdownMode"
+      [item]="item"
+      [ngClass]="item | eqpSidebarNavItemClass"
+      [routerLinkActiveOptions]="{exact: true}"
+      routerLinkActive="show"
+    >
+    </eqp-sidebar-nav-group>
+    <eqp-sidebar-nav-divider
+      *ngSwitchCase="'divider'"
+      [item]="item"
+      [ngClass]="item | eqpSidebarNavItemClass">
+    </eqp-sidebar-nav-divider>
+    <eqp-sidebar-nav-title
+      *ngSwitchCase="'title'"
+      [item]="item"
+      [ngClass]="item | eqpSidebarNavItemClass">
+    </eqp-sidebar-nav-title>
+    <eqp-sidebar-nav-label
+      *ngSwitchCase="'label'"
+      [item]="item"
+      [ngClass]="item | eqpSidebarNavItemClass">
+    </eqp-sidebar-nav-label>
+    <ng-container
+      *ngSwitchCase="'empty'">
+    </ng-container>
+    <eqp-sidebar-nav-link
+      (linkClick)="hideMobile()"
+      *ngSwitchDefault
+      [item]="item"
+      [ngClass]="item | eqpSidebarNavItemClass"
+    >
+    </eqp-sidebar-nav-link>
+  </ng-container>
+</ng-container>
+<ng-content></ng-content>

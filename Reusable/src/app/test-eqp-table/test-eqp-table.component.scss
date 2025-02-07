@@ -1,0 +1,16 @@
+:host ::ng-deep .row-color{
+  background: red!important;
+}
+
+:host ::ng-deep .blue{
+  background: blue!important;
+}
+
+:host ::ng-deep .size{
+  font-size: 30px!important;
+}
+
+:host ::ng-deep .mat-table__wrapper {
+  height: 400px;
+  overflow: auto;
+}

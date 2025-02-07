@@ -1,0 +1,232 @@
+<ng-container>
+  <div class="container-fluid" *ngIf="!this.existDuplicatedProperties">
+    <div class="row" *ngIf="hiddenItemsLength>0">
+      <div class="col-12 text-right">
+        <!--Bottone settings che appare quando c'è almeno un elemento nascosto-->
+        <button mat-button [matMenuTriggerFor]="menu" *ngIf="hiddenItemsLength>0" class="btnSettings">
+          <mat-icon class="mat-icon-rtl-mirror pointericon" [matTooltip]="settingsLabel" [matTooltipPosition]="'above'">
+            settings</mat-icon>
+          <span *ngIf="dashboardSettingsLabel">{{ dashboardSettingsLabel }}</span>
+        </button>
+
+        <!--Bottoni del menu settings (mostra tutti gli elementi e mosta lista elementi nascosti-->
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="showAllCharts()">
+            <mat-icon class="mat-icon-rtl-mirror pointericon">visibility</mat-icon>
+            <mat-label>{{showAllHiddenItemsLabel}}</mat-label>
+          </button>
+          <button mat-menu-item (click)="showHiddenChartsModal()">
+            <mat-icon class="mat-icon-rtl-mirror pointericon">list</mat-icon>
+            <mat-label>{{showListHiddenItemsLabel}}</mat-label>
+          </button>
+        </mat-menu>
+      </div>
+
+    </div>
+
+    <ngx-masonry #masonry [options]="myOptions" [ordered]="true" [updateLayout]="updateMasonryLayout">
+      <div class="grid">
+        <div class="grid-sizer col-md-1"></div>
+        <div ngxMasonryItem class="grid-item" *ngFor="let config of allCurrentSetItems | filter: false; index as i"
+          [ngClass]="!config.isHidden ? getWidgetClassSizeFromEnum(config.WidgetSizeClass) : ''">
+          <mat-card appearance="outlined" class="mt15 matCardWidget" *ngIf="!config.isHidden">
+
+            <div class="mainChartCont">
+              <div class="dashboard-splash-screen-widget" *ngIf="checkActiveSpinner(config)">
+                <div id="eqpDashboardWidgetLoader"></div>
+                <p class="dashboard-spinner-label" *ngIf="showSpinnerLabel == true">
+                  {{spinnerLabel}}
+                </p>
+              </div>
+
+              <!-- Title del widget -->
+              <div *ngIf="config.WidgetTitle" class="dynamicComponentTitle">
+                {{config.WidgetTitle}}
+              </div>
+
+              <!-- Direttiva per caricamento componente esterno -->
+              <!-- <dynamic-factory [component]="config.CustomComponentSelector"
+                [componentInput]="config.CustomComponentInputs"
+                *ngIf="config.CustomComponentSelector && getCustomComponentWidgetStatus(config.WidgetID).WidgetHidden != true">
+              </dynamic-factory> -->
+              <ng-container *ngIf="config.genericComponent">
+                <ng-template dynamic [data]="config.genericComponent"></ng-template>
+              </ng-container>
+
+              <!-- Div che contiene i params nel caso di configurazione con Endpoint -->
+              <ng-container
+                *ngIf="config.EndPointData && config.EndPointData.Params && config.EndPointData.Params.length > 0 && getWidgetStatus(config.WidgetID).IsValid == true">
+                <div class="row mt-3" style="margin-left: 0px !important; margin-right: 0px !important;">
+                  <ng-container *ngFor="let param of config.EndPointData.Params | filter: false; index as paramIndex">
+                    <div [ngSwitch]="param.PropertyType" [class]="getParameterClass(param)">
+                      <mat-form-field *ngSwitchCase="paramPropertyType.TEXT" style="width: 100%;">
+                        <mat-label>{{ param.PropertyLabel }}</mat-label>
+                        <input matInput [(ngModel)]="param.PropertyValue" [ngModelOptions]="{standalone: true}"
+                          (change)="endpointPointParamsValueChanged(config)">
+                      </mat-form-field>
+
+                      <mat-form-field *ngSwitchCase="paramPropertyType.NUMBER" style="width: 100%;">
+                        <mat-label>{{ param.PropertyLabel }}</mat-label>
+                        <input matInput [(ngModel)]="param.PropertyValue" [ngModelOptions]="{standalone: true}"
+                          type="number" (change)="endpointPointParamsValueChanged(config)">
+                      </mat-form-field>
+                      <ng-container *ngSwitchCase="paramPropertyType.DATE">
+                        <eqp-datetimerangepicker  placeholder="{{param.PropertyLabel}}" [(ngModelInput)]="param.PropertyValue"
+                          [type]="pickerModeEnum.DATE" (ngModelInputChange)="endpointPointParamsValueChanged(config)">
+                        </eqp-datetimerangepicker>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="paramPropertyType.DATETIME">
+                        <eqp-datetimerangepicker  placeholder="{{param.PropertyLabel}}" [(ngModelInput)]="param.PropertyValue"
+                          [type]="pickerModeEnum.DATETIME" (ngModelInputChange)="endpointPointParamsValueChanged(config)">
+                        </eqp-datetimerangepicker>
+                      </ng-container>
+                      <ng-container *ngSwitchCase="paramPropertyType.CVL">
+                        <eqp-select *ngIf="param.CvlConfig.EnumData && param.CvlConfig"
+                          [enumData]="param.CvlConfig.EnumData" [(ngModelInput)]="param.PropertyValue"
+                          [isMultiSelect]="param.CvlConfig.IsMultiSelect"
+                          [showCancelButton]="param.CvlConfig.ShowCancelButton"
+                          [isSearchable]="param.CvlConfig.IsSearchable" [placeholder]="param.PropertyLabel ?? param.CvlConfig.SearchText"
+                          (ngModelInputChange)="endpointPointParamsValueChanged(config)"></eqp-select>
+                        <eqp-select *ngIf="param.CvlConfig.ArrayData && param.CvlConfig"
+                          [arrayData]="param.CvlConfig.ArrayData" [arrayKeyProperty]="param.CvlConfig.ArrayKeyProperty"
+                          [arrayValueProperty]="param.CvlConfig.ArrayValueProperty"
+                          [(ngModelInput)]="param.PropertyValue" [isMultiSelect]="param.CvlConfig.IsMultiSelect"
+                          [showCancelButton]="param.CvlConfig.ShowCancelButton"
+                          [isSearchable]="param.CvlConfig.IsSearchable" [placeholder]="param.PropertyLabel ?? param.CvlConfig.SearchText"
+                          (ngModelInputChange)="endpointPointParamsValueChanged(config)"></eqp-select>
+                      </ng-container>
+
+                      <ng-container *ngSwitchCase="paramPropertyType.EXTERNAL_TEMPLATE">
+                        <ng-container [ngTemplateOutlet]="param.ExternalTemplateConfig"
+                          [ngTemplateOutletContext]="{widget:config, parameter: param}">
+                        </ng-container>
+                      </ng-container>
+
+                      <div *ngSwitchDefault></div>
+                    </div>
+                  </ng-container>
+
+                </div>
+              </ng-container>
+
+              <!-- Div che contiene il chart e gli eventuali filtri per l'endpoint -->
+              <div echarts (chartInit)="onChartInit($event)" [options]="config.ChartOptions"
+                *ngIf="((!config.CustomComponentSelector && !config.StatisticWidget) && config.isVisible == true && getWidgetStatus(config.WidgetID).IsChartEmpty != true)"
+                class="chartCont">
+              </div>
+
+              <!-- Pulsante per nascondere il widget -->
+              <div class="hidechartbtn" (click)="hideItemFromMatCard(config)" [matTooltip]="hideTooltipLabel"
+                [matTooltipPosition]="'below'" *ngIf="!checkActiveSpinner(config)">
+                <mat-icon class="mat-icon-rtl-mirror">visibility_off</mat-icon>
+              </div>
+
+              <ng-container *ngIf="!checkActiveSpinner(config)">
+                <!-- Pulsante per ridimensionare il widget -->
+                <div class="menuResizediv">
+                  <button mat-button [matMenuTriggerFor]="menu" class="iconMenMatCard" [matTooltip]="resizeTooltipLabel"
+                    [matTooltipPosition]="'below'">
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+
+                  <mat-menu #menu="matMenu">
+                    <!--RIDIMENSIONA WIDGET PICCOLO-->
+                    <div [matTooltip]="resizeDisabledTooltipLabel"
+                      [matTooltipDisabled]="!(config.WidgetSizeTypes != null && !config.WidgetSizeTypes.includes(WidgetSizeEnum.XS))">
+                      <button mat-menu-item
+                        [disabled]="config.WidgetSizeTypes != null && !config.WidgetSizeTypes.includes(WidgetSizeEnum.XS)"
+                        (click)="setDimensionToWidget(config, WidgetSizeEnum.XS)">
+                        {{smallLabel}}
+                      </button>
+                    </div>
+
+                    <!--RIDIMENSIONA WIDGET MEDIO-->
+                    <div [matTooltip]="resizeDisabledTooltipLabel"
+                      [matTooltipDisabled]="!(config.WidgetSizeTypes != null && !config.WidgetSizeTypes.includes(WidgetSizeEnum.MD))">
+                      <button mat-menu-item
+                        [disabled]="config.WidgetSizeTypes != null && !config.WidgetSizeTypes.includes(WidgetSizeEnum.MD)"
+                        (click)="setDimensionToWidget(config, WidgetSizeEnum.MD)">
+                        {{mediumLabel}}
+                      </button>
+                    </div>
+
+                    <!--RIDIMENSIONA WIDGET GRANDE-->
+                    <div [matTooltip]="resizeDisabledTooltipLabel"
+                      [matTooltipDisabled]="!(config.WidgetSizeTypes != null && !config.WidgetSizeTypes.includes(WidgetSizeEnum.XL))">
+                      <button mat-menu-item
+                        [disabled]="config.WidgetSizeTypes != null && !config.WidgetSizeTypes.includes(WidgetSizeEnum.XL)"
+                        (click)="setDimensionToWidget(config, WidgetSizeEnum.XL)">
+                        {{LargeLabel}}
+                      </button>
+                    </div>
+                  </mat-menu>
+
+                </div>
+
+                <!-- Pulsante per reload API endpoint -->
+                <div class="reloadChartBtn" (click)="reloadWidgetData(config)" [matTooltip]="RechargeLabel"
+                  [matTooltipPosition]="'below'" *ngIf="config.EndPointData || config.CustomComponentSelector">
+                  <mat-icon class="mat-icon-rtl-mirror">autorenew</mat-icon>
+                </div>
+
+                <!-- Pannello di errore da mostrare su ogni widget -->
+                <div class="errorEndpointCont" *ngIf="getWidgetStatus(config.WidgetID).IsValid != true">
+                  <span class="material-icons iconerror"> cancel </span>
+                  <p class="errorfatchdata">{{getWidgetStatus(config.WidgetID).ErrorMessage}}</p>
+                </div>
+
+                <!-- Pannello per CHART VUOTO da mostrare in ogni widget -->
+                <div class="errorEndpointCont" *ngIf="getWidgetStatus(config.WidgetID).IsChartEmpty == true">
+                  <span class="material-icons empty_chart_icon"> dashboard </span>
+                  <p class="empty_chart_message">{{ emptyChartMessage }}</p>
+                </div>
+              </ng-container>
+
+
+              <!-- Widget per info statistiche -->
+              <div class="statisticContent"
+                *ngIf="config.StatisticWidget && config.WidgetType == WidgetTypeEnum.STATISTIC_CHART">
+                <div class="itemstat mt-4" *ngFor="let stat of config.StatisticWidget">
+                  <mat-icon style="margin-left: 5px;vertical-align: middle;"
+                    *ngIf="stat.Icon && stat.IsFontAwesomeIcon != true" [ngClass]="stat.IconClass">{{stat.Icon}}
+                  </mat-icon>
+                  <i *ngIf="stat.Icon && stat.IsFontAwesomeIcon == true" class="item-stat-fa-icon {{stat.Icon}}"
+                    [ngClass]="stat.IconClass"></i>
+                  <span style="vertical-align: middle;margin-left: 5px;"
+                    [ngClass]="stat.LabelClass">{{stat.Label}}</span>
+                  <span class="float-right text-bold-600" [ngClass]="stat.LabelClass">{{stat.Value}}</span>
+                  <mat-progress-bar mode="determinate" [appProgressBarColor]="stat.ProgressBarColor"
+                    [value]="stat.Percentage" style="margin-top: 5px; margin-left: 5px;vertical-align: middle;">
+                  </mat-progress-bar>
+                </div>
+              </div>
+
+            </div>
+          </mat-card>
+
+        </div>
+      </div>
+    </ngx-masonry>
+  </div>
+</ng-container>
+
+<ng-template #dialogHiddenElements>
+  <div class="container-fluid">
+    <div class="row" style="margin-bottom: 20px;">
+      <div class="col-11" style="font-weight: bold;font-size: 18px;line-height: 24px;margin-bottom: auto;">
+        {{ hiddenWidgetModalTitle }}
+      </div>
+      <div class="col-1" style="text-align: right; padding-right: 0px;">
+        <mat-icon style="cursor: pointer;" class="mat-icon-rtl-mirror" (click)="dialogRefHiddenElements.close()">close
+        </mat-icon>
+      </div>
+    </div>
+    <div class="row rowWidgetHidden" *ngFor="let config of allCurrentSetItems | filter: true">
+      <div class="col-9 lh30" *ngIf="config.WidgetTitle">{{config.WidgetTitle}}</div>
+      <div class="col-3 text-right " (click)="showHiddenItemsFromModalList(config)">
+        <mat-icon class="mat-icon-rtl-mirror pointericon lh40eye" [matTooltip]="showTooltipLabel"
+          [matTooltipPosition]="'above'">visibility</mat-icon>
+      </div>
+    </div>
+  </div>
+</ng-template>

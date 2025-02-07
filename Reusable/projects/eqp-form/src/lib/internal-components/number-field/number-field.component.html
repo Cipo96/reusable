@@ -1,0 +1,10 @@
+<form [formGroup]="form">
+  <mat-form-field>
+    <input type="number" matInput [formControlName]="field.key" [placeholder]="field.display"
+      (input)="onInputChange(field.key, $event)">
+    <mat-hint *ngIf="field.tooltip">{{ field.tooltip.tooltipText }}</mat-hint>
+    @if (control?.invalid && control?.touched) {
+    <mat-error> {{ field.validationProperties?.HintLabel }}</mat-error>
+    }
+  </mat-form-field>
+</form>

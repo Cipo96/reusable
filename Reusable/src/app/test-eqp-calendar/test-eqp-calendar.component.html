@@ -1,0 +1,26 @@
+<h1 class="mt-3 mb-3 text-center">EQP-CALENDAR</h1>
+
+<eqp-calendar 
+    [EventList]="eventList" 
+    
+    [CustomStyle]="customStyle" 
+    [InitialView]="initialView" 
+    [FirstDay]="firstDay"
+    [ContentHeight]="contentHeight" 
+    [Locale]="locale" 
+    [MonthButtonText]="monthButtonText"
+    [WeekButtonText]="weekButtonText" 
+    [DayButtonText]="dayButtonText" 
+    [TodayButtonText]="todayButtonText"
+    [ListButtonText]="listButtonText" 
+    [HeaderToolbarStart]="headerToolbarStart"
+    [HeaderToolbarCenter]="headerToolbarCenter" 
+    [HeaderToolbarEnd]="headerToolbarEnd" 
+    [AllDayText]="allDayText"
+    [EventOrder]="eventOrder" 
+    
+    (OnViewDateChange)="onViewDateChange($event)" 
+    (OnDateClick)="onDateClick($event)"
+    (OnEventClick)="onEventClick($event)"
+>
+</eqp-calendar>

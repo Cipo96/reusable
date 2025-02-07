@@ -1,0 +1,25 @@
+.clear-select-button {
+    border: none;
+}
+
+.mat-mdc-form-field-icon-suffix {
+    display: flex;   
+}
+
+.suffix-icon-template, .prefix-icon-template {
+    display: flex !important;
+    align-items: center;
+    font-size: 1.2rem;
+}
+
+.suffix-icon-template {
+    margin-left: 5px;
+}
+
+.ng-value {
+    display: flex;
+}
+
+.ng-value__wrapper {
+    display: flex;
+}

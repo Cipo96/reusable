@@ -1,0 +1,12 @@
+{
+  "name": "@eqproject/eqp-common",
+  "version": "0.0.9",
+  "description": "Eqp common libraries",
+  "author": {
+    "name": "EqProject"
+  },
+  "license": "MIT",
+  "dependencies": {
+  },
+  "sideEffects": false
+}

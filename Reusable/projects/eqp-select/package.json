@@ -1,0 +1,22 @@
+{
+  "name": "@eqproject/eqp-select",
+  "version": "3.0.0",
+  "description": "Generic Material select",
+  "author": {
+    "name": "EqProject"
+  },
+  "license": "MIT",
+  "peerDependencies": {
+    "@angular/common": "^17.0.4",
+    "@angular/core": "^17.0.4",
+    "@angular/cdk": "^17.0.1",
+    "@angular/material": "^17.0.1",
+    "@angular/animations": "^17.0.4",
+    "@angular/forms": "^17.0.4"
+  },
+  "dependencies": {
+    "@ngx-translate/core": "^15.0.0",
+    "@ngx-translate/http-loader": "^8.0.0",
+    "@eqproject/eqp-lookup": "latest"
+  }
+}

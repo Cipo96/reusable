@@ -1,0 +1,17 @@
+{
+  "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../dist/eqp-datetimerangepicker",
+  "lib": { "entryFile": "src/public-api.ts" },
+  "allowedNonPeerDependencies": [
+    "@angular-material-components/datetime-picker",
+    "@angular-material-components/moment-adapter",
+    "@angular/material-moment-adapter",
+    "@ng-bootstrap/ng-bootstrap",
+    "@ngx-translate/core",
+    "@ngx-translate/http-loader",
+    "@popperjs/core",
+    "bootstrap",
+    "moment",
+    "ngx-translate"
+  ]
+}

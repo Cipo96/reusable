@@ -1,0 +1,52 @@
+<div class="container-fluid">
+  <form [formGroup]="addQuestionForm" *ngIf="addQuestionForm" (ngSubmit)="save()">
+    <div class="row mt-4">
+      <div class="col-md-12 col-sm-12 col-12 col-xl-12 col-lg-12 mt-5">
+        <mat-form-field class="mat-focused" style="width: 100%">
+          <mat-label class="whitelabel">Inserisci qui la tua domanda... </mat-label>
+
+          <textarea
+            required
+            matInput
+            autocomplete="off"
+            [(ngModel)]="question.Title"
+            name="title"
+            formControlName="title"
+            class="textareaAnswer"
+            maxlength="250"></textarea>
+        </mat-form-field>
+      </div>
+      <div class="col-md-12 col-sm-12 col-12 mb-4">
+        <label class="whitelabel">Seleziona la categoria della domanda </label>
+
+        <eqp-lookup
+          class="mat-form-field ng-select-focused catselect"
+          #ngselect
+          [items]="questionCategories"
+          formControlName="category"
+          placeholder="Categoria"
+          [(ngModel)]="question.QuestionCategory"
+          [notFoundText]="'Nessun elemento trovato'"
+          [required]="true"
+          [fullUrlHttpCall]="fullUrlHttpCall"
+          [entityType]="'QuestionCategory'"
+          [bindLabel]="'Label'"
+          name="questionCategory"
+          color="white">
+        </eqp-lookup>
+      </div>
+
+      <div class="col-md-12">
+        <button
+          class="btn btn-primary"
+          [disabled]="disableSave()"
+          [ngStyle]="{ opacity: disableSave() == true ? 0.5 : 1 }"
+          type="submit">
+          <div class="lightBorderBtn"></div>
+          Salva
+        </button>
+        <button class="btn third" type="button" (click)="exit()">Chiudi</button>
+      </div>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,34 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "preserveSymlinks": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "baseUrl": "./",
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "ES2021",
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2018",
+      "dom"
+    ]
+  },
+  "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true
+  },
+  "exclude": [
+    "src/test.ts",
+    "**/*.spec.ts"
+  ]
+}

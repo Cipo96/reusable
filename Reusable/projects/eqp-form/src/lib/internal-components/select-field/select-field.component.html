@@ -1,0 +1,50 @@
+<!-- ENUM -->
+<ng-container *ngIf="field.formFieldType == formFieldType.Enum">
+    <eqp-select [enumData]="field.enumModel" [formGroupInput]="form" [formControlNameInput]="field.key"
+        [isMultiSelect]="field.selectObject?.isEnumMultiSelect"
+        [showCancelButton]="field.selectObject?.showEnumCancelButton"
+        [isSearchable]="field.selectObject?.isEnumSearchable" [isDisabled]="control?.disabled"
+        [placeholder]="field.display ?? field.selectObject?.enumSearchText"></eqp-select>
+</ng-container>
+
+<!-- CVL -->
+<ng-container *ngIf="field.formFieldType == formFieldType.Cvl">
+    <eqp-select
+    [placeholder]="field.key ?? field.selectObject?.enumSearchText"
+    [enumData]="field.selectObject?.enumData"
+    [enumDataToExclude]="field.selectObject?.enumDataToExclude"
+    [arrayData]="field.selectObject?.arrayData"
+    [arrayKeyProperty]="field.selectObject?.arrayKeyProperty || 'ID'"
+    [arrayValueProperty]="field.selectObject?.arrayValueProperty || 'Label'"
+    [ngModelOptions]="field.selectObject?.ngModelOptions || { standalone: true }"
+    [ngModelInput]="field.selectObject?.ngModelInput"
+    [formGroupInput]="form"
+    [formControlNameInput]="field.key"
+    [isRequired]="field.selectObject?.isRequired || false"
+    [isDisabled]="control?.disabled"
+    [isMultiLanguage]="field.selectObject?.isMultiLanguage || false"
+    [multilanguagePrefixKey]="field.selectObject?.multilanguagePrefixKey"
+    [isAlphabeticalOrderable]="field.selectObject?.isAlphabeticalOrderable || false"
+    [suffixIcon]="field.selectObject?.suffixIcon"
+    [prefixIcon]="field.selectObject?.prefixIcon"
+    [isMultiSelect]="field.selectObject?.isEnumMultiSelect || false"
+    [showCancelButton]="field.selectObject?.showEnumCancelButton || true"
+    [isSearchable]="field.selectObject?.isEnumSearchable || false"
+    [noResultSearchText]="'Nessun elemento trovato'"
+    [isReadonly]="field.selectObject?.isReadonly || false"
+    [isSearchWhileComposing]="field.selectObject?.isSearchWhileComposing || true"
+    [appendToInput]="field.selectObject?.appendToInput || 'body'"
+    [dropdownPosition]="field.selectObject?.dropdownPosition || 'auto'"
+    [selectOnTab]="field.selectObject?.selectOnTab || true"
+    [selectAll]="field.selectObject?.selectAll || false"
+    [selectAllText]="field.selectObject?.selectAllText || 'Seleziona tutto'"
+    [selectableGroupAsModel]="field.selectObject?.selectableGroupAsModel || false"
+    [clearAllText]="field.selectObject?.clearAllText || 'Elimina'"
+    [customOption]="field.selectObject?.customOption"
+    [customLabel]="field.selectObject?.customLabel"
+    [class]="field.selectObject?.class"
+></eqp-select>
+</ng-container>
+<mat-error *ngIf="control?.invalid && control?.touched">
+    {{ field.validationProperties?.HintLabel }}
+</mat-error>

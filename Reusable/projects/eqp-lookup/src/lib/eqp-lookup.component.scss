@@ -1,0 +1,103 @@
+.space {
+    margin-bottom: 5% !important;
+  }
+  
+  .ng-select.mat-mdc-form-field {
+    width: 100%;
+    margin: -2px 0px;
+  }
+  
+  ::ng-deep .ng-select-single .ng-select-container:not(.containerMultiline) .ng-value-container .ng-input{
+    width: calc(100% - 90px) !important;
+  }
+  
+  ::ng-deep .multiline-lookup.ng-select.ng-select-single .ng-select-container .ng-value-container{
+    white-space: pre-wrap !important;
+  }
+  
+  ::ng-deep .multiline-lookup.ng-select.ng-select-single .ng-select-container .ng-value-container .ng-value{
+    white-space: pre-wrap !important;
+  }
+  
+  ::ng-deep .ng-dropdown-panel .ng-dropdown-panel-items .ng-option{
+    white-space: unset !important;
+    border-top: 1px solid lightgrey !important;
+  }
+  
+  ::ng-deep .multiline-lookup.ng-select.ng-select-opened .ng-value {
+    height: 25px !important
+  }
+  ::ng-deep ng-select.ng-invalid.ng-touched .ng-select-container .ng-value-container .ng-placeholder {
+    color: red;
+  }
+  ::ng-deep ng-select.ng-invalid.ng-touched .ng-arrow-wrapper .ng-arrow {
+    color: red;
+  }
+  ::ng-deep ng-select.ng-invalid.ng-touched .ng-select-container {
+    box-shadow: 0 3px 1px -2px red;
+  }
+  
+  ng-select .ng-placeholder {
+    top: 25px;
+  }
+  
+  ng-select .ng-select-container.ng-has-value .ng-placeholder {
+    top: 30px;
+  }
+  
+  ng-select .ng-select-container.ng-has-value .ng-value-container .ng-value {
+    top: 9px;
+    position: relative;
+  }
+  
+  eqp-lookup {
+    margin-top: 2px;
+  }
+
+  ::ng-deep .lookup-add-button {
+    cursor: pointer;
+    padding-left: 5px;
+    align-self: flex-end;
+    position: relative;
+    bottom: 6px;
+  }
+
+  ::ng-deep .lookup-edit-button {
+    cursor: pointer;
+    padding-left: 5px;
+    align-self: flex-end;
+    position: relative;
+    bottom: 6px;
+  }
+
+  ::ng-deep .ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value {
+    white-space: pre-wrap !important;
+  }
+
+  .optgroup-tmp-label {
+    vertical-align: middle;
+  }
+
+  .optgroup-tmp-total {
+    color: rgba(0,0,0,0.54);
+  }
+
+  .lookup-label-total {
+    font-weight: 400;
+  }
+
+  // ::ng-deep.ng-select.mobile-view {
+  //     box-shadow: 0px 2px 15px -1px rgb(0 0 0 / 10%);
+  //     border-radius: 10px;
+  //     padding: 10px;
+
+  //   .ng-dropdown-panel.ng-select-bottom {
+  //     top: calc(100% - 1em);
+  //     border-radius: 0px 0px 10px 10px;
+  //   }
+
+  //   .ng-dropdown-panel.ng-select-top {
+  //     // top: calc(100% - 1em);
+  //     border-radius: 10px 10px 0px 0px;
+  //   }
+  // }

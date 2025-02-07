@@ -1,0 +1,73 @@
+{
+    "EQP_EDITOR": {
+        "INFO_TOOLTIP": "Click to view the tag usage guide",
+        "INFO_TITLE": "Guide to using tags",
+        "INFO_EXIT": "Close",
+        "GENERAL": {
+            "MAIN_PARAGRAPH": "Column {{columnName}} lists all placeholders that can be used in the document. During printing, these placeholders present in the document can be replaced with specific values.",
+            "HOW_TO_USE_PLACEHOLDERS": "To use placeholders correctly, just make sure that, once dragged into the document, they are separated from the rest of the document content by at least a white space both at the beginning and at the end of the tag."
+        },
+        "CONDITION": {
+            "MAIN": {
+                "TITLE": "Using conditional tags",
+                "FIRST_PARAGRAPH":"If the placeholder <b> {{conditionTagName}} </b> is present in the list of tags then it will be possible to drag the two additional tags <b> {{visibilityConditionTagName}} </b> and <b into the document > {{styleConditionTagName}} </b>.",
+                "SECOND_PARAGRAPH":"By dragging these tags into the document, the user will have the possibility to define conditions that will allow to manage, respectively:",
+                "LIST_ITEM_VISIBILITY_CONDITION":"The visibility of an entire section of the document only when a specific condition occurs",
+                "LIST_ITEM_STYLE_CONDITION":"The style to be applied to the text (background color, text color and bold style) only when appropriate conditions occur"
+            },
+            "VISIBILITY": {
+                "TITLE":"Visibility condition",
+                "FIRST_PARAGRAPH":"By dragging the tag <b> {{visibilityConditionTagName}} </b> into the document, the placeholder <i> {{VISIBILITY_CONDITION_TAG}} </i> will be set up to be completed by the user with the insertion of the condition.",
+                "SECOND_PARAGRAPH": "The insertion of the condition must be done in the opening block of the condition identified by the 'IF' tag in the manner described in the next chapter.",
+                "THIRD_PARAGRAPH":"Once the tag has been dragged into the document, the user can complete it by intervening in the opening block 'IF' and inserting the condition that must be verified in order to show the entire content inserted in the tag <i> {{VISIBILITY_CONDITION_TAG}} </ i>."
+            },
+            "STYLE": {
+                "TITLE":"Condition of style",
+                "FIRST_PARAGRAPH":"By dragging the tag <b> {{styleConditionTagName}} </b> into the document, the placeholder <i> {{STYLE_CONDITION_TAG}} </i> will be set up which, also in this case, must be completed by the user with the insertion of the condition.",
+                "SECOND_PARAGRAPH": "The insertion of the condition must be done in the opening block of the condition identified by the 'IF_STYLE' tag in the manner described in the next chapter."
+            },
+            "CONDITION_DEFINITION": {
+                "TITLE":"Definition of the visibility condition",
+                "FIRST_PARAGRAPH":"To define the condition, the user can use all the tags shown in the {{columnName}} column and, once dragged into the block that identifies the condition, they will be able to complete it by indicating the logical comparison operator and the value with which to perform the comparison.",
+                "SECOND_PARAGRAPH":"You can use all these comparison operators:",
+                "EQUAL_OPERATOR":"<b>=</b>: equality",
+                "NOT_EQUAL_OPERATOR":"<b><></b>: inequality",
+                "GREATHER_THAN_OPERATOR":"<b>></b>: greater than",
+                "GREATHER_THAN_OR_EQUAL_OPERATOR":"<b>>=</b>: greater than or equal",
+                "LESS_THAN_OPERATOR":"<b><</b>: less than",
+                "LESS_THAN_OR_EQUAL_OPERATOR":"<b><=</b>: less than or equal",
+                "EXISTS_OPERATOR":"<b>Exists</b>: to check whether a list is populated",
+                "NOT_EXISTS_OPERATOR":"<b>NotExists</b>: to check if a list is empty",
+                "EXAMPLE": {
+                    "SIMPLE_TITLE":"Simple condition example",
+                    "EXAMPLE_CONTENT":"CONTENT TO SHOW HERE",
+                    "SIMPLE_DESCRIPTION":"With this condition, the content of the document will be displayed only if the @@ DENOMINATION tag takes on the value indicated in the condition",
+                    "COMPLEX_TITLE":"Compound condition example",
+                    "COMPLEX_DESCRIPTION":"It is possible to combine several simple conditions, making sure that these conditions are all combined through the same logical operator (therefore either all conditions in AND or all in OR)",
+                    "EXISTS_TITLE":"Condition example on populated list",
+                    "EXISTS_DESCRIPTION":"With the Exists operator it is possible to check whether the list attributed to the @@ CHILDREN tag is populated, otherwise the condition is not verified",
+                    "NOT_EXISTS_TITLE":"Example of condition on empty list",
+                    "NOT_EXISTS_DESCRIPTION":"With the NotExists operator it is possible to check if the list attributed to the @@ CHILDREN tag is empty, otherwise the condition is not verified"
+                }
+            },
+            "STYLE_DEFINITION": {
+                "TITLE":"Definition of the style condition",
+                "FIRST_PARAGRAPH":"This section describes how to specialize the style condition to make it, after defining the condition, to define the style to be applied if it is verified.",
+                "SECOND_PARAGRAPH": "For the definition of the condition to be verified it will be possible to use the same definition concepts seen in the 'Visibility conditions' section, while for the definition it will be possible to specialize the condition by adding the keyword <b> THEN </b> and, subsequently , the styles to be applied as shown in the example",
+                "THIRD_PARAGRAPH":"It is possible to define the style to be used with these two modes:",
+                "LIST_ITEM_STYLE_MODE_1": "By directly defining the name of the style defined within the document (Ex. Heading 1, Heading 2 ... or the name of a custom style created)",
+                "LIST_ITEM_STYLE_MODE_2": "By manually defining the properties of the styles referring to background, text color and bold (Eg. Background: #FFFFFF; TextColor: #EEEEEE; Bold: 1)",
+                "FOURTH_PARAGRAPH":"In the case of manual definition it is possible to define the following styles:",
+                "LIST_ITEM_BACKGROUND":"<b>Background:</b> allows you to define the background of the text (or of a cell in case the condition is applied inside a cell). The color to be used can be expressed in hexadecimal or in RGB",
+                "LIST_ITEM_BOLD":"<b>Bold</b>: allows you to define whether to apply bold to the text or not. To apply this style, it is sufficient to value it with the value 1",
+                "LIST_ITEM_FOREGROUND":"<b>TextColor:</b> allows you to define the color of the text. The color to be used can be expressed in hexadecimal or in RGB",
+                "EXAMPLE_TITLE_1":"Application example with style defined within the document",
+                "EXAMPLE_CONTENT": "INSERT THE CONTENT ON WHICH TO APPLY THE STYLE HERE",
+                "EXAMPLE_DESCRIPTION_1": "In this example, the condition will be verified only if the @@ IS_VALID tag will assume the value 1 and in that case the content of the conditional tag will assume the style called CustomStyle1 which must be compulsorily registered within the document",
+                "EXAMPLE_TITLE_2":"Application example with style defined manually in the tag",
+                "EXAMPLE_DESCRIPTION_2": "In this example the condition will be verified only if the tag @@ IS_VALID will assume the value 1 and in that case the text will have a red background (Hexadecimal: # FF0000), will be bold and will be white (RGB: 255,255,255)"
+            }
+        }
+    }
+    
+}

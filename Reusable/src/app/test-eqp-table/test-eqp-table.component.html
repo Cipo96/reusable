@@ -1,0 +1,35 @@
+<!-- <eqp-table [tableName]="'Pippo'" #eqpTable
+[createMatCard]="true"
+headerTitle="Elenco dati" [columns]="columns"
+[disableRow]="disableRowTest"
+[isMultiLanguage]="true"
+(functionButtonConfirm)="buttonConfirm($event)"
+  (functionButtonExit)="buttonExit($event)" [showFunctionButtons]="true"
+[data]="DATA">
+</eqp-table> -->
+<div class="container">
+
+  <eqp-table [tableName]="'Pippo'" #eqpTable (functionButtonConfirm)="buttonConfirm($event)"
+    (functionButtonExit)="buttonExit($event)" [showFunctionButtons]="false" [createMatCardHeader]="false"
+    [createMatCard]="false" headerTitle="Elenco dati" [tableColumnFields]="columns" [data]="DATA" [isHighlight]=true
+    (highlightSelected)="testHigh($event)" [highlightColor]="'green'" [isMultiLanguage]="true"
+    [exportEqpTable]="{ buttonIcon: 'download', exportFileName: 'Test', showButtonBorder: false }"
+    (highlightDeselected)="testHigh($event)" [switchFilterType]="false" [isSingleColumnFilter]="false"
+    [selection]="true" [isMultipleSelection]="true" [showSingleFilterButton]="false"
+    (checkboxInfo)="testSelection($event)" [showFirstLastButtons]="true" [autoResizeColumns]="false"
+    [chooseColumnsToShow]="true" (checkboxJustSelectedInfo)="justSelected($event)" [customButtons]="customButtons"
+    [isStickyHeader]="false" [enableFilters]="true">
+  </eqp-table>
+</div>
+
+<!-- <button (click)="changeTestValue()">Cambia</button>
+  [exportEqpTable]="{ buttonIcon: 'download', exportFileName: 'Test', showButtonBorder: false }"
+<button (click)="reloadData()">Ricarica dati</button>
+-->
+
+<ng-template #externalTemplate let-row="row" let-col="col">
+  <span>
+    {{row.SerialNumber * 5}}
+    <!-- getRowSerialNumber(row, col) -->
+  </span>
+</ng-template>

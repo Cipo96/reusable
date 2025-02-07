@@ -1,0 +1,96 @@
+<div class="container highlight">
+  <p>Novità:</p>
+  <ul>
+    <li>Modello base da utilizzare nella creazione dei componenti riutilizzabili, che adesso estendono le proprietà
+      comuni BaseFieldModel</li>
+    <li>Refactoring seguendo questa logica, dei componenti Eqp-Table e Eqp-Filter</li>
+    <ul>
+      <li>I modelli sono diventati ConfigColumn => TableField / FilterConfig => FilterField (sono state applicate le
+        convenzioni TypeScript passando da PascalCase a camelCase per proprietà classe)</li>
+      <li>PS: Questo vale per la versione 17, i "vecchi" modelli saranno deprecati ma attualmente rimane la
+        retrocompatibilità</li>
+    </ul>
+    <li>Eqp-table con eqp-filters</li>
+    <li>Eqp-form</li>
+    <li>EqpCommon</li>
+  </ul>
+</div>
+
+
+<mat-accordion class="container mt-5">
+  <!-- Accordion Panel 1: BASE -->
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Esempio base
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <!-- BASE -->
+    <div *ngIf="baseFields != null" class="container mt-5">
+
+      <h2>Caso Base</h2>
+
+      <eqp-table #eqpTable [tableColumnFields]="baseFields" [data]="users" [isHighlight]="true"
+        [exportEqpTable]="{ buttonIcon: 'download', exportFileName: 'Test', showButtonBorder: false }"
+        [selection]="true" [isMultipleSelection]="true" [showFirstLastButtons]="true" [chooseColumnsToShow]="true"
+        [enableFilters]="true" (filtersSelected)="filterSelected($event)" (highlightSelected)="selectUser($event)">
+      </eqp-table>
+
+      <div class="mt-5 spacer"></div>
+
+      <eqp-form [fields]="baseFields" [record]="user" (submitEvent)="onSubmit($event)"></eqp-form>
+
+      <div class="mb-5 spacer"></div>
+    </div>
+  </mat-expansion-panel>
+
+
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Esempio complesso
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <!-- COMPLESSO -->
+    <div class="container mt-5">
+
+      <h2>Caso Complesso</h2>
+
+      <!-- FILTRI SINGOLI - DECOMMENTARE-->
+      <!-- <div style="margin: auto">
+                <eqp-dynamic-filters [saveLastFilter]="false" [saveFilter]="true" [saveFilterID]="'testFiltri'"
+                    [useInitialValueOnReset]="true" [saveFilterID]="'provaFiltri'" [usingMode]="1" [resultType]="2"
+                    [applyOnInit]="true" (filtersSelected)="filterSelected($event)" [leftCollapseIcon]="false"
+                    [showAppliedFiltersIcon]="true" [filtersField]="filterFields"
+                    [filterTitle]="'Filtro separato - eqp-dynamic-filters'">
+                </eqp-dynamic-filters>
+            </div> -->
+
+      <!-- Tabella con Oggetto Filter innestato -->
+      <eqp-table *ngIf="tableColumnFields != null" #eqpTable [tableColumnFields]="tableColumnFields" [data]="users"
+        [isHighlight]="true"
+        [exportEqpTable]="{ buttonIcon: 'download', exportFileName: 'Test', showButtonBorder: false }"
+        [selection]="true" [isMultipleSelection]="true" [showFirstLastButtons]="true" [chooseColumnsToShow]="true"
+        [enableFilters]="true" [filterObject]="defaultFilters" (filtersSelected)="filterSelected($event)"
+        (highlightSelected)="selectUser($event)">
+      </eqp-table>
+
+      <div class="mt-5 spacer"></div>
+
+      <eqp-form [fields]="formFields" [record]="user" (submitEvent)="onSubmit($event)"></eqp-form>
+
+      <div class="mb-5 spacer"></div>
+    </div>
+  </mat-expansion-panel>
+</mat-accordion>
+
+<ng-template #externalField let-field="field" let-form="form">
+  <form [formGroup]="form">
+    <mat-form-field>
+      <mat-label>{{ field.display }}</mat-label>
+      <input matInput [formControlName]="field.key" />
+    </mat-form-field>
+  </form>
+</ng-template>

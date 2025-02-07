@@ -1,0 +1,20 @@
+{
+  "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../dist/eqp-dashboard",
+  "lib": {
+    "entryFile": "src/public-api.ts"
+  },
+  "allowedNonPeerDependencies": [
+    "@eqproject/eqp-select",
+    "@eqproject/eqp-datetimerangepicker",
+    "masonry-layout",
+    "ngx-masonry",
+    "@ngx-translate/core",
+    "@ngx-translate/http-loader",
+    "@juggle/resize-observer",
+    "bootstrap",
+    "echarts",
+    "ngx-echarts",
+    "resize-observer-polyfill"
+  ]
+}

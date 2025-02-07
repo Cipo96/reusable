@@ -1,0 +1,17 @@
+{
+  "name": "@eqproject/eqp-ui",
+  "version": "0.0.3",
+  "description": "Eqp User Interface",
+  "author": {
+    "name": "EqProject"
+  },
+  "license": "MIT",
+  "peerDependencies": {
+    "@angular/common": "^17.0.0",
+    "@angular/core": "^17.0.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": false
+}

@@ -1,0 +1,372 @@
+<mat-card appearance="outlined">
+  <mat-card-header (click)="cardHeaderClick()" class="filter-mat-card-header">
+    <mat-icon
+      *ngIf="usingMode == usingModeEnum.WITH_CARD && leftCollapseIcon == true"
+      style="margin-left: 15px; margin-top: 8px">
+      {{ collapsed == true ? "keyboard_arrow_down" : "keyboard_arrow_up" }}
+    </mat-icon>
+    <mat-icon *ngIf="usingMode == usingModeEnum.WITH_BUTTON" style="margin-left: 15px; margin-top: 8px" class="me-2">
+      search
+    </mat-icon>
+
+    <span
+      style="min-width: 120px; display: flex; align-items: center"
+      [ngStyle]="{ 'margin-left': usingMode == usingModeEnum.WITH_CARD && leftCollapseIcon != true ? '15px' : null }">
+      <mat-icon *ngIf="showAppliedFiltersIcon && isFiltersApplied" class="eqp-filters-applied-filter-icon me-1">
+        filter_list
+      </mat-icon>
+      <b>{{ isFiltersApplied != true ? filterTitle : filterAppliedTitle }}</b>
+    </span>
+
+    <!-- DIV contenente il riepilogo dei filtri applicati -->
+    <div style="width: 100%">
+      <div *ngIf="isFiltersApplied == true" style="padding-top: 10px">
+        <span
+          [ngClass]="{
+            close: appliedFilter.PreventRemoval != true,
+            'prevent-removal': appliedFilter.PreventRemoval == true
+          }"
+          href="#"
+          *ngFor="let appliedFilter of infoAppliedFilters"
+          (click)="$event.stopPropagation(); removeFilter(appliedFilter)"
+          matTooltip="{{ appliedFilter.PreventRemoval == true ? filterPreventRemovalTooltip : '' }}">
+          <b>{{ appliedFilter.Label }}: </b>
+
+          <ng-container *ngIf="appliedFilter.InputType == TypeEnum.Text || appliedFilter.InputType == TypeEnum.Number">
+            {{ appliedFilter.PropertyObject }}
+          </ng-container>
+
+          <ng-container *ngIf="appliedFilter.InputType == TypeEnum.Date">
+            {{ appliedFilter.PropertyObject | date : "shortDate" : "" : this.currentCultureSelected }}
+          </ng-container>
+
+          <ng-container *ngIf="appliedFilter.InputType == TypeEnum.Datetime">
+            {{ appliedFilter.PropertyObject | date : "short" : "UTC" : this.currentCultureSelected }}
+          </ng-container>
+
+          <ng-container *ngIf="appliedFilter.InputType == TypeEnum.DateRange">
+            {{ appliedFilter.PropertyObject.from | date : "shortDate" : "UTC" : this.currentCultureSelected }} -
+            {{ appliedFilter.PropertyObject.to | date : "shortDate" : "UTC" : this.currentCultureSelected }}
+          </ng-container>
+
+          <ng-container
+            *ngIf="
+              appliedFilter.InputType == TypeEnum.CvlEnum ||
+              appliedFilter.InputType == TypeEnum.Cvl ||
+              appliedFilter.InputType == TypeEnum.BooleanCvl ||
+              appliedFilter.InputType == TypeEnum.Lookup
+            ">
+            {{ getCvlValueSelected(appliedFilter) }}
+          </ng-container>
+
+          <ng-container *ngIf="appliedFilter.InputType == TypeEnum.Boolean">
+            <mat-icon style="line-height: unset; vertical-align: middle" *ngIf="appliedFilter.PropertyObject == true">
+              check</mat-icon
+            >
+          </ng-container>
+
+          <ng-container *ngIf="appliedFilter.InputType == TypeEnum.CustomTemplate">
+            {{ getCustomFilterValue(appliedFilter) }}
+          </ng-container>
+        </span>
+      </div>
+    </div>
+
+    <mat-icon
+      *ngIf="usingMode == usingModeEnum.WITH_CARD && leftCollapseIcon != true"
+      style="margin-left: 15px; margin-top: 8px; margin-right: 15px">
+      {{ collapsed == true ? "keyboard_arrow_down" : "keyboard_arrow_up" }}
+    </mat-icon>
+  </mat-card-header>
+  <mat-card-content [hidden]="usingMode == usingModeEnum.WITH_BUTTON || collapsed">
+    <div class="container-fluid mt-4">
+      <div class="row">
+        <ng-container [ngTemplateOutlet]="filterContainer" [ngTemplateOutletContext]="{ filters: filtersConfig }">
+        </ng-container>
+      </div>
+    </div>
+  </mat-card-content>
+  <mat-card-footer [hidden]="usingMode == usingModeEnum.WITH_BUTTON || collapsed">
+    <ng-container [ngTemplateOutlet]="filterButtons"> </ng-container>
+  </mat-card-footer>
+</mat-card>
+
+<!-- TEMPLATE CONTENENTE TUTTI I FILTRI (è stato un fatto un template per non replicare codice dato che gli stessi filtri vanno mostrati sia nella card che nella modal)-->
+<ng-template #filterContainer let-filters="filters">
+  <form *ngIf="filtersForm" [formGroup]="filtersForm" class="row pt-1">
+    <div [ngClass]="getFilterSizeClass(filter)" *ngFor="let filter of filters">
+      <!-- Filtro tipo 1: TEXT -->
+      <ng-container *ngIf="filter.InputType == TypeEnum.Text">
+        <div class="mb-4">
+          <mat-form-field>
+            <mat-label>{{ filter.Label }}</mat-label>
+            <input matInput [formControlName]="filter.FilterID" />
+          </mat-form-field>
+          <div *ngIf="submitted && f[filter.FilterID].errors" class="invalid-feedback d-block">
+            <div *ngIf="f[filter.FilterID].errors.invalid">{{ filter.ValidationProperties.HintLabel }}</div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Filtro tipo 2: NUMBER -->
+      <ng-container *ngIf="filter.InputType == TypeEnum.Number">
+        <div class="mb-4">
+          <mat-form-field>
+            <mat-label>{{ filter.Label }}</mat-label>
+            <input matInput type="number" [formControlName]="filter.FilterID" />
+          </mat-form-field>
+          <div *ngIf="submitted && f[filter.FilterID].errors" class="invalid-feedback d-block">
+            <div *ngIf="f[filter.FilterID].errors.invalid">{{ filter.ValidationProperties.HintLabel }}</div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Filtro tipo 3: DATE -->
+      <ng-container *ngIf="filter.InputType == TypeEnum.Date">
+        <div class="mb-4">
+          <eqp-datetimerangepicker
+            placeholder="{{ filter.Label }}"
+            [formGroupInput]="filtersForm"
+            [formControlNameInput]="filter.FilterID"
+            [type]="pickerModeEnum.DATE"
+            [disabled]="false">
+          </eqp-datetimerangepicker>
+          <div *ngIf="submitted && f[filter.FilterID].errors" class="invalid-feedback d-block">
+            <div *ngIf="f[filter.FilterID].errors.invalid">{{ filter.ValidationProperties.HintLabel }}</div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Filtro tipo 4: DATE TIME  -->
+      <ng-container *ngIf="filter.InputType == TypeEnum.Datetime">
+        <div class="mb-4">
+          <eqp-datetimerangepicker
+            placeholder="{{ filter.Label }}"
+            [formGroupInput]="filtersForm"
+            [formControlNameInput]="filter.FilterID"
+            [type]="pickerModeEnum.DATETIME"
+            [disabled]="false">
+          </eqp-datetimerangepicker>
+          <div *ngIf="submitted && f[filter.FilterID].errors" class="invalid-feedback d-block">
+            <div *ngIf="f[filter.FilterID].errors.invalid">{{ filter.ValidationProperties.HintLabel }}</div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Filtro tipo 5: CVL ENUM (eqp-select)-->
+      <ng-container *ngIf="filter.InputType == TypeEnum.CvlEnum">
+        <div class="mb-4">
+          <eqp-select
+            [enumData]="filter.EnumData"
+            [formGroupInput]="filtersForm"
+            [formControlNameInput]="filter.FilterID"
+            [isMultiSelect]="filter.IsEnumMultiSelect"
+            [showCancelButton]="filter.ShowEnumCancelButton"
+            [isSearchable]="filter.IsEnumSearchable"
+            [placeholder]="filter.Label ?? filter.EnumSearchText"></eqp-select>
+          <div *ngIf="submitted && f[filter.FilterID].errors" class="invalid-feedback d-block">
+            <div *ngIf="f[filter.FilterID].errors.invalid">{{ filter.ValidationProperties.HintLabel }}</div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Filtro tipo 6: CVL (eqp-select) -->
+      <ng-container *ngIf="filter.InputType == TypeEnum.Cvl">
+        <div class="mb-4">
+          <eqp-select
+            [arrayData]="filter.ArrayData"
+            [arrayKeyProperty]="filter.ArrayKeyProperty"
+            [arrayValueProperty]="filter.ArrayValueProperty"
+            [formGroupInput]="filtersForm"
+            [formControlNameInput]="filter.FilterID"
+            [isMultiSelect]="filter.IsEnumMultiSelect"
+            [showCancelButton]="filter.ShowEnumCancelButton"
+            [isSearchable]="filter.IsEnumSearchable"
+            [placeholder]="filter.Label ?? filter.EnumSearchText"></eqp-select>
+          <div *ngIf="submitted && f[filter.FilterID].errors" class="invalid-feedback d-block">
+            <div *ngIf="f[filter.FilterID].errors.invalid">{{ filter.ValidationProperties.HintLabel }}</div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Filtro tipo 7: BOOLEAN  (con solo due stati: SI/NO)-->
+      <ng-container *ngIf="filter.InputType == TypeEnum.Boolean">
+        <div class="mb-4">
+          <mat-slide-toggle class="booleanFilter" [formControlName]="filter.FilterID">
+            {{ filter.Label }}
+          </mat-slide-toggle>
+        </div>
+      </ng-container>
+
+      <!-- Filtro tipo 8: BooleanCvl (a tre stati: TUTTI; SI; NO; con eqp-select) -->
+      <ng-container *ngIf="filter.InputType == TypeEnum.BooleanCvl">
+        <div class="mb-4">
+          <eqp-select
+            [arrayData]="filter.ArrayData"
+            [arrayKeyProperty]="filter.ArrayKeyProperty"
+            [arrayValueProperty]="filter.ArrayValueProperty"
+            [formGroupInput]="filtersForm"
+            [formControlNameInput]="filter.FilterID"
+            [showCancelButton]="filter.ShowEnumCancelButton"
+            placeholder="{{ filter.Label }}"></eqp-select>
+          <div *ngIf="submitted && f[filter.FilterID].errors" class="invalid-feedback d-block">
+            <div *ngIf="f[filter.FilterID].errors.invalid">{{ filter.ValidationProperties.HintLabel }}</div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Filtro tipo 9: EXTERNAL TEMPLATE -->
+      <ng-container *ngIf="filter.InputType == TypeEnum.CustomTemplate">
+        <div class="mb-4">
+          <ng-container [ngTemplateOutlet]="filter.Externaltemplate" [ngTemplateOutletContext]="{ filter: filter }">
+          </ng-container>
+        </div>
+      </ng-container>
+
+      <!-- Filtro tipo 10: DATE RANGE  -->
+      <ng-container *ngIf="filter.InputType == TypeEnum.DateRange">
+        <div class="mb-4">
+          <eqp-datetimerangepicker
+            placeholder="{{ filter.Label }}"
+            [formGroupInput]="filtersForm"
+            [disabled]="false"
+            [readonlyInput]="true"
+            [type]="pickerModeEnum.DATE_RANGE"
+            [class.mat-form-field-invalid]="true"
+            [(ngModelInput)]="filter.PropertyObject"
+            [formControlNameInputStart]="filter.FilterID + '_START'"
+            [formControlNameInputEnd]="filter.FilterID + '_END'">
+          </eqp-datetimerangepicker>
+          <div
+            *ngIf="submitted && (f[filter.FilterID + '_START'].errors || f[filter.FilterID + '_END'].errors)"
+            class="invalid-feedback d-block">
+            <div *ngIf="f[filter.FilterID + '_START'].errors?.invalid || f[filter.FilterID + '_END'].errors?.invalid">
+              {{ filter.ValidationProperties.HintLabel }}
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Filtro tipo 11: LOOKUP  -->
+      <ng-container *ngIf="filter.InputType == TypeEnum.Lookup">
+        <div class="mb-4">
+          <eqp-lookup
+            [fullUrlHttpCall]="filter.LookupFullUrlHttpCall"
+            [entityType]="filter.LookupEntityType"
+            [placeholder]="filter.Label"
+            [bindLabel]="'Label'"
+            [formGroupInput]="filtersForm"
+            [formControlNameInput]="filter.FilterID"
+            [isSearchable]="filter.IsLookupSearchable"
+            [isClearable]="filter.ShowLookupCancelButton"
+            [isMultiple]="filter.IsLookupMultiple"
+            [dataFilter]="filter.DataFilter"
+            [appendToInput]="'body'"></eqp-lookup>
+          <div *ngIf="submitted && f[filter.FilterID].errors" class="invalid-feedback d-block">
+            <div *ngIf="f[filter.FilterID].errors.invalid">{{ filter.ValidationProperties.HintLabel }}</div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </form>
+</ng-template>
+
+<ng-template #filterButtons>
+  <div class="col-12">
+    <div class="row mt-3">
+      <div class="col-sm-8">
+        <div *ngIf="saveFilter == true && allSavedFilters.length > 0">
+          <p class="savedFiltersLabel">{{ savedFilterLabel }}</p>
+          <span *ngFor="let savedFilter of allSavedFilters" class="saveFilterItem">
+            <span
+              (click)="$event.stopPropagation(); restoreSavedFilter(savedFilter)"
+              [matTooltip]="restoreSavedFilterTooltip">
+              <b>{{ savedFilter.FilterName }}</b>
+            </span>
+            <span
+              (click)="$event.stopPropagation(); removeSavedFilter(savedFilter)"
+              [matTooltip]="removeSavedFilterTooltip"
+              [ngClass]="{
+                'close-savedFilter': savedFilter.PreventRemoval != true,
+                'prevent-removal-savedFilter': savedFilter.PreventRemoval == true
+              }"
+              href="#">
+            </span>
+          </span>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="d-flex justify-content-end">
+          <button
+            (click)="openModalSaveFiltersOnLocalStorage()"
+            class="btn btn-saveFilter me-1"
+            *ngIf="saveFilter == true">
+            {{ saveFilterButtonLabel }}
+          </button>
+          <button (click)="resetFilters()" class="btn mat-raised-button me-1">
+            {{ resetAllFilterLabel }}
+          </button>
+          <button (click)="applyFilters(null, true)" class="btn btn-primary mat-raised-button">
+            {{ applyFilterLabel }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Modale contenente i filtri (usata nella modalita WITH_BUTTON) -->
+<ng-template #dialogModalFilters>
+  <span mat-dialog-title class="modal-filter-title">{{ filterTitle }}</span>
+  <div class="container-fluid" mat-dialog-content>
+    <div class="row modal-filter-container">
+      <ng-container [ngTemplateOutlet]="filterContainer" [ngTemplateOutletContext]="{ filters: filtersConfig }">
+      </ng-container>
+    </div>
+    <div class="row">
+      <ng-container [ngTemplateOutlet]="filterButtons"> </ng-container>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Modale per la memorizzazione del filtro -->
+<ng-template #dialogSaveFilter>
+  <mat-dialog-content>
+    <div class="row mb-3">
+      <div class="col-sm-12 col-md-8">
+        <span style="font-weight: 700; font-size: 18px">{{ saveFilterTitle }}</span>
+      </div>
+    </div>
+    <div class="row modal-filter-container mb-1">
+      <div class="col-12">
+        <mat-form-field>
+          <input matInput [(ngModel)]="currentFilterName" />
+        </mat-form-field>
+      </div>
+    </div>
+    <mat-dialog-actions [align]="'end'">
+      <div class="row">
+        <div class="col-12">
+          <button (click)="saveFiltersOnLocalStorage()" class="btn btn-primary mat-raised-button">
+            {{ saveFilterConfirmLabel }}
+          </button>
+          <button (click)="closeModalSaveFilterOnLocalStorage()" class="btn mat-raised-button">
+            {{ saveFilterAbortLabel }}
+          </button>
+        </div>
+      </div>
+    </mat-dialog-actions>
+  </mat-dialog-content>
+  <!-- <mat-dialog-actions [align]="'end'">
+    <div class="row">
+      <div class="col-12 text-right">
+        <button (click)="saveFiltersOnLocalStorage()" class="btn btn-primary mat-raised-button">
+          {{ saveFilterConfirmLabel }}
+        </button>
+        <button (click)="closeModalSaveFilterOnLocalStorage()" class="btn mat-raised-button">
+          {{ saveFilterAbortLabel }}
+        </button>
+      </div>
+    </div>
+  </mat-dialog-actions> -->
+</ng-template>

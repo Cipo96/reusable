@@ -1,0 +1,26 @@
+<div class="row" style="margin-top: 20px">
+  <div class="col-11" style="margin: auto">
+    <eqp-dynamic-filters
+      [saveLastFilter]="false"
+      [saveFilter]="true"
+      [saveFilterID]="'testFiltri'"
+      [useInitialValueOnReset]="true"
+      [saveFilterID]="'provaFiltri'"
+      [usingMode]="1"
+      [resultType]="2"
+      [applyOnInit]="true"
+      (filtersSelected)="filtersSelected($event)"
+      [leftCollapseIcon]="false"
+      [showAppliedFiltersIcon]="true"
+      (customFiltersSavedValueLoaded)="customFiltersSavedValueLoaded($event)"
+      [filtersField]="filters">
+    </eqp-dynamic-filters>
+  </div>
+</div>
+
+<ng-template #externalFilter let-filter="filter">
+  <mat-form-field>
+    <mat-label>{{ filter.Label }}</mat-label>
+    <input matInput [(ngModel)]="customFilterValue" />
+  </mat-form-field>
+</ng-template>

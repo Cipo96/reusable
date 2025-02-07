@@ -1,0 +1,59 @@
+<div class="container-fluid" style="margin: 2rem">
+  <hr style="margin-top: 2rem; margin-bottom: 2rem" />
+  <div class="row">
+    <div class="col-lg-3 col-md-6">
+      <h4><b>Range NG</b></h4>
+      <eqp-datetimerangepicker
+        [customRangePreset]="customRangePreset"
+        [minDate]="minDate"
+        [maxDate]="maxDate"
+        [type]="PickerModeEnum.DATE_RANGE"
+        [disabled]="disable"
+        [(ngModelInput)]="range"
+        [startPlaceholeder]="''"
+        [endPlaceholeder]="''"
+        [isRequired]="isRequired"
+        [showRangePreset]="showRangePreset"
+        [language]="presetLanguage"></eqp-datetimerangepicker>
+      {{ range | json }}
+    </div>
+  </div>
+  <form [formGroup]="formGroup">
+    <div class="row">
+      <div class="col-lg-3 col-md-6">
+        <h4><b>range FC</b></h4>
+        <eqp-datetimerangepicker
+          [customRangePreset]="customRangePreset"
+          [minDate]="minDate"
+          [maxDate]="maxDate"
+          [type]="PickerModeEnum.DATE_RANGE"
+          [disabled]="disable"
+          [formGroupInput]="formGroup"
+          (formControlChange)="onChangeForm($event)"
+          formControlNameInputStart="dateRangeControlStart"
+          formControlNameInputEnd="dateRangeControlEnd"
+          [startPlaceholeder]="''"
+          [endPlaceholeder]="''"
+          [isRequired]="isRequired"
+          [showRangePreset]="showRangePreset"
+          [language]="presetLanguage"></eqp-datetimerangepicker>
+        {{ this.formGroup.get("dateRangeControlStart")?.value | json }}
+        {{ this.formGroup.get("dateRangeControlEnd")?.value | json }}
+      </div>
+    </div>
+  </form>
+</div>
+
+<div class="container-fluid" style="margin: 2rem">
+  <button color="primary" mat-button (click)="toggleDisable()">toggleDisable</button>
+  <button color="primary" mat-button (click)="toggleRequired()">toggleRequired</button>
+  <button color="primary" mat-button (click)="toggleShowSeconds()">toggleShowSeconds</button>
+  <button color="primary" mat-button (click)="setMinDate()">setMinDate()</button>
+  <button color="primary" mat-button (click)="setMaxDate()">setMaxDate</button>
+  <button color="primary" mat-button (click)="setShowPreset()">setShowPreset</button>
+  <button color="primary" mat-button (click)="setshowSpinnert()">setshowSpinnert</button>
+  <button color="primary" mat-button (click)="showButtons = !showButtons">toggleShowButtons</button>
+  <button [disabled]="formGroup.invalid" color="primary" mat-button (click)="setshowSpinnert()">
+    INVALID OR VALID
+  </button>
+</div>

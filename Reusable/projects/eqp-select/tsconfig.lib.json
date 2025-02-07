@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "preserveSymlinks": true,
+    "allowSyntheticDefaultImports": true,
+    "outDir": "../../out-tsc/lib",
+    "declaration": true,
+    "declarationMap": true,
+    "inlineSources": true,
+    "types": []
+  },
+  "exclude": [
+    "src/test.ts",
+    "**/*.spec.ts"
+  ]
+}

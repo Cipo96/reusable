@@ -1,0 +1,612 @@
+<!-- Se richiesta la gestione singola mostra il pulsante di caricamento di un singolo file -->
+<div *ngIf="multipleAttachment != true">
+  <div *ngIf="!singleAttachmentDragAndDrop">
+    <!-- Template del button per l'aggiunta di un allegato -->
+    <div *ngIf="!addingLinkMode" class="text-center">
+      <ng-container *ngTemplateOutlet="addAttachmentButton"></ng-container>
+    </div>
+    <!-- Template della form per l'aggiunta di un link -->
+    <div *ngIf="addingLinkMode" class="text-center">
+      <ng-container *ngTemplateOutlet="addingLinkTemplate"></ng-container>
+    </div>
+  </div>
+  <div *ngIf="singleAttachmentDragAndDrop">
+    <input
+      #fileInput
+      style="display: none"
+      id="file_attachment"
+      name="file_attachment"
+      type="file"
+      (change)="onFileAdded($event)"
+      [accept]="acceptedFileTypes"
+      [multiple]="loadMultipleFiles" />
+    <ngx-file-drop
+      (onFileDrop)="fileDropped($event)"
+      (click)="onSelectFile($event, fileInput)"
+      *ngIf="
+        allowedTypes &&
+        allowedTypes.includes(1) &&
+        (!attachmentsList || attachmentsList.length == 0 || (attachmentsList.length > 0 && !attachmentsList[0]))
+      ">
+      <ng-template ngx-file-drop-content-tmp *ngIf="!addingLinkMode">
+        <i class="fa-solid fa-cloud-upload-alt fa-3x mt-3"></i>
+        Trascina i file qui
+        <div class="btn-group mt-1" role="group">
+          <button type="button" class="btn btn-light border-end" (click)="fileInput.click()">Scegli un file</button>
+          <div class="btn-group" role="group">
+            <button
+              type="button"
+              class="btn btn-light border-start dropdown-toggle"
+              [matMenuTriggerFor]="attachmentTypeMenu"></button>
+            <mat-menu #attachmentTypeMenu="matMenu">
+              <button
+                *ngIf="allowedTypes.includes(1)"
+                mat-menu-item
+                (click)="fileInput.click()"
+                class="eqp-attachments-file-btn">
+                <i class="fas fa-file"></i>
+                <span style="margin-left: 10px">File</span>
+              </button>
+              <button
+                *ngIf="allowedTypes.includes(2)"
+                mat-menu-item
+                (click)="switchToAddingLinkMode()"
+                class="eqp-attachments-link-btn">
+                <i class="fas fa-link"></i>
+                <span style="margin-left: 10px">Link</span>
+              </button>
+              <button
+                *ngIf="allowedTypes.includes(3)"
+                mat-menu-item
+                (click)="chooseDropboxFile()"
+                class="eqp-attachments-link-btn">
+                <i class="fa-brands fa-dropbox"></i>
+                <span style="margin-left: 10px">Dropbox</span>
+              </button>
+            </mat-menu>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template ngx-file-drop-content-tmp *ngIf="addingLinkMode">
+        <ng-container *ngTemplateOutlet="addingLinkTemplate"></ng-container>
+      </ng-template>
+    </ngx-file-drop>
+  </div>
+  <div class="text-center">
+    <button
+      class="mb-2 me-2 eqp-attachments-download-btn"
+      (click)="viewAttachment(attachmentsList[0])"
+      type="button"
+      mat-raised-button
+      *ngIf="attachmentsList && attachmentsList.length > 0 && attachmentsList[0]"
+      color="primary">
+      <mat-icon *ngIf="attachmentsList[0].AttachmentType == AttachmentType.FILE">download</mat-icon>
+      <mat-icon *ngIf="attachmentsList[0].AttachmentType != AttachmentType.FILE">open_in_new</mat-icon>
+      {{ attachmentsList[0].AttachmentType == AttachmentType.FILE ? downloadLabel : openLinkLabel }}
+    </button>
+    <button
+      class="mb-2 me-2 eqp-attachments-preview-btn"
+      (click)="openPreviewDialog(attachmentsList[0])"
+      type="button"
+      mat-raised-button
+      color="primary"
+      *ngIf="
+        showPreview &&
+        attachmentsList &&
+        attachmentsList.length > 0 &&
+        attachmentsList[0] &&
+        (!attachmentsList[0].FileContentType ||
+          (!attachmentsList[0].FileContentType.startsWith('video') &&
+            !attachmentsList[0].FileContentType.startsWith('audio'))) &&
+        attachmentsList[0].IsImage == true
+      ">
+      <mat-icon>visibility</mat-icon> {{ previewLabel }}
+    </button>
+    <button
+      class="mb-2 eqp-attachments-delete-btn"
+      (click)="deleteAttachment(attachmentsList[0])"
+      type="button"
+      mat-raised-button
+      *ngIf="attachmentsList && attachmentsList.length > 0 && attachmentsList[0]"
+      [disabled]="isDisabled">
+      <mat-icon>delete</mat-icon> {{ deleteLabel }}
+    </button>
+  </div>
+  <div
+    class="row"
+    style="margin-top: 10px"
+    *ngIf="
+      attachmentsList.length > 0 &&
+      attachmentsList[0] &&
+      attachmentsList[0].FileDataBase64 &&
+      attachmentsList[0].IsImage == true
+    ">
+    <div class="col-sm-12 d-flex justify-content-center">
+      <div class="single-attachment-inline-preview-container">
+        <img src="data:image/png;base64,{{ attachmentsList[0].FileDataBase64 }}" />
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="attachmentsList.length > 0 && attachmentsList[0] && attachmentsList[0].IsImage != true">
+    <div class="col-sm-12">
+      <mat-form-field>
+        <mat-label>{{ fileNameLabel }}</mat-label>
+        <input readonly matInput [(ngModel)]="attachmentsList[0].FileName" />
+      </mat-form-field>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="multipleAttachment == true">
+  <input
+    #fileInput
+    style="display: none"
+    id="file_attachment"
+    name="file_attachment"
+    type="file"
+    (change)="onFileAdded($event)"
+    [accept]="acceptedFileTypes"
+    [multiple]="loadMultipleFiles" />
+  <ngx-file-drop (onFileDrop)="fileDropped($event)" (click)="onSelectFile($event, fileInput)">
+    <ng-template ngx-file-drop-content-tmp *ngIf="!addingLinkMode">
+      <i class="fa-solid fa-cloud-upload-alt fa-3x mt-3"></i>
+      Trascina i file qui
+      <div class="btn-group mt-1" role="group">
+        <button type="button" class="btn btn-light border-end" (click)="fileInput.click()">Scegli un file</button>
+        <div class="btn-group" role="group">
+          <button
+            type="button"
+            class="btn btn-light border-start dropdown-toggle"
+            [matMenuTriggerFor]="attachmentTypeMenu"></button>
+          <mat-menu #attachmentTypeMenu="matMenu">
+            <button
+              *ngIf="allowedTypes.includes(1)"
+              mat-menu-item
+              (click)="fileInput.click()"
+              class="eqp-attachments-file-btn">
+              <i class="fas fa-file"></i>
+              <span style="margin-left: 10px">File</span>
+            </button>
+            <button
+              *ngIf="allowedTypes.includes(2)"
+              mat-menu-item
+              (click)="switchToAddingLinkMode()"
+              class="eqp-attachments-link-btn">
+              <i class="fas fa-link"></i>
+              <span style="margin-left: 10px">Link</span>
+            </button>
+            <button
+              *ngIf="allowedTypes.includes(3)"
+              mat-menu-item
+              (click)="chooseDropboxFile()"
+              class="eqp-attachments-link-btn">
+              <i class="fa-brands fa-dropbox"></i>
+              <span style="margin-left: 10px">Dropbox</span>
+            </button>
+          </mat-menu>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template ngx-file-drop-content-tmp *ngIf="addingLinkMode">
+      <ng-container *ngTemplateOutlet="addingLinkTemplate"></ng-container>
+    </ng-template>
+  </ngx-file-drop>
+  <div class="mt-2">
+    <eqp-table
+      #attachmentTable
+      [createMatCard]="false"
+      #table
+      [columns]="attachmentsColumns"
+      [isMultiLanguage]="isEqpTableMultiLanguage"
+      [data]="attachmentsList"
+      [paginatorVisible]="tablePaginatorVisible"
+      [matPaginatorSize]="tablePaginatorSize"
+      [emptyTableMessage]="emptyTableMessage"
+      [searchText]="eqpTableSearchText"
+      [isTableSearcheable]="isTableSearcheable">
+    </eqp-table>
+  </div>
+</div>
+
+<ng-template #dialogCropImage>
+  <!-- Richiama il template per le funzionalità del CROPPIE -->
+  <div style="overflow-x: hidden" [ngClass]="cropDialogClass">
+    <ng-container
+      [ngTemplateOutlet]="croppieTemplate"
+      [ngTemplateOutletContext]="{ form: newAttachmentForm }"
+      *ngIf="showCropImage == true"></ng-container>
+  </div>
+</ng-template>
+
+<ng-template #inlinePreviewTemplate let-row="row">
+  <div
+    class="inline-preview-container"
+    *ngIf="row.AttachmentType != AttachmentType.LINK && row.IsImage"
+    (click)="openPreviewDialog(row)">
+    <img src="data:image/png;base64,{{ row.FileThumbnailBase64 ? row.FileThumbnailBase64 : row.FileDataBase64 }}" />
+  </div>
+  <div
+    class="inline-preview-container"
+    *ngIf="row.AttachmentType != AttachmentType.LINK && !row.IsImage"
+    (click)="openPreviewDialog(row)">
+    <i [ngClass]="getAttachmentIcon(row)"></i>
+  </div>
+</ng-template>
+
+<ng-template #dialogPreview>
+  <mat-card class="example-card" *ngIf="selectedAttachment">
+    <mat-card-content>
+      <div class="row">
+        <div class="header-title-standard">
+          {{ previewLabel }} {{ selectedAttachment?.AttachmentType == attachmentType.FILE ? "File" : "Link" }}
+          <button
+            type="button"
+            class="btn-close closeButton"
+            mat-dialog-close
+            (click)="selectedAttachment = null"></button>
+        </div>
+      </div>
+      <div class="row mt-2">
+        <!-- ANTEPRIMA IMMAGINE -->
+        <div class="col-12 text-center preview-container" *ngIf="selectedAttachment.IsImage">
+          <img
+            class="image-preview"
+            src="data:image/png;base64,{{
+              selectedAttachment.FileDataBase64
+                ? selectedAttachment.FileDataBase64
+                : selectedAttachment.FileThumbnailBase64
+            }}" />
+        </div>
+
+        <!-- ANTEPRIMA LINK -->
+        <div class="col-12 preview-container" *ngIf="!selectedAttachment.IsImage">
+          <iframe
+            class="link-preview"
+            [src]="selectedAttachment.TrustedUrl"
+            [title]="selectedAttachment.FileName"></iframe>
+        </div>
+      </div>
+      <div class="row mt-3">
+        <div class="col-sm-12 text-center">
+          <button
+            mat-mini-fab
+            color="primary"
+            matTooltip="Download"
+            (click)="viewAttachment(selectedAttachment)"
+            *ngIf="selectedAttachment.AttachmentType != AttachmentType.LINK">
+            <mat-icon>download</mat-icon>
+          </button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</ng-template>
+
+<!-- TEMPLATE PER IL PULSANTE DI AGGIUNTA NUOVO ALLEGATO -->
+<ng-template #addAttachmentButton>
+  <!--
+        Pulsanti per l'aggiunta di un file o un link. Ne viene visualizzato uno se:
+        - gli allowedTypes sono stati specificati, nell'array ne è presente uno solo, quello inserito è AttachmentType.FILE (o AttachmentType.LINK)
+        e sono nella gestione di più allegati (multipleAttachment == true)
+        OPPURE
+        - gli allowedTypes sono stati specificati, nell'array ne è presente uno solo, quello inserito è AttachmentType.FILE (o AttachmentType.LINK)
+        e sono nella gestione di un singolo allegato (multipleAttachment == true) e non ne è ancora stato selezionato uno (ovvero attachmentsList non esiste o non ha elementi)
+    -->
+  <input
+    #fileInput
+    style="display: none"
+    id="file_attachment"
+    name="file_attachment"
+    type="file"
+    (change)="onFileAdded($event)"
+    [accept]="acceptedFileTypes"
+    [multiple]="loadMultipleFiles" />
+  <button
+    class="btn btn-primary mb-4 me-5 eqp-attachments-add-btn"
+    mat-raised-button
+    color="primary"
+    type="button"
+    *ngIf="
+      allowedTypes &&
+      allowedTypes.length == 1 &&
+      (multipleAttachment == true ||
+        !attachmentsList ||
+        attachmentsList.length == 0 ||
+        (attachmentsList.length > 0 && !attachmentsList[0]))
+    "
+    (click)="addFile(allowedTypes[0], fileInput)"
+    [disabled]="isDisabled">
+    <!-- Per l'aggiunta dei file mostro un'icona diversa dall'aggiunta dei link -->
+    <mat-icon *ngIf="allowedTypes[0] == 1">cloud_upload</mat-icon>
+    <i class="fas fa-link" *ngIf="allowedTypes[0] == 2"></i>
+    <i class="fa-brands fa-dropbox" *ngIf="allowedTypes[0] == 3"></i>
+    <span style="margin-left: 10px">
+      {{
+        allowedTypes[0] == 1
+          ? addButtonLabel + " file"
+          : allowedTypes[0] == 2
+          ? addButtonLabel + " link"
+          : uploadWithDropboxLabel
+      }}</span
+    >
+  </button>
+
+  <!-- Pulsante per aprire il menu per la scelta del tipo di Attachment da creare -->
+  <button
+    class="btn btn-primary mb-4 me-5 eqp-attachments-add-btn"
+    mat-raised-button
+    color="primary"
+    type="button"
+    [matMenuTriggerFor]="attachmentTypeMenu"
+    [disabled]="isDisabled"
+    *ngIf="
+      !separatedUploadButtons &&
+      allowedTypes &&
+      allowedTypes.length > 1 &&
+      (multipleAttachment == true ||
+        !attachmentsList ||
+        attachmentsList.length == 0 ||
+        (attachmentsList.length > 0 && !attachmentsList[0]))
+    ">
+    <mat-icon *ngIf="multipleAttachment != true">cloud_upload</mat-icon>
+    <mat-icon *ngIf="multipleAttachment == true">add</mat-icon>
+    <span style="margin-left: 0px"> {{ addButtonLabel }} </span>
+  </button>
+  <mat-menu #attachmentTypeMenu="matMenu">
+    <input
+      #imageInput
+      style="display: none"
+      id="file_attachment"
+      name="file_attachment"
+      type="file"
+      (change)="onFileAdded($event)"
+      [accept]="acceptedFileTypes"
+      [multiple]="loadMultipleFiles" />
+    <button
+      *ngIf="allowedTypes.includes(1)"
+      mat-menu-item
+      (click)="imageInput.click()"
+      class="eqp-attachments-file-btn">
+      <i class="fas fa-file"></i>
+      <span style="margin-left: 10px">File</span>
+    </button>
+    <button
+      *ngIf="allowedTypes.includes(2)"
+      mat-menu-item
+      (click)="switchToAddingLinkMode()"
+      class="eqp-attachments-link-btn">
+      <i class="fas fa-link"></i>
+      <span style="margin-left: 10px">Link</span>
+    </button>
+    <button
+      *ngIf="allowedTypes.includes(3)"
+      mat-menu-item
+      (click)="chooseDropboxFile()"
+      class="eqp-attachments-link-btn">
+      <i class="fa-brands fa-dropbox"></i>
+      <span style="margin-left: 10px">Dropbox</span>
+    </button>
+  </mat-menu>
+
+  <div
+    *ngIf="
+      separatedUploadButtons &&
+      allowedTypes &&
+      allowedTypes.length > 1 &&
+      (multipleAttachment == true ||
+        !attachmentsList ||
+        attachmentsList.length == 0 ||
+        (attachmentsList.length > 0 && !attachmentsList[0]))
+    ">
+    <div class="btn-group">
+      <button
+        *ngIf="allowedTypes.includes(1)"
+        (click)="imageInput.click()"
+        class="btn btn-secondary eqp-attachments-add-btn"
+        mat-raised-button
+        color="secondary"
+        type="button">
+        <i class="fa-solid fa-cloud-upload"></i>
+        <span style="margin-left: 10px">File</span>
+      </button>
+      <input
+        #imageInput
+        style="display: none"
+        id="file_attachment"
+        name="file_attachment"
+        type="file"
+        (change)="onFileAdded($event)"
+        [accept]="acceptedFileTypes"
+        [multiple]="loadMultipleFiles" />
+      <button
+        *ngIf="allowedTypes.includes(2)"
+        (click)="switchToAddingLinkMode()"
+        class="btn btn-secondary eqp-attachments-add-btn"
+        mat-raised-button
+        color="secondary"
+        type="button">
+        <i class="fas fa-link"></i>
+        <span style="margin-left: 10px">Link</span>
+      </button>
+      <button
+        *ngIf="allowedTypes.includes(3)"
+        (click)="chooseDropboxFile()"
+        class="btn btn-secondary eqp-attachments-add-btn"
+        mat-raised-button
+        color="secondary"
+        type="button">
+        <i class="fa-brands fa-dropbox"></i>
+        <span style="margin-left: 10px">Dropbox</span>
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #croppieTemplate>
+  <div class="row m-3">
+    <h4>{{ cropLabel }}</h4>
+  </div>
+  <div class="row m-2 crop-large">
+    <div class="col-md-12 d-flex align-items-center justify-content-center">
+      <button
+        [matTooltip]="rotateLeftLabel"
+        *ngIf="cropOptions.includes(1)"
+        class="btn btn-primary mat-raised-button ms-2"
+        (click)="rotateLeft()">
+        <mat-icon style="vertical-align: middle">rotate_left</mat-icon>
+      </button>
+      <button
+        [matTooltip]="rotateRightLabel"
+        *ngIf="cropOptions.includes(1)"
+        class="btn btn-primary mat-raised-button ms-2"
+        (click)="rotateRight()">
+        <mat-icon style="vertical-align: middle">rotate_right</mat-icon>
+      </button>
+      <button
+        [matTooltip]="flipHorinzontalLabel"
+        *ngIf="cropOptions.includes(2)"
+        class="btn btn-primary mat-raised-button ms-2"
+        (click)="flipHorizontal()">
+        <mat-icon style="vertical-align: middle">flip_horizontal</mat-icon>
+      </button>
+      <button
+        [matTooltip]="flipVerticalLabel"
+        *ngIf="cropOptions.includes(2)"
+        class="btn btn-primary mat-raised-button ms-2"
+        (click)="flipVertical()">
+        <div style="transform: rotate(90deg)"><mat-icon style="vertical-align: middle">flip_vertical</mat-icon></div>
+      </button>
+      <button
+        [matTooltip]="'Reset'"
+        class="btn btn-primary mat-raised-button ms-2"
+        (click)="restoreOriginalDimensions()">
+        <mat-icon style="vertical-align: middle">replay</mat-icon>
+      </button>
+    </div>
+  </div>
+  <div class="row m-2 crop-small">
+    <div class="col-md-12 d-flex align-items-center justify-content-center">
+      <mat-icon *ngIf="cropOptions.includes(1)" style="font-size: 27px; vertical-align: middle" (click)="rotateLeft()"
+        >rotate_left</mat-icon
+      >
+      <mat-icon
+        class="ms-3"
+        *ngIf="cropOptions.includes(1)"
+        style="font-size: 27px; vertical-align: middle"
+        (click)="rotateRight()"
+        >rotate_right</mat-icon
+      >
+      <mat-icon
+        class="ms-3"
+        *ngIf="cropOptions.includes(2)"
+        style="font-size: 27px; vertical-align: middle"
+        (click)="flipHorizontal()"
+        >flip_horizontal</mat-icon
+      >
+      <div class="ms-3" style="transform: rotate(90deg)">
+        <mat-icon
+          *ngIf="cropOptions.includes(2)"
+          style="font-size: 27px; vertical-align: middle"
+          (click)="flipVertical()"
+          >flip_vertical</mat-icon
+        >
+      </div>
+      <mat-icon class="ms-3" (click)="restoreOriginalDimensions()" style="font-size: 27px; vertical-align: middle"
+        >replay</mat-icon
+      >
+    </div>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-12 d-flex align-items-center justify-content-center">
+      <div class="crop-container">
+        <image-cropper
+          [imageFile]="selectedFile"
+          [maintainAspectRatio]="false"
+          [autoCrop]="false"
+          [containWithinAspectRatio]="false"
+          [aspectRatio]="4 / 3"
+          [cropperMinWidth]="128"
+          [onlyScaleDown]="true"
+          [roundCropper]="false"
+          [canvasRotation]="0"
+          [transform]="transform"
+          [alignImage]="'left'"
+          format="png"
+          (imageCropped)="imageCropped($event)"
+          [resizeToWidth]="customWidth"
+          [resizeToHeight]="customHeight"
+          [canvasRotation]="canvasRotation">
+        </image-cropper>
+      </div>
+    </div>
+  </div>
+  <div class="row justify-content-center mt-2 mb-2 crop-large">
+    <div class="col-12 d-flex align-items-center justify-content-center">
+      <button
+        class="btn btn-primary mat-raised-button eqp-attachments-confirm-btn me-2"
+        type="button"
+        (click)="confirmAddAttachment()">
+        {{ confirmLabel }}
+      </button>
+      <button class="btn mat-raised-button eqp-attachments-abort-btn" type="button" (click)="abortFile()">
+        {{ abortLabel }}
+      </button>
+    </div>
+  </div>
+  <div class="row justify-content-center mt-2 mb-2 crop-small">
+    <div class="col-6 d-flex align-items-center justify-content-center" style="font-size: 20px">
+      <i class="fa fa-times" (click)="abortFile()"></i>
+    </div>
+    <div class="col-6 d-flex align-items-center justify-content-center" style="font-size: 20px">
+      <i class="fa fa-check" (click)="confirmAddAttachment()"></i>
+    </div>
+  </div>
+</ng-template>
+
+<!-- TEMPLATE PER FORM DI AGGIUNTA DI UN LINK -->
+<ng-template #addingLinkTemplate>
+  <span class="mb-1" style="font-size: 20px"><i class="fa fa-link"></i>Inserisci l'URL</span>
+  <form [formGroup]="newAttachmentForm" *ngIf="newAttachmentForm">
+    <div class="row mb-2" style="height: 80px">
+      <div class="col-6 d-grid gap-2 mx-auto">
+        <div class="input-group mb-1">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="{{ fileNameLabel }}"
+            formControlName="name"
+            [(ngModel)]="newAttachment.FileName" />
+        </div>
+      </div>
+      <div class="col-12 d-grid gap-2">
+        <div class="input-group">
+          <input
+            required
+            type="text"
+            class="form-control"
+            placeholder="Link"
+            formControlName="path"
+            [(ngModel)]="newAttachment.FilePath" />
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-6 d-grid gap-2">
+        <button
+          class="btn btn-secondary mat-raised-button"
+          (click)="selectedAttachment = null; addingLinkMode = false"
+          type="button">
+          {{ exitLabel }}
+        </button>
+      </div>
+      <div class="col-6 d-grid gap-2">
+        <button
+          class="btn btn-primary mat-raised-button"
+          type="submit"
+          (click)="confirmAddAttachment(); selectedAttachment = null; addingLinkMode = false">
+          {{ saveLabel }}
+        </button>
+      </div>
+    </div>
+  </form>
+</ng-template>

@@ -1,0 +1,213 @@
+<div class="container-fluid">
+
+  <div class="row">
+    <!-- BOX PLACEHOLDERS -->
+    <div style="padding-left: 0px; padding-right: 0px; background: #FAFAFA;" *ngIf="placeholderEndpoint != null"
+      class="col-2">
+      <div class="row justify-content-center placeholder-title">
+        <div class="align-self-center" style="display: inline-flex;">
+          <h3 style="margin: 0px">{{ label != null ? label : 'Tag'}}</h3>
+          <mat-icon style="margin-left: 5px;cursor: pointer;" [matTooltip]="getTranslatedValue('EQP_EDITOR.INFO_TOOLTIP')"
+            (click)="showInfo()">
+            info
+          </mat-icon>
+        </div>
+      </div>
+      <div class="virtual-scroll-container">
+        <div id='treeparent'>
+          <ejs-treeview cssClass='custom' id='listbox' [fields]='field' [allowMultiSelection]='false'
+            [allowDragAndDrop]=false>
+          </ejs-treeview>
+        </div>
+      </div>
+
+
+    </div>
+
+    <!-- EDITOR -->
+    <div style="padding-left: 0px; padding-right: 0px" [ngClass]="placeholderEndpoint != null ? 'col-10' : 'col-12'">
+      <div id="containerDocument">
+        <ejs-documenteditorcontainer id="container" style="display:block;height:3000px!important"
+          (toolbarClick)="onToolbarClick($event)" [toolbarItems]=items #documenteditor [enableToolbar]=true
+          [serviceUrl]="hostUrl" [enableLocalPaste]=false (created)="onCreate()" [locale]="language"
+          [height]="editorHeight">
+        </ejs-documenteditorcontainer>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #dialogDocumentation>
+  <div class="container-fluid">
+    <div class="row">
+      <span class="eqp-editor-legend-title-h1">{{ getTranslatedValue('EQP_EDITOR.INFO_TITLE') }}</span>
+    </div>
+    <div class="row" style="max-height: 65vh !important;overflow-y: auto;">
+
+      <div class="col-md-12">
+        <p [innerHtml]="getTranslatedValue('EQP_EDITOR.GENERAL.MAIN_PARAGRAPH', {columnName: label || 'Tag'})"></p>
+        <p [innerHtml]="getTranslatedValue('EQP_EDITOR.GENERAL.HOW_TO_USE_PLACEHOLDERS')"></p>
+      </div>
+
+      <div *ngIf="useConditionPlaceholder == true">
+        <hr>
+        <div class="col-md-12">
+          <span class="eqp-editor-legend-title-h2">{{ getTranslatedValue('EQP_EDITOR.CONDITION.MAIN.TITLE') }}</span>
+        </div>
+        <div class="col-md-12">
+          <p [innerHtml]="getTranslatedValue('EQP_EDITOR.CONDITION.MAIN.FIRST_PARAGRAPH',{conditionTagName: conditionTagName, visibilityConditionTagName: visibilityConditionTagName, styleConditionTagName: styleConditionTagName })">
+          </p>
+          <p [innerHtml]="getTranslatedValue('EQP_EDITOR.CONDITION.MAIN.SECOND_PARAGRAPH')">
+          </p>
+          <ul>
+            <li [innerHtml]="getTranslatedValue('EQP_EDITOR.CONDITION.MAIN.LIST_ITEM_VISIBILITY_CONDITION')"></li>
+            <li [innerHtml]="getTranslatedValue('EQP_EDITOR.CONDITION.MAIN.LIST_ITEM_STYLE_CONDITION')"></li>
+          </ul>
+        </div>
+        <div class="col-md-12">
+          <span class="eqp-editor-legend-title-h3"> {{ getTranslatedValue('EQP_EDITOR.CONDITION.VISIBILITY.TITLE') }}</span>
+        </div>
+        <div class="col-md-12">
+          <p [innerHtml]="getTranslatedValue('EQP_EDITOR.CONDITION.VISIBILITY.FIRST_PARAGRAPH', {visibilityConditionTagName:visibilityConditionTagName, VISIBILITY_CONDITION_TAG: VISIBILITY_CONDITION_TAG })">
+          </p>
+          <p [innerHtml]="getTranslatedValue('EQP_EDITOR.CONDITION.VISIBILITY.SECOND_PARAGRAPH')">
+          </p>
+          <p [innerHtml]="getTranslatedValue('EQP_EDITOR.CONDITION.VISIBILITY.THIRD_PARAGRAPH',{VISIBILITY_CONDITION_TAG:VISIBILITY_CONDITION_TAG})">
+          </p>
+        </div>
+        <div class="col-md-12">
+          <span class="eqp-editor-legend-title-h3"> {{ getTranslatedValue('EQP_EDITOR.CONDITION.STYLE.TITLE') }}</span>
+        </div>
+        <div class="col-md-12">
+          <p [innerHtml]="getTranslatedValue('EQP_EDITOR.CONDITION.STYLE.FIRST_PARAGRAPH',{styleConditionTagName:styleConditionTagName, STYLE_CONDITION_TAG:STYLE_CONDITION_TAG })">
+          </p>
+          <p [innerHtml]="getTranslatedValue('EQP_EDITOR.CONDITION.STYLE.SECOND_PARAGRAPH')"></p>
+        </div>
+        <hr>
+        <div class="col-md-12">
+          <span class="eqp-editor-legend-title-h2">{{ getTranslatedValue('EQP_EDITOR.CONDITION.CONDITION_DEFINITION.TITLE') }}</span>
+        </div>
+        <div class="col-md-12">
+          <p [innerHtml]="getTranslatedValue('EQP_EDITOR.CONDITION.CONDITION_DEFINITION.FIRST_PARAGRAPH', {columnName: label || 'Tag'})">
+          </p>
+          <p [innerHtml]="getTranslatedValue('EQP_EDITOR.CONDITION.CONDITION_DEFINITION.SECOND_PARAGRAPH')">
+          </p>
+          <ul>
+            <li [innerHtml]="getTranslatedValue('EQP_EDITOR.CONDITION.CONDITION_DEFINITION.EQUAL_OPERATOR')"></li>
+            <li [innerHtml]="getTranslatedValue('EQP_EDITOR.CONDITION.CONDITION_DEFINITION.NOT_EQUAL_OPERATOR')"></li>
+            <li [innerHtml]="getTranslatedValue('EQP_EDITOR.CONDITION.CONDITION_DEFINITION.GREATHER_THAN_OPERATOR')"></li>
+            <li [innerHtml]="getTranslatedValue('EQP_EDITOR.CONDITION.CONDITION_DEFINITION.GREATHER_THAN_OR_EQUAL_OPERATOR')"></li>
+            <li [innerHtml]="getTranslatedValue('EQP_EDITOR.CONDITION.CONDITION_DEFINITION.LESS_THAN_OPERATOR')"></li>
+            <li [innerHtml]="getTranslatedValue('EQP_EDITOR.CONDITION.CONDITION_DEFINITION.LESS_THAN_OR_EQUAL_OPERATOR')"></li>
+            <li [innerHtml]="getTranslatedValue('EQP_EDITOR.CONDITION.CONDITION_DEFINITION.EXISTS_OPERATOR')"></li>
+            <li [innerHtml]="getTranslatedValue('EQP_EDITOR.CONDITION.CONDITION_DEFINITION.NOT_EXISTS_OPERATOR')"></li>
+          </ul>
+        </div>
+        <div class="col-md-12">
+          <span class="eqp-editor-legend-title-h3"> {{ getTranslatedValue('EQP_EDITOR.CONDITION.CONDITION_DEFINITION.EXAMPLE.SIMPLE_TITLE') }}</span>
+        </div>
+        <div class="col-md-12">
+          <pre>
+            <code>
+              {{simpleVisibilityConditionStart}}
+               <i>{{ getTranslatedValue('EQP_EDITOR.CONDITION.CONDITION_DEFINITION.EXAMPLE.EXAMPLE_CONTENT') }}</i>
+              {{visibilityConditionEnd}}
+            </code>
+          </pre>
+          <p [innerHtml]="getTranslatedValue('EQP_EDITOR.CONDITION.CONDITION_DEFINITION.EXAMPLE.SIMPLE_DESCRIPTION')"></p>
+        </div>
+        <div class="col-md-12">
+          <span class="eqp-editor-legend-title-h3"> {{ getTranslatedValue('EQP_EDITOR.CONDITION.CONDITION_DEFINITION.EXAMPLE.COMPLEX_TITLE') }}</span>
+        </div>
+        <div class="col-md-12">
+          <pre>
+            <code>
+              {{complexVisibilityConditionStart}}
+               <i>{{ getTranslatedValue('EQP_EDITOR.CONDITION.CONDITION_DEFINITION.EXAMPLE.EXAMPLE_CONTENT') }}</i>
+              {{visibilityConditionEnd}}
+            </code>
+          </pre>
+          <p [innerHtml]="getTranslatedValue('EQP_EDITOR.CONDITION.CONDITION_DEFINITION.EXAMPLE.COMPLEX_DESCRIPTION')"></p>
+        </div>
+        <div class="col-md-12">
+          <span class="eqp-editor-legend-title-h3"> {{ getTranslatedValue('EQP_EDITOR.CONDITION.CONDITION_DEFINITION.EXAMPLE.EXISTS_TITLE') }}</span>
+        </div>
+        <div class="col-md-12">
+          <pre>
+            <code>
+              {{existsVisibilityConditionStart}}
+               <i>{{ getTranslatedValue('EQP_EDITOR.CONDITION.CONDITION_DEFINITION.EXAMPLE.EXAMPLE_CONTENT') }}</i>
+              {{visibilityConditionEnd}}
+            </code>
+          </pre>
+          <p [innerHtml]="getTranslatedValue('EQP_EDITOR.CONDITION.CONDITION_DEFINITION.EXAMPLE.EXISTS_DESCRIPTION')"></p>
+        </div>
+        <div class="col-md-12">
+          <span class="eqp-editor-legend-title-h3"> {{ getTranslatedValue('EQP_EDITOR.CONDITION.CONDITION_DEFINITION.EXAMPLE.NOT_EXISTS_TITLE') }}</span>
+        </div>
+        <div class="col-md-12">
+          <pre>
+            <code>
+              {{notExistsVisibilityConditionStart}}
+               <i>{{ getTranslatedValue('EQP_EDITOR.CONDITION.CONDITION_DEFINITION.EXAMPLE.EXAMPLE_CONTENT') }}</i>
+              {{visibilityConditionEnd}}
+            </code>
+          </pre>
+          <p [innerHtml]="getTranslatedValue('EQP_EDITOR.CONDITION.CONDITION_DEFINITION.EXAMPLE.NOT_EXISTS_DESCRIPTION')"></p>
+        </div>
+        <hr>
+        <div class="col-md-12">
+          <span class="eqp-editor-legend-title-h2">{{ getTranslatedValue('EQP_EDITOR.CONDITION.STYLE_DEFINITION.TITLE') }}</span>
+        </div>
+        <div class="col-md-12">
+          <p [innerHtml]="getTranslatedValue('EQP_EDITOR.CONDITION.STYLE_DEFINITION.FIRST_PARAGRAPH')"></p>
+          <p [innerHtml]="getTranslatedValue('EQP_EDITOR.CONDITION.STYLE_DEFINITION.SECOND_PARAGRAPH')"></p>
+          <p [innerHtml]="getTranslatedValue('EQP_EDITOR.CONDITION.STYLE_DEFINITION.THIRD_PARAGRAPH')"></p>
+          <ol>
+            <li [innerHtml]="getTranslatedValue('EQP_EDITOR.CONDITION.STYLE_DEFINITION.LIST_ITEM_STYLE_MODE_1')"></li>
+            <li [innerHtml]="getTranslatedValue('EQP_EDITOR.CONDITION.STYLE_DEFINITION.LIST_ITEM_STYLE_MODE_2')"></li>
+          </ol>
+          <p [innerHtml]="getTranslatedValue('EQP_EDITOR.CONDITION.STYLE_DEFINITION.FOURTH_PARAGRAPH')"></p>
+          <ul>
+            <li [innerHtml]="getTranslatedValue('EQP_EDITOR.CONDITION.STYLE_DEFINITION.LIST_ITEM_BACKGROUND')"></li>
+            <li [innerHtml]="getTranslatedValue('EQP_EDITOR.CONDITION.STYLE_DEFINITION.LIST_ITEM_BOLD')"></li>
+            <li [innerHtml]="getTranslatedValue('EQP_EDITOR.CONDITION.STYLE_DEFINITION.LIST_ITEM_FOREGROUND')"></li>
+          </ul>
+        </div>
+        <div class="col-md-12">
+          <span class="eqp-editor-legend-title-h3"> {{ getTranslatedValue('EQP_EDITOR.CONDITION.STYLE_DEFINITION.EXAMPLE_TITLE_1') }}</span>
+        </div>
+        <div class="col-md-12">
+          <pre>
+            <code>
+              {{styleConditionExample1}}
+               <i>{{ getTranslatedValue('EQP_EDITOR.CONDITION.STYLE_DEFINITION.EXAMPLE_CONTENT') }}</i>
+              {{styleConditionEnd}}
+            </code>
+          </pre>
+          <p [innerHtml]="getTranslatedValue('EQP_EDITOR.CONDITION.STYLE_DEFINITION.EXAMPLE_DESCRIPTION_1')"></p>
+        </div>
+        <div class="col-md-12">
+          <span class="eqp-editor-legend-title-h3"> {{ getTranslatedValue('EQP_EDITOR.CONDITION.STYLE_DEFINITION.EXAMPLE_TITLE_2') }}</span>
+        </div>
+        <div class="col-md-12">
+          <pre>
+            <code>
+              {{styleConditionExample2}}
+               <i>{{ getTranslatedValue('EQP_EDITOR.CONDITION.STYLE_DEFINITION.EXAMPLE_CONTENT') }}</i>
+              {{styleConditionEnd}}
+            </code>
+          </pre>
+          <p [innerHtml]="getTranslatedValue('EQP_EDITOR.CONDITION.STYLE_DEFINITION.EXAMPLE_DESCRIPTION_2')"></p>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 text-right">
+        <button class="btn mat-raised-button" (click)="dialogDocumentationRef.close()">
+          {{ getTranslatedValue('EQP_EDITOR.INFO_EXIT')}}
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>

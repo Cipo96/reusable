@@ -1,0 +1,5 @@
+<!-- <eqp-dashboard #eqpDashboard [configs]="chartConfigs" (widgetSizeChange)="onSizeChange($event)"></eqp-dashboard> -->
+
+<ng-template #externalTemplate let-widget="widget" let-parameter="parameter">
+    <button (click)="testExternalTemplate(widget)">Cliccami</button>
+</ng-template>

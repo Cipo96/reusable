@@ -1,0 +1,11 @@
+<ng-container>
+
+    <!-- Immagine a dimensioni reali -->
+    <img *ngIf="!col.image.imageFull" [src]="getImagePreviewValue(col, element)" />
+
+    <!-- Immagine in dimensione 'preview' -->
+    <img *ngIf="col.image.imageFull" [src]="getImagePreviewValue(col, element)"
+        [matTooltip]="getImageFullValue(col,element)" [matTooltipPosition]="'below'"
+        style="margin-left: 5px;" />
+
+</ng-container>

@@ -1,0 +1,18 @@
+.custom-button {
+  display: inline-flex;
+  align-items: center;
+}
+
+.custom-button-container {
+  display: inline-flex;
+  align-items: center;
+}
+
+.custom-icon-size {
+  font-size: 24px;
+}
+
+:host ::ng-deep.mdc-button__label {
+  display: flex;
+  justify-content: center;
+}

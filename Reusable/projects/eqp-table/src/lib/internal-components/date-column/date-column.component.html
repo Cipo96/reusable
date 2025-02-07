@@ -1,0 +1,20 @@
+<ng-container>
+    <!-- Visualizzazione data senza nessun formato specificato come input -->
+    <span *ngIf="!col.format" [ngStyle]="columnStyleHelper.getNgStyle(col,element)">
+        {{ columnValueHelper.getDateValue(element, col) | date: 'shortDate' : '' : currentCultureSelected }}
+        {{col.additionalValue != null ? col.additionalValue : ''}}
+    </span>
+
+    <!-- Visualizzazione data con formato specifico -->
+    <span *ngIf="col.format">
+        {{ columnValueHelper.getDateValue(element, col) | date: col.format ? col.format : 'shortDate' : '' :
+        currentCultureSelected}}
+        {{col.additionalValue != null ? col.additionalValue : ''}}</span>
+
+    <!-- Gestione tooltip -->
+    <i *ngIf="col.tooltip && columnAccessibiltyHelper.getTooltipInfo(col,element) != null && columnAccessibiltyHelper.getTooltipInfo(col,element) != ''"
+        [matTooltip]="columnAccessibiltyHelper.getTooltipInfo(col,element)"
+        [matTooltipPosition]="col.tooltip?.tooltipPosition != null ? col.tooltip?.tooltipPosition : 'below'"
+        style="margin-left: 5px;" class="fa-solid fa-circle-info"></i>
+
+</ng-container>

@@ -1,0 +1,13 @@
+{
+  "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../dist/eqp-filters",
+  "lib": {
+    "entryFile": "src/public-api.ts"
+  },
+  "allowedNonPeerDependencies": [
+    "@eqproject/eqp-datetimerangepicker",
+    "@eqproject/eqp-select",
+    "@eqproject/eqp-table",
+    "@eqproject/eqp-lookup"
+  ]
+}

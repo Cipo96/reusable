@@ -1,0 +1,673 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "Reusable": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "preserveSymlinks": true,
+            "allowedCommonJsDependencies": [
+              "*"
+            ],
+            "outputPath": "dist/Reusable",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "tsconfig.app.json",
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "src/styles.scss"
+            ],
+            "scripts": ["./node_modules/jquery/dist/jquery.min.js"],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          },
+          "defaultConfiguration": ""
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "Reusable:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "Reusable:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "Reusable:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "src/test.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "tsconfig.spec.json",
+            "karmaConfig": "karma.conf.js",
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "node_modules/@fullcalendar/common/main.css",
+              "node_modules/@fullcalendar/daygrid/main.css",
+              "node_modules/@fullcalendar/timegrid/main.css",
+              "src/styles.scss"
+            ],
+            "scripts": ["./node_modules/jquery/dist/jquery.min.js"]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "e2e/protractor.conf.js",
+            "devServerTarget": "Reusable:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "Reusable:serve:production"
+            }
+          }
+        }
+      }
+    },
+    "eqp-select": {
+      "projectType": "library",
+      "root": "projects/eqp-select",
+      "sourceRoot": "projects/eqp-select/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/eqp-select/tsconfig.lib.json",
+            "project": "projects/eqp-select/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/eqp-select/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/eqp-select/src/test.ts",
+            "tsConfig": "projects/eqp-select/tsconfig.spec.json",
+            "karmaConfig": "projects/eqp-select/karma.conf.js"
+          }
+        }
+      }
+    },
+    "eqp-lookup": {
+      "projectType": "library",
+      "root": "projects/eqp-lookup",
+      "sourceRoot": "projects/eqp-lookup/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/eqp-lookup/tsconfig.lib.json",
+            "project": "projects/eqp-lookup/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/eqp-lookup/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/eqp-lookup/src/test.ts",
+            "tsConfig": "projects/eqp-lookup/tsconfig.spec.json",
+            "karmaConfig": "projects/eqp-lookup/karma.conf.js"
+          }
+        }
+      }
+    },
+    "eqp-numeric": {
+      "projectType": "library",
+      "root": "projects/eqp-numeric",
+      "sourceRoot": "projects/eqp-numeric/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/eqp-numeric/tsconfig.lib.json",
+            "project": "projects/eqp-numeric/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/eqp-numeric/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/eqp-numeric/src/test.ts",
+            "tsConfig": "projects/eqp-numeric/tsconfig.spec.json",
+            "karmaConfig": "projects/eqp-numeric/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/eqp-numeric/tsconfig.lib.json",
+              "projects/eqp-numeric/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "eqp-calendar": {
+      "projectType": "library",
+      "root": "projects/eqp-calendar",
+      "sourceRoot": "projects/eqp-calendar/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/eqp-calendar/tsconfig.lib.json",
+            "project": "projects/eqp-calendar/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/eqp-calendar/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/eqp-calendar/src/test.ts",
+            "tsConfig": "projects/eqp-calendar/tsconfig.spec.json",
+            "karmaConfig": "projects/eqp-calendar/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/eqp-calendar/tsconfig.lib.json",
+              "projects/eqp-calendar/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "eqp-img-drawing": {
+      "projectType": "library",
+      "root": "projects/eqp-img-drawing",
+      "sourceRoot": "projects/eqp-img-drawing/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/eqp-img-drawing/tsconfig.lib.json",
+            "project": "projects/eqp-img-drawing/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/eqp-img-drawing/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/eqp-img-drawing/src/test.ts",
+            "tsConfig": "projects/eqp-img-drawing/tsconfig.spec.json",
+            "karmaConfig": "projects/eqp-img-drawing/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/eqp-img-drawing/tsconfig.lib.json",
+              "projects/eqp-img-drawing/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "eqp-filters": {
+      "projectType": "library",
+      "root": "projects/eqp-filters",
+      "sourceRoot": "projects/eqp-filters/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/eqp-filters/tsconfig.lib.json",
+            "project": "projects/eqp-filters/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/eqp-filters/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/eqp-filters/src/test.ts",
+            "tsConfig": "projects/eqp-filters/tsconfig.spec.json",
+            "karmaConfig": "projects/eqp-filters/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/eqp-filters/tsconfig.lib.json",
+              "projects/eqp-filters/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "eqp-editor": {
+      "projectType": "library",
+      "root": "projects/eqp-editor",
+      "sourceRoot": "projects/eqp-editor/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/eqp-editor/tsconfig.lib.json",
+            "project": "projects/eqp-editor/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/eqp-editor/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/eqp-editor/src/test.ts",
+            "tsConfig": "projects/eqp-editor/tsconfig.spec.json",
+            "karmaConfig": "projects/eqp-editor/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/eqp-editor/tsconfig.lib.json",
+              "projects/eqp-editor/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "eqp-table": {
+      "projectType": "library",
+      "root": "projects/eqp-table",
+      "sourceRoot": "projects/eqp-table/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/eqp-table/tsconfig.lib.json",
+            "project": "projects/eqp-table/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/eqp-table/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/eqp-table/src/test.ts",
+            "tsConfig": "projects/eqp-table/tsconfig.spec.json",
+            "karmaConfig": "projects/eqp-table/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/eqp-table/tsconfig.lib.json",
+              "projects/eqp-table/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "eqp-attachments": {
+      "projectType": "library",
+      "root": "projects/eqp-attachments",
+      "sourceRoot": "projects/eqp-attachments/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/eqp-attachments/tsconfig.lib.json",
+            "project": "projects/eqp-attachments/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/eqp-attachments/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/eqp-attachments/src/test.ts",
+            "tsConfig": "projects/eqp-attachments/tsconfig.spec.json",
+            "karmaConfig": "projects/eqp-attachments/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/eqp-attachments/tsconfig.lib.json",
+              "projects/eqp-attachments/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "eqp-dashboard": {
+      "projectType": "library",
+      "root": "projects/eqp-dashboard",
+      "sourceRoot": "projects/eqp-dashboard/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/eqp-dashboard/tsconfig.lib.json",
+            "project": "projects/eqp-dashboard/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/eqp-dashboard/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/eqp-dashboard/src/test.ts",
+            "tsConfig": "projects/eqp-dashboard/tsconfig.spec.json",
+            "karmaConfig": "projects/eqp-dashboard/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/eqp-dashboard/tsconfig.lib.json",
+              "projects/eqp-dashboard/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "eqp-suite": {
+      "projectType": "library",
+      "root": "projects/eqp-suite",
+      "sourceRoot": "projects/eqp-suite/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/eqp-suite/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/eqp-suite/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/eqp-suite/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/eqp-suite/src/test.ts",
+            "tsConfig": "projects/eqp-suite/tsconfig.spec.json",
+            "karmaConfig": "projects/eqp-suite/karma.conf.js"
+          }
+        }
+      }
+    },
+    "eqp-datetimerangepicker": {
+      "projectType": "library",
+      "root": "projects/eqp-datetimerangepicker",
+      "sourceRoot": "projects/eqp-datetimerangepicker/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/eqp-datetimerangepicker/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/eqp-datetimerangepicker/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/eqp-datetimerangepicker/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "tsConfig": "projects/eqp-datetimerangepicker/tsconfig.spec.json",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ]
+          }
+        }
+      }
+    },
+    "eqp-ui": {
+      "projectType": "library",
+      "root": "projects/eqp-ui",
+      "sourceRoot": "projects/eqp-ui/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/eqp-ui/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/eqp-ui/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/eqp-ui/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "tsConfig": "projects/eqp-ui/tsconfig.spec.json",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ]
+          }
+        }
+      }
+    },
+    "eqp-common": {
+      "projectType": "library",
+      "root": "projects/eqp-common",
+      "sourceRoot": "projects/eqp-common/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/eqp-common/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/eqp-common/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/eqp-common/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "tsConfig": "projects/eqp-common/tsconfig.spec.json",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ]
+          }
+        }
+      }
+    },
+    "eqp-form": {
+      "projectType": "library",
+      "root": "projects/eqp-form",
+      "sourceRoot": "projects/eqp-form/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/eqp-form/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/eqp-form/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/eqp-form/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "tsConfig": "projects/eqp-form/tsconfig.spec.json",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "analytics": false,
+    "cache": {
+      "enabled": false
+    }
+  }
+}

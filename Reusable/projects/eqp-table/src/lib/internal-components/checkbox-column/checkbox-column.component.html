@@ -1,0 +1,14 @@
+<ng-container>
+    <mat-checkbox (click)="$event.stopPropagation()"
+        [disabled]="col.disabled != null ? columnAccessibiltyHelper.getDisableInfo(col,element) : columnAccessibiltyHelper.isRowDisabled(element)"
+        [checked]="columnValueHelper.getCheckboxValue(element, col)"
+        (change)="changeCheckboxRow($event, element, col);">
+    </mat-checkbox>
+
+    <!-- Gestione tooltip -->
+    <i *ngIf="col.tooltip && columnAccessibiltyHelper.getTooltipInfo(col,element) != null && columnAccessibiltyHelper.getTooltipInfo(col,element) != ''"
+        [matTooltip]="columnAccessibiltyHelper.getTooltipInfo(col,element)"
+        [matTooltipPosition]="col.tooltip?.tooltipPosition != null ? col.tooltip?.tooltipPosition : 'below'"
+        style="margin-left: 5px;" class="fa-solid fa-circle-info"></i>
+
+</ng-container>

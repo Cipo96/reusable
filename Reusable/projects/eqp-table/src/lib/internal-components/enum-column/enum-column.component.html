@@ -1,0 +1,12 @@
+<ng-container>
+    <span [ngStyle]="columnStyleHelper.getNgStyle(col,element)">
+        {{ columnValueHelper.getEnumValue(col.enumModel, element, col) }} 
+        {{col.additionalValue != null ? col.additionalValue : ''}}
+    </span>
+
+    <i *ngIf="col.tooltip && columnAccessibilityHelper.getTooltipInfo(col,element) != null && columnAccessibilityHelper.getTooltipInfo(col,element) != ''"
+        [matTooltip]="columnAccessibilityHelper.getTooltipInfo(col,element)"
+        [matTooltipPosition]="col.tooltip?.tooltipPosition != null ? col.tooltip?.tooltipPosition : 'below'"
+        style="margin-left: 5px;" class="fa-solid fa-circle-info"></i>
+
+</ng-container>

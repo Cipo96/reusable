@@ -1,0 +1,169 @@
+::ng-deep mat-form-field {
+  width: 100%;
+}
+
+.booleanFilter {
+  margin-top: 15px;
+}
+
+.filter-mat-card-header {
+  background-color: #0000001f;
+  padding: 5px !important;
+  cursor: pointer;
+  min-height: 50px;
+}
+
+/* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
+mat-card {
+  padding: 0 !important;
+}
+
+/* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
+mat-card-content {
+  padding: 5px !important;
+}
+
+/* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
+mat-card-footer {
+  width: 100%;
+  padding: 10px;
+  margin: 0;
+}
+
+/* TODO(mdc-migration): The following rule targets internal classes of card that may no longer apply for the MDC version. */
+::ng-deep .mat-card-header-text {
+  display: none !important;
+}
+
+.close {
+  color: rgba(0, 0, 0, 0.87);
+  font: 400 14px/20px Roboto, "Helvetica Neue", sans-serif !important;
+  padding-right: 20px;
+  margin-left: 20px;
+  position: relative;
+  text-decoration: none;
+  opacity: 1 !important;
+  text-shadow: none;
+  float: left !important;
+  padding-bottom: 5px;
+}
+
+.prevent-removal {
+  color: rgba(0, 0, 0, 0.87);
+  font: 400 14px/20px Roboto, "Helvetica Neue", sans-serif !important;
+  padding-right: 20px;
+  margin-left: 20px;
+  position: relative;
+  text-decoration: none;
+  opacity: 1 !important;
+  text-shadow: none;
+  float: left !important;
+  padding-bottom: 5px;
+}
+
+.close:before,
+.close:after {
+  background-color: rgba(0, 0, 0, 0.87);
+  content: " ";
+  height: 2px;
+  position: absolute;
+  right: 0;
+  top: 10px;
+  transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
+  width: 15px;
+}
+
+.close:hover::before {
+  transform: rotate(45deg);
+}
+
+.close:hover::after {
+  transform: rotate(-45deg);
+}
+
+.close-savedFilter {
+  color: rgba(0, 0, 0, 0.87);
+  font: 400 14px/20px Roboto, "Helvetica Neue", sans-serif !important;
+  padding-right: 20px;
+  margin-left: 5px;
+  margin-right: 5px;
+  position: relative;
+  text-decoration: none;
+  opacity: 1 !important;
+  text-shadow: none;
+  padding-top: 2px;
+}
+
+.prevent-removal-savedFilter {
+  color: rgba(0, 0, 0, 0.87);
+  font: 400 14px/20px Roboto, "Helvetica Neue", sans-serif !important;
+  padding-right: 20px;
+  margin-left: 5px;
+  margin-right: 5px;
+  position: relative;
+  text-decoration: none;
+  opacity: 1 !important;
+  text-shadow: none;
+  padding-top: 2px;
+}
+
+.close-savedFilter:before,
+.close-savedFilter:after {
+  background-color: rgba(0, 0, 0, 0.87);
+  content: " ";
+  height: 2px;
+  position: absolute;
+  right: 0;
+  top: 10px;
+  transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
+  width: 15px;
+}
+
+.close-savedFilter:hover::before {
+  transform: rotate(45deg);
+}
+
+.close-savedFilter:hover::after {
+  transform: rotate(-45deg);
+}
+
+.modal-filter-title {
+  font-weight: bold !important;
+  font-size: 16px !important;
+}
+
+.modal-filter-container {
+  max-height: 65vh !important;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.saveFilterItem {
+  background-color: #00000033;
+  padding: 5px;
+  margin-right: 2px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-bottom: 2px;
+  display: inline-block;
+}
+
+.savedFiltersLabel {
+  font-weight: bold;
+}
+
+.btn-saveFilter {
+  font-weight: 400;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.btn-saveFilter:hover {
+  text-decoration: underline;
+}
+
+:host ::ng-deep mat-form-field {
+  .mat-mdc-form-field-subscript-wrapper {
+    display: none;
+  }
+}

@@ -1,0 +1,131 @@
+.e-save:before {
+  content: '\e98e';
+}
+
+.example-tree-invisible {
+  display: none;
+}
+
+.example-tree ul,
+.example-tree li {
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style-type: none;
+}
+
+//Nascondo il drag nel container finchè non viene effettivamente rilasciato
+.cdk-drag-placeholder {
+  display: none !important;
+}
+
+//Placeholder title
+.placeholder-title {
+  display: -ms-flexbox;
+  display: flex;
+  height: 80px;
+  width: 100%;
+  background-color: #fafafa;
+  margin-left: 0px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.virtual-scroll-container {
+  max-height: 720px;
+  overflow: auto;
+}
+
+.control_wrapper {
+  max-width: 320px;
+  margin: auto;
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+}
+
+.e-treeview .e-list-text {
+  width: 100%;
+  font-size: 15px;
+}
+
+.treeCount.e-badge {
+  padding: 0.4em;
+  vertical-align: text-bottom;
+}
+
+.material .treeCount.e-badge {
+  vertical-align: middle;
+}
+
+/*To hide the sibling shown while performing drag and drop*/
+.custom .e-sibling {
+  display: none !important;
+}
+
+.e-treeview {
+  white-space: break-spaces !important
+}
+
+.e-list-text {
+  padding: 5px 0 !important;
+  line-height: 1 !important;
+}
+
+
+/*To change the background color applied for the cloned node*/
+.e-treeview.custom.e-drag-item {
+  background-color: transparent;
+
+}
+
+/*To hide the drop indicator in the cloned node*/
+.e-treeview.custom.e-drag-item .e-icons.e-drop-out::before,
+.e-treeview.custom.e-drag-item .e-icons.e-drop-in::before,
+.e-treeview.custom.e-drag-item .e-icons.e-drop-next::before {
+  content: '';
+}
+
+.e-level-1[data-uid="@@PARENT_CONDITION_NODE"] {
+  border-bottom: 1px dotted !important;
+}
+
+.e-level-1[data-uid="@@PARENT_CONDITION_NODE"]>.e-text-content .e-list-text {
+  font-weight: bold;
+}
+
+.eqp-editor-legend-title-h1 {
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 32px;
+  letter-spacing: normal;
+  margin: 0 0 16px;
+}
+
+.eqp-editor-legend-title-h2 {
+  font-weight: 500;
+  font-stretch: normal;
+  font-size: 22px;
+  line-height: 32px;
+  letter-spacing: normal;
+  margin: 0 0 16px;
+}
+
+.eqp-editor-legend-title-h3 {
+  font-size: 18px;
+  line-height: 40px;
+  letter-spacing: 0.1px;
+  margin: 0 0 16px;
+  text-transform: uppercase;
+  font-weight: 400;
+}
+
+pre {
+  margin-bottom: 0px !important;
+  height: 135px;
+  overflow-y: hidden;
+}
+
+pre code {
+  background-color: #eee;
+  border: 1px solid #999;
+  display: block;
+  margin-top: -18px;
+}

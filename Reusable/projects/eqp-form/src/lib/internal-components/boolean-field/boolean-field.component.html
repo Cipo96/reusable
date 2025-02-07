@@ -1,0 +1,11 @@
+<form [formGroup]="form">
+    <mat-slide-toggle class="booleanFilter" [formControlName]="field.key" (change)="onInputChange($event)"
+        [labelPosition]="getLabelPosition(field)">
+        {{ field.display }}
+    </mat-slide-toggle>
+
+    <mat-hint *ngIf="field.tooltip">{{ field.tooltip.tooltipText }}</mat-hint>
+    <mat-error *ngIf="control?.invalid && control?.touched">
+        {{ field.validationProperties?.HintLabel }}
+    </mat-error>
+</form>

@@ -1,0 +1,6 @@
+<ng-container>
+    <span [ngStyle]="columnStyleHelper.getNgStyle(col,element)"
+        [innerHTML]="columnValueHelper.getBooleanValue(element,col)"
+        [matTooltip]="columnAccessibiltyHelper.getTooltipInfo(col,element)"
+        [matTooltipPosition]="col.tooltip?.tooltipPosition != null ? col.tooltip?.tooltipPosition : 'below'"></span>
+</ng-container>
